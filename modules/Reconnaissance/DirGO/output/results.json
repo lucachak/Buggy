@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "ports": null,
+    "target": "http://localhost:8000",
+    "total_found": 2
+  },
+  "results": [
+    {
+      "url": "http://localhost:8000/admin",
+      "status": 301,
+      "size": 0,
+      "redirect": "/admin/",
+      "elapsed_ms": 199.001,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:8000/api",
+      "status": 301,
+      "size": 0,
+      "redirect": "/api/",
+      "elapsed_ms": 125.053,
+      "is_dir": false,
+      "depth": 0
+    }
+  ]
+}
