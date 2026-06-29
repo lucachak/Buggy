@@ -5,6 +5,7 @@ import subprocess
 import sys
 import time
 from datetime import datetime
+from pathlib import Path
 
 banner = """
 ██████╗   ██╗   ██╗   ██████╗    ██████╗   ██╗   ██╗
@@ -41,7 +42,7 @@ MODULE_REGISTRY = {
     "report": "Report",
 }
 
-IMPLEMENTED_MODULES = {"recon"}
+IMPLEMENTED_MODULES = {"recon", "surface"}
 RED = "\033[91m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
@@ -126,12 +127,59 @@ def run_recon(target: str, args, output_dir: str) -> None:
     )
 
 
+def run_surface(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo SurfaceMapping."""
+    from modules.SurfaceMapping.surface import run_surface as _run_surface
+    
+    print(f"\n{BOLD}[>] Starting Surface Mapping on {target}{RESET}\n")
+    
+    # Verifica se binários existem
+    surface_dir = Path(__file__).parent / "modules" / "SurfaceMapping"
+    bin_dir = surface_dir / "bin"
+    
+    if not bin_dir.exists():
+        print(f"{YELLOW}[!] SurfaceMapping binaries not found.{RESET}")
+        print(f"{YELLOW}    Run: cd {surface_dir} && make all{RESET}")
+        
+        # Tenta build automático
+        print(f"{CYAN}[i] Attempting automatic build...{RESET}")
+        try:
+            subprocess.run(["make", "all"], cwd=surface_dir, check=True)
+            print(f"{GREEN}[✓] Build successful!{RESET}")
+        except:
+            print(f"{RED}[✗] Automatic build failed. Please build manually.{RESET}")
+            print(f"{RED}    cd {surface_dir} && ./build.sh{RESET}")
+            return
+    
+    _run_surface(target, args, output_dir)
+
+
+
 def run_all(target: str, args, output_dir: str) -> None:
+    """Executa pipeline completo: Recon → SurfaceMapping"""
+    print(f"\n{BOLD}[>] Starting Full Pipeline on {target}{RESET}\n")
+    
+    # Fase 1: Recon
+    print(f"{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 1/2: Reconnaissance{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
     run_recon(target, args, output_dir)
+    
+    # Fase 2: SurfaceMapping
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 2/2: Surface Mapping{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    run_surface(target, args, output_dir)
+    
+    print(f"\n{GREEN}{'='*60}{RESET}")
+    print(f"{GREEN}  ✅ Full Pipeline Complete!{RESET}")
+    print(f"{GREEN}  Output: {output_dir}{RESET}")
+    print(f"{GREEN}{'='*60}{RESET}")
 
 
 MODULE_RUNNERS = {
     "recon": lambda t, a, o: run_recon(t, a, o),
+    "surface": lambda t, a, o: run_surface(t, a, o),
     "all": lambda t, a, o: run_all(t, a, o),
 }
 
@@ -156,15 +204,15 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         metavar="MODULE",
         choices=valid_modules,
-        help=(
-            "Module to run. Available:\n"
-            + "\n".join(
-                f"  {k:<12} {MODULE_REGISTRY[k]}"
-                + ("" if k in IMPLEMENTED_MODULES else "  [coming soon]")
-                for k in MODULE_REGISTRY
-            )
-            + "\n  all          Run all implemented modules in order"
-        ),
+help=(
+    "Module to run. Available:\n"
+    + "\n".join(
+        f"  {k:<12} {MODULE_REGISTRY[k]}"
+        + ("  [✓ implemented]" if k in IMPLEMENTED_MODULES else "  [coming soon]")
+        for k in MODULE_REGISTRY
+    )
+    + "\n  all          Run all implemented modules in order"
+),
     )
     parser.add_argument("--threads", type=int, default=50, help="Dir busting threads (default: 50)")
     parser.add_argument("--recursive", action="store_true", help="Recursive dir busting")
