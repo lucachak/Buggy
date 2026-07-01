@@ -10,11 +10,11 @@ from urllib.parse import urlparse, urljoin
 
 
 commands_dns_subdomain = [
-    "curl -s 'https://crt.sh/?q=*.{}&output=json' | jq -r '.[].name_value' | sed 's/\\*\\.//g' | sort -u > {}/ct-subs.txt",
-    "subfinder -d {} -all -silent -o {}/subfinder-subs.txt",
-    "amass enum --passive -d {} -dir {}/amass-subs",
-    "assetfinder -subs-only {} > {}/passive-subs.txt",
-    "cat {}/ct-subs.txt {}/subfinder-subs.txt {}/amass-subs/amass.txt {}/passive-subs.txt 2>/dev/null | sort -u > {}/all-subs.txt"
+    "curl -s 'https://crt.sh/?q=*.{0}&output=json' | jq -r '.[].name_value' | sed 's/\\*\\.//g' | sort -u > {1}/ct-subs.txt",
+    "subfinder -d {0} -all -silent -o {1}/subfinder-subs.txt",
+    "amass enum --passive -d {0} -dir {1}/amass-subs",
+    "assetfinder -subs-only {0} > {1}/passive-subs.txt",
+    "cat {1}/ct-subs.txt {1}/subfinder-subs.txt {1}/amass-subs/amass.txt {1}/passive-subs.txt 2>/dev/null | sort -u > {1}/all-subs.txt"
 ]
 
 commands_dns_resolution = [
@@ -47,7 +47,6 @@ class Discovery:
         self.__user_agent: str = user_agent
         self.__proxy: dict = proxy
 
-        # Estrutura de output
         self.__output_root = output_dir or "."
         self.__recon_dir = os.path.join(self.__output_root, "recon")
         self.__subdomains_dir = os.path.join(self.__recon_dir, "subdomains")
@@ -56,7 +55,6 @@ class Discovery:
         self.__reports_dir = os.path.join(self.__output_root, "reports")
         self.__logs_dir = os.path.join(self.__output_root, "logs")
 
-        # Criar todas as pastas
         for d in [self.__subdomains_dir, self.__dns_dir, self.__dirbust_dir, self.__reports_dir, self.__logs_dir]:
             os.makedirs(d, exist_ok=True)
 
@@ -67,10 +65,6 @@ class Discovery:
         self.__headers = {}
         self.__cookies = {}
         self.__auth = None
-
-    # ─────────────────────────────────────────────
-    # Internal helpers
-    # ─────────────────────────────────────────────
 
     def _banner(self, stage: str, color: str = "\033[96m") -> None:
         BOLD  = "\033[1m"
@@ -157,9 +151,6 @@ class Discovery:
             pass
         return "127.0.0.1"
 
-    # ─────────────────────────────────────────────
-    # Stage 1 — Subdomain Enumeration
-    # ─────────────────────────────────────────────
 
     def run_subdomain_enum(self) -> None:
         domain = self._extract_domain()
@@ -173,11 +164,9 @@ class Discovery:
             self.__subdomains = [domain]
             return
 
-        # Usa __subdomains_dir como diretório de saída
         sub_dir = self.__subdomains_dir
 
         for cmd in commands_dns_subdomain:
-            # Formata com domain e sub_dir
             formatted = cmd.format(domain, sub_dir)
             self._run_cmd(formatted)
 
@@ -191,10 +180,6 @@ class Discovery:
             print(f"\n{GREEN}  [✔] {len(subs)} unique subdomains collected  ({time.time()-t0:.1f}s){RESET}")
         except FileNotFoundError:
             print(f"  [!] {all_subs_path} not found — continuing with empty list")
-
-    # ─────────────────────────────────────────────
-    # Stage 2 — DNS Resolution
-    # ─────────────────────────────────────────────
 
     def run_dns_resolution(self) -> None:
         domain = self._extract_domain()
@@ -265,10 +250,6 @@ class Discovery:
         if origin_ips:
             for ip in origin_ips:
                 print(f"        {ip}")
-
-    # ─────────────────────────────────────────────
-    # Stage 4 — Directory Bruteforce (Dirpy v2 Go)
-    # ─────────────────────────────────────────────
 
     def run_dir_busting(
         self,
@@ -402,10 +383,6 @@ class Discovery:
         elapsed = time.time() - t0
         print(f"\n{GREEN}  [✔] {len(self.__params)} paths discovered across {len(targets)} target(s)  ({elapsed:.1f}s){RESET}")
 
-    # ─────────────────────────────────────────────
-    # Summary & Reporting
-    # ─────────────────────────────────────────────
-
     def GetSubdomains(self) -> list:
         return self.__subdomains
 
@@ -422,7 +399,7 @@ class Discovery:
             "auth":             self.__auth,
         }
 
-    def SaveReport(self) -> tuple[str, str]:
+    def SaveReport(self, output_dir: str | None = None) -> tuple[str, str]:
         CYAN  = "\033[96m"
         GREEN = "\033[92m"
         BOLD  = "\033[1m"
@@ -433,7 +410,7 @@ class Discovery:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_name = f"{domain}_recon_{timestamp}"
 
-        reports_dir = self.__reports_dir
+        reports_dir = output_dir or self.__reports_dir
         os.makedirs(reports_dir, exist_ok=True)
         txt_path  = os.path.join(reports_dir, base_name + ".txt")
         json_path = os.path.join(reports_dir, base_name + ".json")
@@ -506,9 +483,6 @@ class Discovery:
 
         return txt_path, json_path
 
-    # ─────────────────────────────────────────────
-    # Pipeline executor
-    # ─────────────────────────────────────────────
 
     def exec(
         self,
@@ -553,9 +527,6 @@ class Discovery:
 
         return summary
 
-    # ─────────────────────────────────────────────
-    # Getters and Setters
-    # ─────────────────────────────────────────────
 
     def get_target(self) -> str: 
         return self.__target

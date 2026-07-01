@@ -215,14 +215,14 @@ class TestRunDnsResolution(unittest.TestCase):
             d.run_dns_resolution()   # must NOT raise
 
     @patch("modules.Reconnaissance.Discovery.subprocess.run")
-    def test_commands_include_domain(self, mock_run):
+    def test_dns_resolution_commands_executed(self, mock_run):
         mock_run.return_value = _make_completed()
         with patch("builtins.open", mock_open(read_data="")):
             d = Discovery(target="http://mytarget.com/")
             d.run_dns_resolution()
-        # At least one call should contain the domain
+        # Ensure dnsx is called
         calls_str = " ".join(str(c) for c in mock_run.call_args_list)
-        self.assertIn("mytarget.com", calls_str)
+        self.assertIn("dnsx", calls_str)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

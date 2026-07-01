@@ -204,12 +204,12 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         metavar="MODULE",
         choices=valid_modules,
-help=(
-    "Module to run. Available:\n"
-    + "\n".join(
-        f"  {k:<12} {MODULE_REGISTRY[k]}"
-        + ("  [✓ implemented]" if k in IMPLEMENTED_MODULES else "  [coming soon]")
-        for k in MODULE_REGISTRY
+        help=(
+            "Module to run. Available:\n"
+            + "\n".join(
+                f"  {k:<12} {MODULE_REGISTRY[k]}"
+                + ("  [✓ implemented]" if k in IMPLEMENTED_MODULES else "  [coming soon]")
+                for k in MODULE_REGISTRY
     )
     + "\n  all          Run all implemented modules in order"
 ),
