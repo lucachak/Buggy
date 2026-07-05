@@ -130,27 +130,8 @@ def run_recon(target: str, args, output_dir: str) -> None:
 def run_surface(target: str, args, output_dir: str) -> None:
     """Wrapper para o módulo SurfaceMapping."""
     from modules.SurfaceMapping.surface import run_surface as _run_surface
-    
+
     print(f"\n{BOLD}[>] Starting Surface Mapping on {target}{RESET}\n")
-    
-    # Verifica se binários existem
-    surface_dir = Path(__file__).parent / "modules" / "SurfaceMapping"
-    bin_dir = surface_dir / "bin"
-    
-    if not bin_dir.exists():
-        print(f"{YELLOW}[!] SurfaceMapping binaries not found.{RESET}")
-        print(f"{YELLOW}    Run: cd {surface_dir} && make all{RESET}")
-        
-        # Tenta build automático
-        print(f"{CYAN}[i] Attempting automatic build...{RESET}")
-        try:
-            subprocess.run(["make", "all"], cwd=surface_dir, check=True)
-            print(f"{GREEN}[✓] Build successful!{RESET}")
-        except:
-            print(f"{RED}[✗] Automatic build failed. Please build manually.{RESET}")
-            print(f"{RED}    cd {surface_dir} && ./build.sh{RESET}")
-            return
-    
     _run_surface(target, args, output_dir)
 
 
@@ -168,6 +149,14 @@ def run_all(target: str, args, output_dir: str) -> None:
     print(f"{CYAN}  PHASE 2/2: Surface Mapping{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_surface(target, args, output_dir)
+
+    # Gera relatório HTML consolidado
+    try:
+        from modules.Report.report import generate
+        report_path = generate(output_dir)
+        print(f"\n{GREEN}  📊  Report: {report_path}{RESET}")
+    except Exception as e:
+        print(f"{YELLOW}  [!] Report generation failed: {e}{RESET}")
 
     print(f"\n{GREEN}{'='*60}{RESET}")
     print(f"{GREEN}  ✅ Full Pipeline Complete!{RESET}")
