@@ -37,7 +37,7 @@ MODULE_REGISTRY = {
     "auth": "AutheAndAutho",
     "business": "BusinessLogic",
     "injection": "InjectionAttk",
-    "ssrf": "ServerSide(SSRF)",
+    "ssrf": "ServerSide_SSRF",
     "xss": "XSSAndClient",
     "report": "Report",
 }
@@ -158,34 +158,76 @@ def run_surface(target: str, args, output_dir: str) -> None:
 def run_all(target: str, args, output_dir: str) -> None:
     """Executa pipeline completo: Recon → SurfaceMapping"""
     print(f"\n{BOLD}[>] Starting Full Pipeline on {target}{RESET}\n")
-    
-    # Fase 1: Recon
+
     print(f"{CYAN}{'='*60}{RESET}")
     print(f"{CYAN}  PHASE 1/2: Reconnaissance{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_recon(target, args, output_dir)
-    
-    # Fase 2: SurfaceMapping
+
     print(f"\n{CYAN}{'='*60}{RESET}")
     print(f"{CYAN}  PHASE 2/2: Surface Mapping{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_surface(target, args, output_dir)
-    
+
     print(f"\n{GREEN}{'='*60}{RESET}")
     print(f"{GREEN}  ✅ Full Pipeline Complete!{RESET}")
     print(f"{GREEN}  Output: {output_dir}{RESET}")
     print(f"{GREEN}{'='*60}{RESET}")
 
 
+def run_watch(target: str, args, output_dir: str) -> None:
+    """
+    Watch mode: re-executa o pipeline em loop e reporta delta entre scans.
+    Intervalo configurável via --watch-interval (default: 3600s).
+    """
+    from modules.Report import rotate_snapshot, load_and_diff, print_delta
+
+    interval = getattr(args, "watch_interval", 3600)
+    iteration = 0
+
+    print(f"\n{BOLD}👁  Watch mode — target: {target}{RESET}")
+    print(f"     {CYAN}Interval : {interval}s  |  Output: {output_dir}{RESET}")
+    print(f"     {YELLOW}Press Ctrl+C to stop.{RESET}\n")
+
+    try:
+        while True:
+            iteration += 1
+            ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"\n{CYAN}{'='*60}{RESET}")
+            print(f"{CYAN}  WATCH SCAN #{iteration}  [{ts}]{RESET}")
+            print(f"{CYAN}{'='*60}{RESET}")
+
+            # Rotaciona snapshot antes de escanear
+            rotate_snapshot(output_dir)
+
+            # Roda pipeline completo
+            run_all(target, args, output_dir)
+
+            # Calcula e imprime delta
+            print(f"\n{BOLD}  📊  Delta since last scan:{RESET}")
+            delta = load_and_diff(output_dir)
+            print_delta(delta)
+
+            if iteration > 1 and delta.get("has_changes"):
+                print(f"\n{YELLOW}  [!] Surface changed — review findings above.{RESET}")
+
+            print(f"\n{CYAN}  Next scan in {interval}s  (Ctrl+C to stop){RESET}")
+            time.sleep(interval)
+
+    except KeyboardInterrupt:
+        print(f"\n\n{GREEN}  Watch mode stopped after {iteration} scan(s).{RESET}")
+
+
 MODULE_RUNNERS = {
-    "recon": lambda t, a, o: run_recon(t, a, o),
+    "recon":   lambda t, a, o: run_recon(t, a, o),
     "surface": lambda t, a, o: run_surface(t, a, o),
-    "all": lambda t, a, o: run_all(t, a, o),
+    "all":     lambda t, a, o: run_all(t, a, o),
+    "watch":   lambda t, a, o: run_watch(t, a, o),
 }
 
 
 def build_parser() -> argparse.ArgumentParser:
-    valid_modules = list(MODULE_REGISTRY.keys()) + ["all"]
+    valid_modules = list(MODULE_REGISTRY.keys()) + ["all", "watch"]
 
     parser = argparse.ArgumentParser(
         prog="Buggy",
@@ -219,6 +261,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout", type=float, default=10.0, help="Request timeout in seconds (default: 10)")
     parser.add_argument("--wordlist", default="default.txt", help="Wordlist file (default: default.txt)")
     parser.add_argument("--output-dir", "-o", metavar="DIR", help="Custom output directory (default: output/<target>_<timestamp>)")
+    parser.add_argument(
+        "--watch-interval",
+        type=int,
+        default=3600,
+        metavar="SECONDS",
+        help="Re-scan interval for watch mode in seconds (default: 3600)",
+    )
     parser.add_argument("--skip-deps", action="store_true", help="Skip dependency check")
     parser.add_argument("--no-banner", action="store_true", help="Suppress ASCII banner")
 
@@ -246,7 +295,7 @@ def main() -> None:
         time.sleep(0.2)
 
     requested = args.module
-    if requested != "all" and requested not in IMPLEMENTED_MODULES:
+    if requested not in ("all", "watch") and requested not in IMPLEMENTED_MODULES:
         print(
             f"{YELLOW}[!] Module '{requested}' ({MODULE_REGISTRY[requested]}) "
             f"is not yet implemented.{RESET}"

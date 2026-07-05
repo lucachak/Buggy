@@ -1,5 +1,5 @@
-
 import json
+import shutil
 import subprocess
 import logging
 import time
@@ -70,24 +70,37 @@ def make_request(url: str, timeout: int = 5, max_redirects: int = 3) -> Optional
 def run_go_binary(binary_name: str, args: List[str], timeout: int = 30) -> Dict:
     """
     Executa binário Go e retorna JSON parseado.
-    
+
     Args:
-        binary_name: Nome do binário (ex: 'tech_detector')
+        binary_name: Nome do binário (ex: 'tech_detector') ou path absoluto
         args: Argumentos de linha de comando
         timeout: Timeout em segundos
-    
+
     Returns:
-        Dict com output parseado
+        Dict com output parseado, ou {"error": ...} se falhar
     """
-    # Encontra o binário
     module_dir = Path(__file__).parent
     binary_path = module_dir / binary_name
-    
-    if not binary_path.exists():
-        # Tenta no PATH
-        binary_path = binary_name
-    
-    cmd = [str(binary_path)] + args
+
+    if binary_path.exists():
+        resolved = str(binary_path)
+    elif Path(binary_name).is_absolute() and Path(binary_name).exists():
+        resolved = binary_name
+    else:
+        # Última tentativa: PATH do sistema
+        in_path = shutil.which(str(binary_name))
+        if in_path:
+            resolved = in_path
+        else:
+            msg = (
+                f"Binary '{binary_name}' not found in module dir "
+                f"({module_dir}) or PATH. "
+                f"Build it with: cd {module_dir} && make all"
+            )
+            logger.error(msg)
+            return {"error": msg}
+
+    cmd = [resolved] + args
     
     try:
         result = subprocess.run(
