@@ -11,6 +11,7 @@ from .form_mapper.forms import FormMapper
 
 # Importações relativas
 from .utils import load_json, make_request, run_go_binary, save_json
+from .detectors import detect_tech, analyze_js, scan_ports, discover_apis
 
 logger = logging.getLogger(__name__)
 
@@ -173,28 +174,9 @@ class SurfaceMapper:
         return list(urls)
 
     def _run_tech_detection(self, threads: int, timeout: float) -> Dict:
-        """Executa Tech Detection via binário Go."""
-        # Prepara input
-        urls_file = self.surface_dir / "urls_to_scan.json"
-        save_json(self.base_urls[:20], str(urls_file))  # Limita 20 URLs
-
-        output_file = self.surface_dir / "tech_results.json"
-
-        # Executa binário
-        result = run_go_binary(
-            str(self.bin_dir / "tech_detector"),
-            [
-                "-urls",
-                str(urls_file),
-                "-output",
-                str(output_file),
-                "-workers",
-                str(min(threads, 30)),
-            ],
-            timeout=timeout * 3,
-        )
-
-        return result if result else {}
+        """Detecta tecnologias, WAF, CMS e frameworks via HTTP (Python)."""
+        print("  running tech detection (Python)...")
+        return detect_tech(self.base_urls[:20], threads=threads, timeout=timeout)
 
     def _run_endpoint_mapper(self, timeout: float) -> Dict:
         """Executa Endpoint Mapper em Python."""
@@ -211,52 +193,24 @@ class SurfaceMapper:
         return mapper.discover()
 
     def _run_js_analyzer(self, threads: int, timeout: float) -> Dict:
-        """Executa JS Analyzer via binário Go."""
-        # Coleta URLs de JS dos endpoints descobertos
-        js_urls = []
-        endpoints_data = self.results.get("endpoints", {})
-        all_endpoints = endpoints_data.get("endpoints", [])
-
-        for endpoint in all_endpoints:
-            if str(endpoint).endswith(".js"):
-                js_urls.append(endpoint)
+        """Analisa arquivos JavaScript em busca de segredos e endpoints (Python)."""
+        endpoints = self.results.get("endpoints", {}).get("endpoints", [])
+        js_urls = [ep for ep in endpoints if str(ep).endswith(".js")]
 
         if not js_urls:
-            # Busca em paths comuns
-            for base_url in self.base_urls[:5]:
-                common_js = [
-                    f"{base_url}/static/js/main.js",
-                    f"{base_url}/js/app.js",
-                    f"{base_url}/assets/js/bundle.js",
+            for base in self.base_urls[:5]:
+                js_urls += [
+                    f"{base}/static/js/main.js",
+                    f"{base}/js/app.js",
+                    f"{base}/assets/js/bundle.js",
                 ]
-                js_urls.extend(common_js)
 
-        js_urls = list(set(js_urls))[:30]  # Limita 30 arquivos
+        js_urls = list(set(js_urls))[:30]
 
         if not js_urls:
             return {"results": [], "summary": {"total_files": 0, "total_secrets": 0}}
 
-        # Prepara input
-        js_file = self.surface_dir / "js_urls.json"
-        save_json(js_urls, str(js_file))
-
-        output_file = self.surface_dir / "js_results.json"
-
-        # Executa binário
-        result = run_go_binary(
-            str(self.bin_dir / "js_analyzer"),
-            [
-                "-urls",
-                str(js_file),
-                "-output",
-                str(output_file),
-                "-workers",
-                str(min(threads, 15)),
-            ],
-            timeout=timeout * 5,  # JS pode ser pesado
-        )
-
-        return result if result else {"results": [], "summary": {}}
+        return analyze_js(js_urls, threads=threads, timeout=timeout)
 
     def _run_form_mapper(self, timeout: float) -> Dict:
         """Executa Form Mapper em Python."""
@@ -268,94 +222,36 @@ class SurfaceMapper:
         return form_mapper.extract_forms()
 
     def _run_api_discoverer(self, threads: int, timeout: float) -> Dict:
-        """Executa API Discovery via binário Go."""
-        # Prepara input
-        urls_file = self.surface_dir / "api_base_urls.json"
-        save_json(self.base_urls[:10], str(urls_file))
-
-        output_file = self.surface_dir / "api_results.json"
-
-        # Executa binário
-        result = run_go_binary(
-            str(self.bin_dir / "api_discoverer"),
-            [
-                "-urls",
-                str(urls_file),
-                "-output",
-                str(output_file),
-                "-workers",
-                str(min(threads, 20)),
-            ],
-            timeout=timeout * 3,
-        )
-
-        return result if result else {"results": [], "total_apis": 0}
+        """Descobre APIs REST, GraphQL e specs OpenAPI/Swagger (Python)."""
+        return discover_apis(self.base_urls[:10], threads=threads, timeout=timeout)
 
     def _run_port_scanner(self, threads: int, timeout: float) -> Dict:
-        """Executa Port Scanner via binário Go."""
-        # Coleta todos os IPs
-        all_ips = set()
+        """Escaneia portas abertas nos IPs resolvidos (Python socket)."""
+        import socket as _socket
 
+        all_ips: set = set()
         for host in self.hosts + self.resolved_ips:
-            if isinstance(host, dict):
-                ip = host.get("ip", "")
-            else:
-                ip = str(host)
+            ip = host.get("ip", "") if isinstance(host, dict) else str(host)
             if ip:
                 all_ips.add(ip)
 
         if not all_ips:
-            # Fallback: resolve o target
-            import socket
-
             try:
-                ip = socket.gethostbyname(self.target)
-                all_ips.add(ip)
-            except:
+                all_ips.add(_socket.gethostbyname(self.target))
+            except Exception:
                 pass
 
         if not all_ips:
             return {}
 
-        # Prepara input
-        hosts_file = self.surface_dir / "hosts_to_scan.json"
-        save_json(list(all_ips), str(hosts_file))
-
-        output_file = self.surface_dir / "port_results.json"
-
-        # Executa binário
-        result = run_go_binary(
-            str(self.bin_dir / "port_scanner"),
-            [
-                "-hosts",
-                str(hosts_file),
-                "-ports",
-                "top100",
-                "-timeout",
-                str(int(timeout / 5)),  # Timeout por porta
-                "-workers",
-                str(min(threads, 30)),
-                "-output",
-                str(output_file),
-            ],
-            timeout=timeout * len(all_ips),  # Tempo proporcional aos hosts
+        return scan_ports(
+            list(all_ips),
+            threads=threads,
+            timeout=min(timeout / 5, 2.0),
         )
 
-        # Converte array para dict
-        if isinstance(result, list):
-            port_dict = {}
-            for host_result in result:
-                host = host_result.get("host", "unknown")
-                port_dict[host] = {
-                    "open_ports": host_result.get("open_ports", []),
-                    "services": host_result.get("services", {}),
-                }
-            return port_dict
-
-        return result if result else {}
-
     def _save_results(self):
-        """Salva todos os resultados."""
+        """Salva todos os resultados e anota attack_surface.json com CVSS."""
         # Resultado completo
         final_file = self.surface_dir / "surface_mapping.json"
         save_json(self.results, str(final_file))
@@ -364,11 +260,53 @@ class SurfaceMapper:
         summary_file = self.surface_dir / "summary.json"
         save_json(self.results["summary"], str(summary_file))
 
-        # Dados para módulos de ataque
+        # ── CVSS scoring ──────────────────────────────────────────────────────
+        from modules.Report import score_bulk
+
+        attack_data = self._export_for_attack_modules()
+
+        # Anota findings de JS com tipo para scoring
+        for finding in self.results.get("js_secrets", {}).get("results", []):
+            for secret in finding.get("secrets", []):
+                secret.setdefault("type", "js_secret")
+
+        # Anota exposições de infra (high-risk ports)
+        for host, data in self.results.get("open_ports", {}).items():
+            if isinstance(data, dict):
+                for port in data.get("high_risk", []):
+                    attack_data.setdefault("scored_findings", []).append(
+                        {"type": "exposed_db", "host": host, "port": port}
+                    )
+
+        # Anota endpoints admin expostos
+        for ep in self._filter_admin_endpoints():
+            attack_data.setdefault("scored_findings", []).append(
+                {"type": "exposed_admin", "url": ep}
+            )
+
+        # Scoring e ordenação
+        findings = attack_data.get("scored_findings", [])
+        if findings:
+            attack_data["scored_findings"] = score_bulk(findings)
+            attack_data["cvss_summary"] = {
+                "CRITICAL": sum(1 for f in findings if f.get("cvss_severity") == "CRITICAL"),
+                "HIGH":     sum(1 for f in findings if f.get("cvss_severity") == "HIGH"),
+                "MEDIUM":   sum(1 for f in findings if f.get("cvss_severity") == "MEDIUM"),
+                "LOW":      sum(1 for f in findings if f.get("cvss_severity") == "LOW"),
+            }
+        # ─────────────────────────────────────────────────────────────────────
+
         attack_file = self.surface_dir / "attack_surface.json"
-        save_json(self._export_for_attack_modules(), str(attack_file))
+        save_json(attack_data, str(attack_file))
 
         print(f"\n📁 Results saved to: {self.surface_dir}/")
+        if attack_data.get("cvss_summary"):
+            s = attack_data["cvss_summary"]
+            print(
+                f"   CVSS: \033[91m{s['CRITICAL']} CRITICAL\033[0m  "
+                f"\033[93m{s['HIGH']} HIGH\033[0m  "
+                f"{s['MEDIUM']} MEDIUM  {s['LOW']} LOW"
+            )
 
     def _export_for_attack_modules(self) -> Dict:
         """Exporta dados para módulos de ataque."""
