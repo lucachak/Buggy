@@ -42,7 +42,7 @@ MODULE_REGISTRY = {
     "report": "Report",
 }
 
-IMPLEMENTED_MODULES = {"recon", "surface"}
+IMPLEMENTED_MODULES = {"recon", "surface", "injection", "xss", "ssrf"}
 RED = "\033[91m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
@@ -135,20 +135,65 @@ def run_surface(target: str, args, output_dir: str) -> None:
     _run_surface(target, args, output_dir)
 
 
+def run_injection(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo InjectionAttk."""
+    from modules.InjectionAttk import run_injection as _run_injection
+
+    print(f"\n{BOLD}[>] Starting Injection Scan on {target}{RESET}\n")
+    _run_injection(target, args, output_dir)
+
+
+def run_xss(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo XSSAndClient."""
+    from modules.XSSAndClient import run_xss as _run_xss
+
+    print(f"\n{BOLD}[>] Starting XSS/Client Scan on {target}{RESET}\n")
+    _run_xss(target, args, output_dir)
+
+
+def run_ssrf(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo ServerSide_SSRF."""
+    from modules.ServerSide_SSRF import run_ssrf as _run_ssrf
+    _run_ssrf(target, args, output_dir)
+
 
 def run_all(target: str, args, output_dir: str) -> None:
-    """Executa pipeline completo: Recon → SurfaceMapping"""
+    """Executa pipeline completo: Recon → Surface → Injection → XSS → SSRF → Report"""
     print(f"\n{BOLD}[>] Starting Full Pipeline on {target}{RESET}\n")
 
     print(f"{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 1/2: Reconnaissance{RESET}")
+    print(f"{CYAN}  PHASE 1/5: Reconnaissance{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_recon(target, args, output_dir)
 
     print(f"\n{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 2/2: Surface Mapping{RESET}")
+    print(f"{CYAN}  PHASE 2/5: Surface Mapping{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_surface(target, args, output_dir)
+
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 3/5: Injection Attacks{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    try:
+        run_injection(target, args, output_dir)
+    except Exception as e:
+        print(f"{YELLOW}  [!] Injection scan error: {e}{RESET}")
+
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 4/5: XSS & Client-Side{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    try:
+        run_xss(target, args, output_dir)
+    except Exception as e:
+        print(f"{YELLOW}  [!] XSS scan error: {e}{RESET}")
+
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 5/5: SSRF & Server-Side{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    try:
+        run_ssrf(target, args, output_dir)
+    except Exception as e:
+        print(f"{YELLOW}  [!] SSRF scan error: {e}{RESET}")
 
     # Gera relatório HTML consolidado
     try:
@@ -162,6 +207,7 @@ def run_all(target: str, args, output_dir: str) -> None:
     print(f"{GREEN}  ✅ Full Pipeline Complete!{RESET}")
     print(f"{GREEN}  Output: {output_dir}{RESET}")
     print(f"{GREEN}{'='*60}{RESET}")
+
 
 
 def run_watch(target: str, args, output_dir: str) -> None:
@@ -208,10 +254,13 @@ def run_watch(target: str, args, output_dir: str) -> None:
 
 
 MODULE_RUNNERS = {
-    "recon":   lambda t, a, o: run_recon(t, a, o),
-    "surface": lambda t, a, o: run_surface(t, a, o),
-    "all":     lambda t, a, o: run_all(t, a, o),
-    "watch":   lambda t, a, o: run_watch(t, a, o),
+    "recon":     lambda t, a, o: run_recon(t, a, o),
+    "surface":   lambda t, a, o: run_surface(t, a, o),
+    "injection": lambda t, a, o: run_injection(t, a, o),
+    "xss":       lambda t, a, o: run_xss(t, a, o),
+    "ssrf":      lambda t, a, o: run_ssrf(t, a, o),
+    "all":       lambda t, a, o: run_all(t, a, o),
+    "watch":     lambda t, a, o: run_watch(t, a, o),
 }
 
 
@@ -259,6 +308,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--skip-deps", action="store_true", help="Skip dependency check")
     parser.add_argument("--no-banner", action="store_true", help="Suppress ASCII banner")
+    parser.add_argument(
+        "--oob-host",
+        default="",
+        metavar="HOST",
+        help="OOB/callback host for blind SSRF detection (e.g. your.burpcollaborator.net)",
+    )
 
     return parser
 

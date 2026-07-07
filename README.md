@@ -176,7 +176,7 @@ Buggy/
 │   ├── AutheAndAutho/
 │   ├── BusinessLogic/
 │   ├── InjectionAttk/
-│   ├── ServerSide(SSRF)/
+│   ├── ServerSide_SSRF/
 │   ├── XSSAndClient/
 │   └── Report/
 └── tests/
