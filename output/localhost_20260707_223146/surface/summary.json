@@ -1,0 +1,30 @@
+{
+  "target": "http://localhost:8000",
+  "timestamp": 1783474306.6359434,
+  "attack_surface": {
+    "total_endpoints": 0,
+    "total_forms": 0,
+    "total_apis": 0,
+    "js_secrets_found": 0,
+    "open_ports_count": 0
+  },
+  "technologies": {
+    "cms": [],
+    "waf": false,
+    "waf_type": null,
+    "frameworks": [],
+    "servers": []
+  },
+  "high_value_targets": {
+    "admin_panels": [],
+    "api_specs": [],
+    "graphql": [],
+    "exposed_dbs": []
+  },
+  "risk_indicators": {
+    "waf_present": false,
+    "exposed_admin": false,
+    "exposed_databases": false,
+    "js_secrets_leaked": false
+  }
+}

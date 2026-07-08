@@ -1,0 +1,110 @@
+{
+  "target": "http://localhost:8000",
+  "timestamp": 1783474306.4853585,
+  "technologies": {
+    "results": [],
+    "summary": {
+      "waf_detected": false,
+      "waf_type": null,
+      "all_waf": [],
+      "all_cms": [],
+      "all_frameworks": [],
+      "all_servers": [],
+      "total_urls": 0
+    }
+  },
+  "endpoints": {
+    "endpoints": [],
+    "total_discovered": 0,
+    "categorized": {
+      "admin_panels": [],
+      "api_endpoints": [],
+      "backup_files": [],
+      "config_files": [],
+      "login_pages": [],
+      "uploads": [],
+      "debug": []
+    },
+    "interesting": [],
+    "discovery_sources": []
+  },
+  "js_secrets": {
+    "results": [],
+    "summary": {
+      "total_files": 0,
+      "total_secrets": 0,
+      "high_severity": 0
+    }
+  },
+  "forms": {
+    "total_forms": 0,
+    "forms": [],
+    "categorized": {
+      "login_forms": [],
+      "search_forms": [],
+      "contact_forms": [],
+      "upload_forms": [],
+      "registration_forms": [],
+      "payment_forms": [],
+      "other": []
+    },
+    "high_value_targets": [],
+    "injection_points": [],
+    "summary": {
+      "total_forms": 0,
+      "total_injection_points": 0,
+      "forms_by_risk": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0
+      },
+      "csrf_protection": 0,
+      "upload_forms": 0
+    }
+  },
+  "apis": {
+    "results": [],
+    "openapi_specs": [],
+    "graphqls": [],
+    "rest_apis": [],
+    "total_apis": 0
+  },
+  "open_ports": {
+    "localhost": {
+      "open_ports": [],
+      "services": {},
+      "high_risk": []
+    }
+  },
+  "summary": {
+    "target": "http://localhost:8000",
+    "timestamp": 1783474306.6359434,
+    "attack_surface": {
+      "total_endpoints": 0,
+      "total_forms": 0,
+      "total_apis": 0,
+      "js_secrets_found": 0,
+      "open_ports_count": 0
+    },
+    "technologies": {
+      "cms": [],
+      "waf": false,
+      "waf_type": null,
+      "frameworks": [],
+      "servers": []
+    },
+    "high_value_targets": {
+      "admin_panels": [],
+      "api_specs": [],
+      "graphql": [],
+      "exposed_dbs": []
+    },
+    "risk_indicators": {
+      "waf_present": false,
+      "exposed_admin": false,
+      "exposed_databases": false,
+      "js_secrets_leaked": false
+    }
+  }
+}

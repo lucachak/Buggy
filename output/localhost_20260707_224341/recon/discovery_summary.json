@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "tool": "Buggy",
+    "target": "http://localhost:8000",
+    "domain": "localhost",
+    "timestamp": "20260707_224341",
+    "report_json": "output/localhost_20260707_224341/reports/localhost_recon_20260707_224341.json",
+    "report_txt": "output/localhost_20260707_224341/reports/localhost_recon_20260707_224341.txt"
+  },
+  "subdomains": [
+    "localhost"
+  ],
+  "live_ips": [
+    "localhost"
+  ],
+  "resolved_ips": [
+    "localhost"
+  ],
+  "origin_ips": [],
+  "discovered_paths": []
+}

@@ -7,88 +7,51 @@ CSRF (ausência de token), e Open Redirect.
 from __future__ import annotations
 
 import json
-import re
 import ssl
-import time
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
+from urllib.parse import urlparse, parse_qs, urlencode
 
 from . import payloads as P
-
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; Buggy/1.0)", "Accept": "*/*"}
-TIMEOUT = 10
-
-SSL_CTX = ssl.create_default_context()
-SSL_CTX.check_hostname = False
-SSL_CTX.verify_mode    = ssl.CERT_NONE
-
+from modules.utils.http_client import HttpClient
+from modules.utils.logger import buggy_logger
 
 # ── HTTP helpers ──────────────────────────────────────────────────────────────
 
-def _get(url: str, allow_redirects: bool = True, timeout: int = TIMEOUT) -> tuple[int, str, str]:
-    """GET → (status, body, final_url)."""
-    try:
-        req  = Request(url, headers=HEADERS)
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
-        body = resp.read(256 * 1024).decode("utf-8", errors="ignore")
-        return resp.status, body, resp.url
-    except HTTPError as e:
-        body = e.read(16 * 1024).decode("utf-8", errors="ignore") if e.fp else ""
-        return e.code, body, url
-    except Exception:
-        return 0, "", url
-
-
-def _post_form(url: str, data: dict, timeout: int = TIMEOUT) -> tuple[int, str]:
-    try:
-        encoded = urllib.parse.urlencode(data).encode()
-        req = Request(url, data=encoded, headers={
-            **HEADERS, "Content-Type": "application/x-www-form-urlencoded"
-        })
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
-        body = resp.read(256 * 1024).decode("utf-8", errors="ignore")
-        return resp.status, body
-    except HTTPError as e:
-        body = e.read(16 * 1024).decode("utf-8", errors="ignore") if e.fp else ""
-        return e.code, body
-    except Exception:
-        return 0, ""
-
-
-def _inject_param(url: str, param: str, value: str) -> str:
-    parsed = urllib.parse.urlparse(url)
-    qs     = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
+def _inject_get_param(url: str, param: str, value: str) -> str:
+    parsed = urlparse(url)
+    qs = parse_qs(parsed.query, keep_blank_values=True)
     qs[param] = [value]
-    return parsed._replace(query=urllib.parse.urlencode(qs, doseq=True)).geturl()
+    new_qs = urlencode(qs, doseq=True)
+    return parsed._replace(query=new_qs).geturl()
 
 
 # ── Reflected XSS ─────────────────────────────────────────────────────────────
 
-def _test_reflected_xss(url: str, param: str) -> dict | None:
+def _test_xss_get(client: HttpClient, url: str, param: str) -> dict | None:
     for payload in P.XSS_REFLECTED[:8]:
-        injected = _inject_param(url, param, payload)
-        _, body, _ = _get(injected)
+        injected_url = _inject_get_param(url, param, payload)
+        resp = client.get(injected_url)
+        
         # Verifica se o canary aparece sem encoding na resposta
-        if P.XSS_CANARY in body and (
-            "<script>" in body.lower() or "onerror=" in body.lower()
-            or "onload=" in body.lower() or "svg" in body.lower()
+        if P.XSS_CANARY in resp.body and (
+            "<script>" in resp.body.lower() or "onerror=" in resp.body.lower()
+            or "onload=" in resp.body.lower() or "svg" in resp.body.lower()
         ):
             return {
                 "type":       "xss_reflected",
-                "url":        injected,
+                "url":        injected_url,
                 "parameter":  param,
                 "payload":    payload,
                 "evidence":   f"Payload reflected unencoded in response",
                 "confidence": "high",
             }
         # Fallback: só canary (possível)
-        if P.XSS_CANARY in body:
+        if P.XSS_CANARY in resp.body:
             return {
                 "type":       "xss_reflected",
-                "url":        injected,
+                "url":        injected_url,
                 "parameter":  param,
                 "payload":    payload,
                 "evidence":   f"Canary '{P.XSS_CANARY}' reflected in response",
@@ -99,7 +62,7 @@ def _test_reflected_xss(url: str, param: str) -> dict | None:
 
 # ── Stored XSS probe ──────────────────────────────────────────────────────────
 
-def _test_stored_xss(form: dict) -> dict | None:
+def _test_stored_xss(client: HttpClient, form: dict) -> dict | None:
     url    = form.get("action", "") or form.get("url", "")
     method = (form.get("method", "GET") or "GET").upper()
     fields = form.get("fields", []) or form.get("inputs", [])
@@ -107,7 +70,6 @@ def _test_stored_xss(form: dict) -> dict | None:
     if not url or not fields:
         return None
 
-    # Submete payload em todos os campos de texto
     data = {}
     for f in fields:
         name = f if isinstance(f, str) else f.get("name", "")
@@ -121,15 +83,18 @@ def _test_stored_xss(form: dict) -> dict | None:
         return None
 
     if method == "POST":
-        status, body = _post_form(url, data)
+        resp = client.post(url, data=data)
+        body = resp.body
     else:
         probe_url = url
         for k, v in data.items():
-            probe_url = _inject_param(probe_url, k, v)
-        _, body, _ = _get(probe_url)
+            probe_url = _inject_get_param(probe_url, k, v)
+        resp = client.get(probe_url)
+        body = resp.body
 
     # Re-lê a mesma URL para ver se o payload persiste
-    _, body2, _ = _get(url)
+    resp2 = client.get(url)
+    body2 = resp2.body
 
     for probe_url_str in [body, body2]:
         if P.XSS_CANARY in probe_url_str:
@@ -147,10 +112,6 @@ def _test_stored_xss(form: dict) -> dict | None:
 # ── DOM XSS heuristic ─────────────────────────────────────────────────────────
 
 def _check_dom_xss(url: str, js_content: str) -> dict | None:
-    """
-    Analisa JS já baixado (do JS analyzer) buscando source→sink.
-    Retorna finding se houver source próximo de sink.
-    """
     found_sources = [s for s in P.DOM_SOURCES if s in js_content]
     found_sinks   = [s for s in P.DOM_SINKS   if s in js_content]
 
@@ -173,7 +134,6 @@ def _check_csrf(form: dict, page_body: str) -> dict | None:
     method = (form.get("method", "GET") or "GET").upper()
     fields = form.get("fields", []) or form.get("inputs", [])
 
-    # Só interessa forms POST
     if method != "POST" or not url:
         return None
 
@@ -183,10 +143,8 @@ def _check_csrf(form: dict, page_body: str) -> dict | None:
         if name:
             field_names.add(name.lower())
 
-    # Verifica ausência de qualquer campo CSRF
     has_token = any(t in field_names for t in P.CSRF_TOKEN_NAMES)
 
-    # Também checa header (mas não temos headers de form no surface)
     if has_token:
         return None
 
@@ -202,47 +160,32 @@ def _check_csrf(form: dict, page_body: str) -> dict | None:
 
 # ── Open Redirect ─────────────────────────────────────────────────────────────
 
-def _test_open_redirect(url: str, param: str) -> dict | None:
+def _test_open_redirect(client: HttpClient, url: str, param: str) -> dict | None:
     for payload in P.REDIRECT_PAYLOADS[:5]:
-        injected = _inject_param(url, param, payload)
+        injected = _inject_get_param(url, param, payload)
         try:
-            # urlopen segue redirects por padrão — verifica URL final
-            req = Request(injected, headers=HEADERS)
-            resp = urlopen(req, timeout=TIMEOUT, context=SSL_CTX)
-            final_url = resp.url
-            resp.close()
-            if "evil.com" in final_url or payload.lstrip("/") in final_url:
+            resp = client.get(injected)
+            if "evil.com" in resp.url or payload.lstrip("/") in resp.url:
                 return {
                     "type":       "open_redirect",
                     "url":        injected,
                     "parameter":  param,
                     "payload":    payload,
-                    "evidence":   f"Redirected to {final_url}",
+                    "evidence":   f"Redirected to {resp.url}",
                     "confidence": "high",
                 }
-        except Exception:
-            pass
-
-        # Checa status 30x sem seguir redirect
-        try:
-            req = Request(injected, headers=HEADERS)
-            import urllib.request
-            old_opener = urllib.request.build_opener(
-                urllib.request.HTTPRedirectHandler()
-            )
         except Exception:
             pass
     return None
 
 
-def _probe_redirect_params(url: str) -> list[dict]:
-    """Detecta parâmetros de redirect na URL e testa todos."""
+def _probe_redirect_params(client: HttpClient, url: str) -> list[dict]:
     findings = []
     parsed = urllib.parse.urlparse(url)
     qs     = urllib.parse.parse_qs(parsed.query)
     for param in qs:
         if param.lower() in P.REDIRECT_PARAMS:
-            r = _test_open_redirect(url, param)
+            r = _test_open_redirect(client, url, param)
             if r:
                 findings.append(r)
     return findings
@@ -281,18 +224,18 @@ class XSSScanner:
                 json.dump(surface, f, indent=2)
 
     def exec(self, threads: int = 20, timeout: float = 10.0):
-        print(f"\n{'='*60}")
-        print(f"  XSSScanner — {self.target}")
-        print(f"{'='*60}\n")
+        buggy_logger.info(f"\n{'='*60}")
+        buggy_logger.info(f"  XSSScanner — {self.target}")
+        buggy_logger.info(f"{'='*60}\n")
 
         surface = self._load_surface()
         if not surface:
-            print("  ⚠️  attack_surface.json não encontrado — rode surface primeiro")
+            buggy_logger.warning("attack_surface.json não encontrado — rode surface primeiro")
             return
 
+        client = HttpClient(timeout=timeout)
         tasks = []
 
-        # Reflected XSS — parâmetros GET
         search_eps = surface.get("injection_targets", {}).get("search_endpoints", [])
         for ep in search_eps[:40]:
             url    = str(ep)
@@ -300,56 +243,41 @@ class XSSScanner:
             qs     = urllib.parse.parse_qs(parsed.query)
             for param in list(qs.keys())[:5]:
                 tasks.append(("reflected", url, param))
-            # Open redirect
             for param in list(qs.keys())[:5]:
                 if param.lower() in P.REDIRECT_PARAMS:
                     tasks.append(("redirect", url, param))
 
-        # Redirect params via login/admin pages
         for ep in surface.get("injection_targets", {}).get("login_pages", [])[:20]:
             tasks.append(("redirect_probe", str(ep)))
 
-        # Stored XSS — forms
         forms = surface.get("injection_targets", {}).get("forms", [])
-        print(f"  [+] {len(forms)} forms | {len(search_eps)} search endpoints")
+        buggy_logger.info(f"  [+] {len(forms)} forms | {len(search_eps)} search endpoints")
         for form in forms[:30]:
             tasks.append(("stored",  form))
             tasks.append(("csrf",    form, ""))
 
-        # DOM XSS — JS results do JS analyzer (surface_mapping.json)
-        sm_file = self.output_dir / "surface" / "surface_mapping.json"
-        if sm_file.exists():
-            with open(sm_file) as f:
-                sm = json.load(f)
-            js_results = sm.get("js_secrets", {}).get("results", [])
-            for jr in js_results[:20]:
-                if jr.get("endpoints"):
-                    # Não temos o conteúdo JS aqui — usa endpoints como heurística
-                    pass
-            # Se temos conteúdo inline… (futuro)
-
-        print(f"  [+] {len(tasks)} tarefas totais\n")
+        buggy_logger.info(f"  [+] {len(tasks)} tarefas totais\n")
 
         def _run_task(task: tuple) -> list[dict]:
             kind = task[0]
             try:
                 if kind == "reflected":
-                    r = _test_reflected_xss(task[1], task[2])
+                    r = _test_xss_get(client, task[1], task[2])
                     return [r] if r else []
                 elif kind == "stored":
-                    r = _test_stored_xss(task[1])
+                    r = _test_stored_xss(client, task[1])
                     return [r] if r else []
                 elif kind == "csrf":
-                    _, body, _ = _get(task[1].get("action", "") or task[1].get("url", ""))
-                    r = _check_csrf(task[1], body)
+                    resp = client.get(task[1].get("action", "") or task[1].get("url", ""))
+                    r = _check_csrf(task[1], resp.body)
                     return [r] if r else []
                 elif kind == "redirect":
-                    r = _test_open_redirect(task[1], task[2])
+                    r = _test_open_redirect(client, task[1], task[2])
                     return [r] if r else []
                 elif kind == "redirect_probe":
-                    return _probe_redirect_params(task[1])
-            except Exception:
-                pass
+                    return _probe_redirect_params(client, task[1])
+            except Exception as e:
+                buggy_logger.debug(f"Error in XSS task {kind}: {e}")
             return []
 
         with ThreadPoolExecutor(max_workers=min(threads, 25)) as ex:
@@ -358,18 +286,18 @@ class XSSScanner:
             for fut in as_completed(futures):
                 self.findings.extend(fut.result())
                 done += 1
-                if done % 15 == 0:
-                    print(f"  ... {done}/{len(tasks)} tasks, {len(self.findings)} findings")
+                if done % 10 == 0:
+                    buggy_logger.info(f"  ... {done}/{len(tasks)} tasks, {len(self.findings)} findings")
 
         self._save()
 
-        print(f"\n{'='*60}")
-        print(f"  ✅ XSS scan complete — {len(self.findings)} findings")
+        buggy_logger.info(f"\n{'='*60}")
+        buggy_logger.info(f"  ✅ XSS scan complete — {len(self.findings)} findings")
         for sev in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
             count = sum(1 for f in self.findings if f.get("cvss_severity") == sev)
             if count:
-                print(f"     {sev}: {count}")
-        print(f"  📁 {self.attack_dir}/findings.json")
-        print(f"{'='*60}")
+                buggy_logger.info(f"     {sev}: {count}")
+        buggy_logger.info(f"  📁 {self.attack_dir}/findings.json")
+        buggy_logger.info(f"{'='*60}")
 
         return self.findings

@@ -14,74 +14,13 @@ import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
-from urllib.error import HTTPError
-from urllib.request import Request, urlopen
 
 from . import payloads as P
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; Buggy/1.0)",
-    "Accept": "*/*",
-}
-JSON_HEADERS = {**HEADERS, "Content-Type": "application/json"}
-XML_HEADERS  = {**HEADERS, "Content-Type": "application/xml"}
-
-SSL_CTX = ssl.create_default_context()
-SSL_CTX.check_hostname = False
-SSL_CTX.verify_mode    = ssl.CERT_NONE
+from modules.utils.http_client import HttpClient
+from modules.utils.logger import buggy_logger
 
 TIMEOUT = 12  # segundos por request normal
 TIME_THRESHOLD = 3.2  # segundos — threshold para time-based SQLi
-
-
-# ── HTTP helpers ──────────────────────────────────────────────────────────────
-
-def _get(url: str, timeout: int = TIMEOUT) -> tuple[int, str, float]:
-    """GET → (status, body, elapsed_s)."""
-    t0 = time.time()
-    try:
-        req = Request(url, headers=HEADERS)
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
-        body = resp.read(512 * 1024).decode("utf-8", errors="ignore")
-        return resp.status, body, time.time() - t0
-    except HTTPError as e:
-        body = e.read(32 * 1024).decode("utf-8", errors="ignore") if e.fp else ""
-        return e.code, body, time.time() - t0
-    except Exception:
-        return 0, "", time.time() - t0
-
-
-def _post_form(url: str, data: dict, timeout: int = TIMEOUT) -> tuple[int, str, float]:
-    """POST form-urlencoded → (status, body, elapsed_s)."""
-    t0 = time.time()
-    try:
-        encoded = urllib.parse.urlencode(data).encode()
-        req = Request(url, data=encoded, headers={
-            **HEADERS, "Content-Type": "application/x-www-form-urlencoded"
-        })
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
-        body = resp.read(512 * 1024).decode("utf-8", errors="ignore")
-        return resp.status, body, time.time() - t0
-    except HTTPError as e:
-        body = e.read(32 * 1024).decode("utf-8", errors="ignore") if e.fp else ""
-        return e.code, body, time.time() - t0
-    except Exception:
-        return 0, "", time.time() - t0
-
-
-def _post_xml(url: str, xml: str, timeout: int = TIMEOUT) -> tuple[int, str, float]:
-    t0 = time.time()
-    try:
-        req = Request(url, data=xml.encode(), headers=XML_HEADERS)
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
-        body = resp.read(512 * 1024).decode("utf-8", errors="ignore")
-        return resp.status, body, time.time() - t0
-    except HTTPError as e:
-        body = e.read(32 * 1024).decode("utf-8", errors="ignore") if e.fp else ""
-        return e.code, body, time.time() - t0
-    except Exception:
-        return 0, "", time.time() - t0
-
 
 def _inject_get_param(url: str, param: str, value: str) -> str:
     """Substitui ou adiciona `param=value` na query string."""
@@ -102,11 +41,11 @@ def _contains_any(text: str, markers: list[str]) -> str | None:
 
 # ── SQLi ──────────────────────────────────────────────────────────────────────
 
-def _test_sqli_error(url: str, param: str, via: str = "GET") -> dict | None:
+def _test_sqli_error(client: HttpClient, url: str, param: str, via: str = "GET") -> dict | None:
     for payload in P.SQLI_ERROR[:10]:   # limite de payloads por param
         injected_url = _inject_get_param(url, param, payload)
-        _, body, _   = _get(injected_url, timeout=TIMEOUT)
-        hit = _contains_any(body, P.SQLI_ERROR_PATTERNS)
+        resp = client.get(injected_url)
+        hit = _contains_any(resp.body, P.SQLI_ERROR_PATTERNS)
         if hit:
             return {
                 "type":       "sqli",
@@ -120,20 +59,21 @@ def _test_sqli_error(url: str, param: str, via: str = "GET") -> dict | None:
     return None
 
 
-def _test_sqli_time(url: str, param: str) -> dict | None:
+def _test_sqli_time(client: HttpClient, url: str, param: str) -> dict | None:
     # Baseline
-    _, _, baseline = _get(url, timeout=TIMEOUT)
+    baseline = client.get(url)
 
     for payload in P.SQLI_TIME[:6]:
         injected_url  = _inject_get_param(url, param, payload)
-        _, _, elapsed = _get(injected_url, timeout=20)
-        if elapsed >= TIME_THRESHOLD and elapsed >= baseline + 2.5:
+        # Using a specialized client config for this if we wanted, but the global handles timeouts
+        resp = client.get(injected_url)
+        if resp.elapsed >= TIME_THRESHOLD and resp.elapsed >= baseline.elapsed + 2.5:
             return {
                 "type":       "sqli_blind",
                 "url":        injected_url,
                 "parameter":  param,
                 "payload":    payload,
-                "evidence":   f"Response delayed {elapsed:.1f}s (baseline {baseline:.1f}s)",
+                "evidence":   f"Response delayed {resp.elapsed:.1f}s (baseline {baseline.elapsed:.1f}s)",
                 "confidence": "medium",
             }
     return None
@@ -141,11 +81,11 @@ def _test_sqli_time(url: str, param: str) -> dict | None:
 
 # ── Command Injection ─────────────────────────────────────────────────────────
 
-def _test_cmdi(url: str, param: str) -> dict | None:
+def _test_cmdi(client: HttpClient, url: str, param: str) -> dict | None:
     for payload in P.CMD_PAYLOADS[:8]:
         injected_url = _inject_get_param(url, param, payload)
-        _, body, _   = _get(injected_url, timeout=TIMEOUT)
-        if P.CANARY in body:
+        resp = client.get(injected_url)
+        if P.CANARY in resp.body:
             return {
                 "type":       "command_injection",
                 "url":        injected_url,
@@ -159,11 +99,11 @@ def _test_cmdi(url: str, param: str) -> dict | None:
 
 # ── SSTI ──────────────────────────────────────────────────────────────────────
 
-def _test_ssti(url: str, param: str) -> dict | None:
+def _test_ssti(client: HttpClient, url: str, param: str) -> dict | None:
     for payload in P.SSTI_PAYLOADS[:6]:
         injected_url = _inject_get_param(url, param, payload)
-        _, body, _   = _get(injected_url, timeout=TIMEOUT)
-        hit = _contains_any(body, P.SSTI_MARKERS)
+        resp = client.get(injected_url)
+        hit = _contains_any(resp.body, P.SSTI_MARKERS)
         if hit:
             return {
                 "type":       "ssti",
@@ -178,10 +118,10 @@ def _test_ssti(url: str, param: str) -> dict | None:
 
 # ── XXE ───────────────────────────────────────────────────────────────────────
 
-def _test_xxe(url: str) -> dict | None:
+def _test_xxe(client: HttpClient, url: str) -> dict | None:
     for xml_payload in P.XXE_PAYLOADS[:3]:
-        _, body, _ = _post_xml(url, xml_payload, timeout=TIMEOUT)
-        hit = _contains_any(body, P.XXE_MARKERS)
+        resp = client.post_xml(url, xml_payload)
+        hit = _contains_any(resp.body, P.XXE_MARKERS)
         if hit:
             return {
                 "type":       "xxe",
@@ -196,7 +136,7 @@ def _test_xxe(url: str) -> dict | None:
 
 # ── Form-based injection ──────────────────────────────────────────────────────
 
-def _test_form(form: dict) -> list[dict]:
+def _test_form(client: HttpClient, form: dict) -> list[dict]:
     """Testa SQLi + SSTI em todos os campos de um form."""
     url    = form.get("action", "") or form.get("url", "")
     method = (form.get("method", "GET") or "GET").upper()
@@ -215,11 +155,11 @@ def _test_form(form: dict) -> list[dict]:
         payload = "'"
         data    = {name: payload}
         if method == "POST":
-            _, body, _ = _post_form(url, data)
+            resp = client.post_form(url, data)
         else:
-            _, body, _ = _get(_inject_get_param(url, name, payload))
+            resp = client.get(_inject_get_param(url, name, payload))
 
-        if _contains_any(body, P.SQLI_ERROR_PATTERNS):
+        if _contains_any(resp.body, P.SQLI_ERROR_PATTERNS):
             findings.append({
                 "type": "sqli", "url": url, "parameter": name,
                 "payload": payload, "evidence": "sql error in response",
@@ -230,10 +170,10 @@ def _test_form(form: dict) -> list[dict]:
         # SSTI
         for pl in P.SSTI_PAYLOADS[:3]:
             if method == "POST":
-                _, body, _ = _post_form(url, {name: pl})
+                resp = client.post_form(url, {name: pl})
             else:
-                _, body, _ = _get(_inject_get_param(url, name, pl))
-            hit = _contains_any(body, P.SSTI_MARKERS)
+                resp = client.get(_inject_get_param(url, name, pl))
+            hit = _contains_any(resp.body, P.SSTI_MARKERS)
             if hit:
                 findings.append({
                     "type": "ssti", "url": url, "parameter": name,
@@ -299,20 +239,21 @@ class InjectionScanner:
         return targets[:60]   # cap de segurança
 
     def exec(self, threads: int = 20, timeout: float = 10.0):
-        print(f"\n{'='*60}")
-        print(f"  InjectionScanner — {self.target}")
-        print(f"{'='*60}\n")
+        buggy_logger.info(f"\n{'='*60}")
+        buggy_logger.info(f"  InjectionScanner — {self.target}")
+        buggy_logger.info(f"{'='*60}\n")
 
         surface = self._load_surface()
         if not surface:
-            print("  ⚠️  attack_surface.json não encontrado — rode surface primeiro")
+            buggy_logger.warning("  ⚠️  attack_surface.json não encontrado — rode surface primeiro")
             return
 
+        client = HttpClient(timeout=timeout)
         tasks: list[tuple] = []   # (type, *args)
 
         # Coleta alvos de parâmetros GET
         targets = self._collect_targets(surface)
-        print(f"  [+] {len(targets)} parâmetros GET para testar")
+        buggy_logger.info(f"  [+] {len(targets)} parâmetros GET para testar")
 
         for url, param in targets:
             tasks.append(("sqli_error", url, param))
@@ -322,7 +263,7 @@ class InjectionScanner:
 
         # Forms
         forms = surface.get("injection_targets", {}).get("forms", [])
-        print(f"  [+] {len(forms)} formulários para testar")
+        buggy_logger.info(f"  [+] {len(forms)} formulários para testar")
         for form in forms[:30]:
             tasks.append(("form", form))
 
@@ -332,30 +273,30 @@ class InjectionScanner:
             if url:
                 tasks.append(("xxe", url))
 
-        print(f"  [+] {len(tasks)} tarefas totais\n")
+        buggy_logger.info(f"  [+] {len(tasks)} tarefas totais\n")
 
         def _run_task(task: tuple) -> list[dict]:
             kind = task[0]
             try:
                 if kind == "sqli_error":
-                    r = _test_sqli_error(task[1], task[2])
+                    r = _test_sqli_error(client, task[1], task[2])
                     return [r] if r else []
                 elif kind == "sqli_time":
-                    r = _test_sqli_time(task[1], task[2])
+                    r = _test_sqli_time(client, task[1], task[2])
                     return [r] if r else []
                 elif kind == "cmdi":
-                    r = _test_cmdi(task[1], task[2])
+                    r = _test_cmdi(client, task[1], task[2])
                     return [r] if r else []
                 elif kind == "ssti":
-                    r = _test_ssti(task[1], task[2])
+                    r = _test_ssti(client, task[1], task[2])
                     return [r] if r else []
                 elif kind == "form":
-                    return _test_form(task[1])
+                    return _test_form(client, task[1])
                 elif kind == "xxe":
-                    r = _test_xxe(task[1])
+                    r = _test_xxe(client, task[1])
                     return [r] if r else []
-            except Exception:
-                pass
+            except Exception as e:
+                buggy_logger.debug(f"Error in Injection task {kind} for {task[1]}: {e}")
             return []
 
         with ThreadPoolExecutor(max_workers=min(threads, 30)) as ex:
@@ -366,17 +307,17 @@ class InjectionScanner:
                 self.findings.extend(results)
                 done += 1
                 if done % 20 == 0:
-                    print(f"  ... {done}/{len(tasks)} tasks, {len(self.findings)} findings")
+                    buggy_logger.info(f"  ... {done}/{len(tasks)} tasks, {len(self.findings)} findings")
 
         self._save()
 
-        print(f"\n{'='*60}")
-        print(f"  ✅ Injection scan complete — {len(self.findings)} findings")
+        buggy_logger.info(f"\n{'='*60}")
+        buggy_logger.info(f"  ✅ Injection scan complete — {len(self.findings)} findings")
         for sev in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
             count = sum(1 for f in self.findings if f.get("cvss_severity") == sev)
             if count:
-                print(f"     {sev}: {count}")
-        print(f"  📁 {self.attack_dir}/findings.json")
-        print(f"{'='*60}")
+                buggy_logger.info(f"     {sev}: {count}")
+        buggy_logger.info(f"  📁 {self.attack_dir}/findings.json")
+        buggy_logger.info(f"{'='*60}")
 
         return self.findings

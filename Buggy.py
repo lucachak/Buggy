@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import sys
 import time
+import urllib.parse
 from datetime import datetime
 from pathlib import Path
 
@@ -42,7 +43,7 @@ MODULE_REGISTRY = {
     "report": "Report",
 }
 
-IMPLEMENTED_MODULES = {"recon", "surface", "injection", "xss", "ssrf"}
+IMPLEMENTED_MODULES = {"recon", "surface", "infra", "auth", "business", "injection", "xss", "ssrf"}
 RED = "\033[91m"
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
@@ -157,22 +158,67 @@ def run_ssrf(target: str, args, output_dir: str) -> None:
     _run_ssrf(target, args, output_dir)
 
 
+def run_infra(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo Infra."""
+    from modules.Infra import run_infra as _run_infra
+    print(f"\n{BOLD}[>] Starting Infra Scan on {target}{RESET}\n")
+    _run_infra(target, args, output_dir)
+
+
+def run_auth(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo AutheAndAutho."""
+    from modules.AutheAndAutho import run_auth as _run_auth
+    print(f"\n{BOLD}[>] Starting Auth Scan on {target}{RESET}\n")
+    _run_auth(target, args, output_dir)
+
+
+def run_business(target: str, args, output_dir: str) -> None:
+    """Wrapper para o módulo BusinessLogic."""
+    from modules.BusinessLogic import run_business as _run_business
+    print(f"\n{BOLD}[>] Starting Business Logic Scan on {target}{RESET}\n")
+    _run_business(target, args, output_dir)
+
+
 def run_all(target: str, args, output_dir: str) -> None:
-    """Executa pipeline completo: Recon → Surface → Injection → XSS → SSRF → Report"""
+    """Executa pipeline completo: Recon → Surface → Infra → Auth → Business → Injection → XSS → SSRF → Report"""
     print(f"\n{BOLD}[>] Starting Full Pipeline on {target}{RESET}\n")
 
     print(f"{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 1/5: Reconnaissance{RESET}")
+    print(f"{CYAN}  PHASE 1/8: Reconnaissance{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_recon(target, args, output_dir)
 
     print(f"\n{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 2/5: Surface Mapping{RESET}")
+    print(f"{CYAN}  PHASE 2/8: Surface Mapping{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     run_surface(target, args, output_dir)
 
     print(f"\n{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 3/5: Injection Attacks{RESET}")
+    print(f"{CYAN}  PHASE 3/8: Infrastructure Security{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    try:
+        run_infra(target, args, output_dir)
+    except Exception as e:
+        print(f"{YELLOW}  [!] Infra scan error: {e}{RESET}")
+
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 4/8: Authentication & Authorization{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    try:
+        run_auth(target, args, output_dir)
+    except Exception as e:
+        print(f"{YELLOW}  [!] Auth scan error: {e}{RESET}")
+
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 5/8: Business Logic{RESET}")
+    print(f"{CYAN}{'='*60}{RESET}")
+    try:
+        run_business(target, args, output_dir)
+    except Exception as e:
+        print(f"{YELLOW}  [!] Business Logic scan error: {e}{RESET}")
+
+    print(f"\n{CYAN}{'='*60}{RESET}")
+    print(f"{CYAN}  PHASE 6/8: Injection Attacks{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     try:
         run_injection(target, args, output_dir)
@@ -180,7 +226,7 @@ def run_all(target: str, args, output_dir: str) -> None:
         print(f"{YELLOW}  [!] Injection scan error: {e}{RESET}")
 
     print(f"\n{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 4/5: XSS & Client-Side{RESET}")
+    print(f"{CYAN}  PHASE 7/8: XSS & Client-Side{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     try:
         run_xss(target, args, output_dir)
@@ -188,7 +234,7 @@ def run_all(target: str, args, output_dir: str) -> None:
         print(f"{YELLOW}  [!] XSS scan error: {e}{RESET}")
 
     print(f"\n{CYAN}{'='*60}{RESET}")
-    print(f"{CYAN}  PHASE 5/5: SSRF & Server-Side{RESET}")
+    print(f"{CYAN}  PHASE 8/8: SSRF & Server-Side{RESET}")
     print(f"{CYAN}{'='*60}{RESET}")
     try:
         run_ssrf(target, args, output_dir)
@@ -256,6 +302,9 @@ def run_watch(target: str, args, output_dir: str) -> None:
 MODULE_RUNNERS = {
     "recon":     lambda t, a, o: run_recon(t, a, o),
     "surface":   lambda t, a, o: run_surface(t, a, o),
+    "infra":     lambda t, a, o: run_infra(t, a, o),
+    "auth":      lambda t, a, o: run_auth(t, a, o),
+    "business":  lambda t, a, o: run_business(t, a, o),
     "injection": lambda t, a, o: run_injection(t, a, o),
     "xss":       lambda t, a, o: run_xss(t, a, o),
     "ssrf":      lambda t, a, o: run_ssrf(t, a, o),
@@ -325,6 +374,14 @@ BOLD_CYAN = "\033[1m\033[96m"
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+    
+    if not args.target.startswith("http://") and not args.target.startswith("https://"):
+        args.target = "http://" + args.target
+
+    parsed_target = urllib.parse.urlparse(args.target)
+    if not parsed_target.hostname:
+        print(f"{RED}[!] Invalid target format. Example: http://example.com{RESET}")
+        sys.exit(1)
 
     if not args.no_banner:
         print(banner)
@@ -357,6 +414,12 @@ def main() -> None:
         os.makedirs(output_dir, exist_ok=True)
     else:
         output_dir = create_output_structure(args.target)
+        
+    try:
+        from modules.utils.logger import buggy_logger
+        buggy_logger.setup_file_logging(output_dir)
+    except ImportError:
+        pass # Ignora se utils não for encontrado
 
     runner(args.target, args, output_dir)
 
