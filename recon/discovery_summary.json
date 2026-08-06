@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "tool": "Buggy",
+    "target": "http://127.0.0.1:8000/",
+    "domain": "127.0.0.1",
+    "timestamp": "20260806_170405",
+    "report_json": "/tmp/tmpl6y4k7v6/127.0.0.1_recon_20260806_170405.json",
+    "report_txt": "/tmp/tmpl6y4k7v6/127.0.0.1_recon_20260806_170405.txt"
+  },
+  "subdomains": [
+    "sub.example.com"
+  ],
+  "live_ips": [],
+  "resolved_ips": [],
+  "origin_ips": [],
+  "discovered_paths": [
+    "http://target.com/admin"
+  ]
+}

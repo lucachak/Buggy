@@ -82,9 +82,13 @@ def _test_sqli_time(client: HttpClient, url: str, param: str) -> dict | None:
 # ── Command Injection ─────────────────────────────────────────────────────────
 
 def _test_cmdi(client: HttpClient, url: str, param: str) -> dict | None:
-    for payload in P.CMD_PAYLOADS[:8]:
+    baseline = client.get(url)
+    
+    for payload in P.CMD_PAYLOADS[:12]: # Increased limit to include sleep payloads
         injected_url = _inject_get_param(url, param, payload)
         resp = client.get(injected_url)
+        
+        # Reflected
         if P.CANARY in resp.body:
             return {
                 "type":       "command_injection",
@@ -94,6 +98,18 @@ def _test_cmdi(client: HttpClient, url: str, param: str) -> dict | None:
                 "evidence":   P.CANARY,
                 "confidence": "high",
             }
+            
+        # Blind (Time-based)
+        if "sleep" in payload or "ping" in payload:
+            if resp.elapsed >= 4.5 and resp.elapsed >= baseline.elapsed + 4.5:
+                 return {
+                    "type":       "command_injection_blind",
+                    "url":        injected_url,
+                    "parameter":  param,
+                    "payload":    payload,
+                    "evidence":   f"Response delayed {resp.elapsed:.1f}s (baseline {baseline.elapsed:.1f}s)",
+                    "confidence": "medium",
+                }
     return None
 
 

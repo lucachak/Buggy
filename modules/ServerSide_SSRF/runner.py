@@ -67,7 +67,7 @@ def _test_ssrf_form(client: HttpClient, form: dict) -> dict | None:
         name = f if isinstance(f, str) else f.get("name", "")
         if not name or name.lower() not in P.SSRF_PARAMS:
             continue
-        for target in P.SSRF_TARGETS[:8]:
+        for target in P.SSRF_TARGETS[:16]:
             resp = client.post(url, {name: target})
             if resp and any(m.lower() in resp.body.lower() for m in P.SSRF_MARKERS):
                 return {

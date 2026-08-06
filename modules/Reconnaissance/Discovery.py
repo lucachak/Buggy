@@ -6,12 +6,25 @@ import subprocess
 import sys
 import time
 from datetime import datetime
+from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 
 def _sanitize_domain(raw: str) -> str:
     """Strip to safe characters only — no shell-special chars can survive."""
     return re.sub(r"[^a-zA-Z0-9.-]", "", raw)
+
+
+def _shodan_available() -> tuple[bool, str]:
+    """Check if Shodan CLI is installed and has an API key configured."""
+    if shutil.which("shodan") is None:
+        return False, "shodan CLI not found in PATH"
+    # Check for API key: env var or config file
+    env_key = os.environ.get("SHODAN_API_KEY", "").strip()
+    api_key_file = Path.home() / ".shodan" / "api_key"
+    if not env_key and not api_key_file.exists():
+        return False, "no API key (set SHODAN_API_KEY or run 'shodan init <KEY>')"
+    return True, "ok"
 
 
 # ── Safe command builders ──────────────────────────────────────────────────────
@@ -59,14 +72,18 @@ def _build_dns_resolution_cmds(subs_dir: str, dns_dir: str) -> list:
     ]
 
 
-def _build_origin_ip_cmds(domain: str) -> list:
-    return [
+def _build_origin_ip_cmds(domain: str, include_shodan: bool = True) -> list:
+    cmds = [
         (False, ["curl", "-s",
                  f"https://securitytrails.com/domain/{domain}/history/a"]),
-        (False, ["shodan", "search",
-                 f"ssl.cert.subject.cn:{domain} http.title:{domain}"]),
-        (False, ["shodan", "search", f"http.html:{domain}", "-org:Cloudflare"]),
     ]
+    if include_shodan:
+        cmds.extend([
+            (False, ["shodan", "search",
+                     f"ssl.cert.subject.cn:{domain} http.title:{domain}"]),
+            (False, ["shodan", "search", f"http.html:{domain}", "-org:Cloudflare"]),
+        ])
+    return cmds
 
 
 class Discovery:
@@ -286,8 +303,14 @@ class Discovery:
             self.__pages = []
             return
 
+        # ── Shodan availability check ─────────────────────────────────────
+        shodan_ok, shodan_reason = _shodan_available()
+        if not shodan_ok:
+            print(f"\033[93m  [i] Shodan not available — {shodan_reason}. Skipping Shodan queries.\033[0m")
+        # ──────────────────────────────────────────────────────────────────
+
         origin_ips: list[str] = []
-        cmds = _build_origin_ip_cmds(domain)
+        cmds = _build_origin_ip_cmds(domain, include_shodan=shodan_ok)
 
         for _, cmd in cmds:
             result = self._run_cmd(cmd)

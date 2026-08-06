@@ -72,8 +72,9 @@ def _test_mass_assignment(client: HttpClient, form: dict) -> list[dict]:
     # Constrói o corpo original falso com values 'buggy_test'
     data = {f: "buggy_test" for f in field_names}
     
-    # Envia sem mass assignment
-    base_resp = client.post_form(url, data)
+    # Envia sem mass assignment (form and json)
+    base_resp_form = client.post_form(url, data)
+    base_resp_json = client.post_json(url, data)
     
     # Testa cada parâmetro de mass assignment
     for m_param in P.MASS_ASSIGNMENT_PARAMS:
@@ -81,22 +82,32 @@ def _test_mass_assignment(client: HttpClient, form: dict) -> list[dict]:
             test_data = data.copy()
             test_data[m_param] = m_val
             
-            resp = client.post_form(url, test_data)
-            
-            # Se a resposta for um 200 e for diferente do base (ex: uma msg de "Profile updated" q nao deu no primeiro)
-            # Mas na vdd, test_data só mudou adicionando o campo admin. Se der 200 e base der 200
-            # E os tamanhos divergirem bem, pode indicar q o server processou o campo extra.
-            if resp.status == 200 and base_resp.status == 200:
-                if abs(len(resp.body) - len(base_resp.body)) > 150:
+            # Test Form-urlencoded
+            resp_form = client.post_form(url, test_data)
+            if resp_form.status == 200 and base_resp_form.status == 200:
+                if abs(len(resp_form.body) - len(base_resp_form.body)) > 150:
                     findings.append({
                         "type": "potential_mass_assignment",
                         "url": url,
                         "parameter": m_param,
                         "payload": m_val,
-                        "evidence": f"Response length changed significantly when injecting {m_param}={m_val}",
+                        "evidence": f"Response length changed significantly when injecting {m_param}={m_val} (Form URL-Encoded)",
                         "confidence": "low",
                     })
-                    # Quebra pra não testar todo o payload space se ja achamos indicio
+                    break
+                    
+            # Test JSON (API)
+            resp_json = client.post_json(url, test_data)
+            if resp_json.status == 200 and base_resp_json.status == 200:
+                if abs(len(resp_json.body) - len(base_resp_json.body)) > 150:
+                    findings.append({
+                        "type": "potential_mass_assignment_api",
+                        "url": url,
+                        "parameter": m_param,
+                        "payload": m_val,
+                        "evidence": f"Response length changed significantly when injecting {m_param}={m_val} (JSON)",
+                        "confidence": "low",
+                    })
                     break
     
     return findings

@@ -17,29 +17,49 @@ from . import payloads as P
 from modules.utils.http_client import HttpClient
 from modules.utils.logger import buggy_logger
 
-def _test_idor(client: HttpClient, url: str, param: str, orig_val: str) -> dict | None:
+def _test_idor(client: HttpClient, url: str, param: str, orig_val: str) -> list[dict]:
+    findings = []
     # Baseline
     baseline = client.get(url)
+    if baseline.status != 200:
+        return findings
     
-    # Inject
     parsed = urllib.parse.urlparse(url)
     qs = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
-    qs[param] = [P.IDOR_TEST_VALUE]
-    injected_url = parsed._replace(query=urllib.parse.urlencode(qs, doseq=True)).geturl()
     
-    test = client.get(injected_url)
+    # 1. Standard Replacement
+    qs_standard = qs.copy()
+    qs_standard[param] = [P.IDOR_TEST_VALUE]
+    url_standard = parsed._replace(query=urllib.parse.urlencode(qs_standard, doseq=True)).geturl()
+    test_standard = client.get(url_standard)
     
-    if test.status == 200 and baseline.status == 200:
-        if abs(len(test.body) - len(baseline.body)) > 100:
-            return {
-                "type": "potential_idor",
-                "url": injected_url,
-                "parameter": param,
-                "payload": P.IDOR_TEST_VALUE,
-                "evidence": f"Status 200. Response length changed from {len(baseline.body)} to {len(test.body)}",
-                "confidence": "low",
-            }
-    return None
+    if test_standard.status == 200 and abs(len(test_standard.body) - len(baseline.body)) > 100:
+        findings.append({
+            "type": "potential_idor",
+            "url": url_standard,
+            "parameter": param,
+            "payload": P.IDOR_TEST_VALUE,
+            "evidence": f"Status 200. Response length changed from {len(baseline.body)} to {len(test_standard.body)}",
+            "confidence": "low",
+        })
+        
+    # 2. Array Bypass (HPP)
+    qs_array = qs.copy()
+    qs_array[param] = [orig_val, P.IDOR_ARRAY_BYPASS_VALUE]
+    url_array = parsed._replace(query=urllib.parse.urlencode(qs_array, doseq=True)).geturl()
+    test_array = client.get(url_array)
+    
+    if test_array.status == 200 and abs(len(test_array.body) - len(baseline.body)) > 100:
+        findings.append({
+            "type": "potential_idor_array_bypass",
+            "url": url_array,
+            "parameter": param,
+            "payload": f"{orig_val}&{param}={P.IDOR_ARRAY_BYPASS_VALUE}",
+            "evidence": f"Status 200. Response length changed from {len(baseline.body)} to {len(test_array.body)} via HPP",
+            "confidence": "low",
+        })
+        
+    return findings
 
 
 def _check_cookies_and_ratelimit(client: HttpClient, url: str, is_login: bool = False) -> list[dict]:
@@ -72,7 +92,7 @@ def _check_cookies_and_ratelimit(client: HttpClient, url: str, is_login: bool = 
 
     # Check rate limit on login
     if is_login:
-        has_rl = any(rl in headers for rl in P.RATE_LIMIT_HEADERS)
+        has_rl = any(rl in resp.headers for rl in P.RATE_LIMIT_HEADERS)
         if not has_rl:
             findings.append({
                 "type": "missing_rate_limit",
@@ -83,6 +103,36 @@ def _check_cookies_and_ratelimit(client: HttpClient, url: str, is_login: bool = 
                 "confidence": "low",
             })
             
+    # Check for JWT exposure in headers or cookies and inspect for sensitive info
+    import base64
+    def _inspect_jwt(token: str, source: str):
+        if token.startswith("eyJ") and token.count(".") == 2:
+            try:
+                payload = token.split(".")[1]
+                # Pad payload for base64 decoding
+                payload += "=" * ((4 - len(payload) % 4) % 4)
+                decoded = base64.b64decode(payload).decode("utf-8")
+                
+                # Check for sensitive claims
+                sensitive_claims = ["admin", "role", "email", "password", "secret", "uid"]
+                exposed = [c for c in sensitive_claims if f'"{c}"' in decoded.lower()]
+                if exposed:
+                    findings.append({
+                        "type": "jwt_sensitive_data_exposure",
+                        "url": url,
+                        "parameter": source,
+                        "payload": "N/A",
+                        "evidence": f"JWT payload exposes sensitive claims: {exposed}",
+                        "confidence": "medium",
+                    })
+            except Exception:
+                pass
+
+    _inspect_jwt(set_cookie, "Set-Cookie")
+    for k, v in resp.headers.items():
+        if "authorization" in k.lower():
+            _inspect_jwt(v, "Authorization Header")
+
     return findings
 
 
@@ -158,8 +208,7 @@ class AuthScanner:
             kind = task[0]
             try:
                 if kind == "idor":
-                    r = _test_idor(client, task[1], task[2], task[3])
-                    return [r] if r else []
+                    return _test_idor(client, task[1], task[2], task[3])
                 elif kind == "cookies":
                     return _check_cookies_and_ratelimit(client, task[1], task[2])
             except Exception as e:
@@ -175,6 +224,17 @@ class AuthScanner:
                 if done % 10 == 0:
                     buggy_logger.info(f"  ... {done}/{len(tasks)} tasks, {len(self.findings)} findings")
 
+        # ── SSO Brute Scan ────────────────────────────────────────────────
+        try:
+            from .sso_scanner import SSOScanner
+            buggy_logger.info(f"\n  [+] Running SSO brute scanner...")
+            sso = SSOScanner(target=self.target, client=client)
+            sso_findings = sso.exec(threads=min(threads, 10))
+            self.findings.extend(sso_findings)
+        except Exception as e:
+            buggy_logger.warning(f"SSO scan error: {e}")
+        # ──────────────────────────────────────────────────────────────────
+
         self._save()
 
         buggy_logger.info(f"\n{'='*60}")
@@ -187,3 +247,4 @@ class AuthScanner:
         buggy_logger.info(f"{'='*60}")
 
         return self.findings
+
