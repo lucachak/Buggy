@@ -140,7 +140,7 @@ class BusinessLogicScanner:
         if surface_file.exists():
             with open(surface_file) as f:
                 surface = json.load(f)
-            surface.setdefault("business_findings", []).extend(self.findings)
+            surface["business_findings"] = self.findings
             with open(surface_file, "w") as f:
                 json.dump(surface, f, indent=2)
 
@@ -162,7 +162,7 @@ class BusinessLogicScanner:
         for ep in search_endpoints[:30]:
             url = str(ep)
             parsed = urllib.parse.urlparse(url)
-            qs = urllib.parse.parse_qs(parsed.query)
+            qs = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
             for param in qs.keys():
                 tasks.append(("hpp", url, param))
 

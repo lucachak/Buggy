@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}Buggy{% endblock %}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header><a href="/">🐛 Buggy</a><span>Authorized Security Workspace</span></header>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>

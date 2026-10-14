@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "ports": null,
+    "target": "http://127.0.0.1:3000",
+    "total_found": 15
+  },
+  "results": [
+    {
+      "url": "http://127.0.0.1:3000/robots.txt",
+      "status": 200,
+      "size": 28,
+      "elapsed_ms": 2.698,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/sitemap.xml",
+      "status": 200,
+      "size": 9393,
+      "elapsed_ms": 394.965,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/login",
+      "status": 200,
+      "size": 9393,
+      "elapsed_ms": 715.903,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/register",
+      "status": 200,
+      "size": 9393,
+      "elapsed_ms": 1056.305,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/administration",
+      "status": 200,
+      "size": 9393,
+      "elapsed_ms": 1005.129,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/api",
+      "status": 500,
+      "size": 2408,
+      "elapsed_ms": 1009.197,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/api/Challenges",
+      "status": 200,
+      "size": 67664,
+      "elapsed_ms": 1087.668,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/rest",
+      "status": 500,
+      "size": 2410,
+      "elapsed_ms": 979.319,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/rest/products/search",
+      "status": 200,
+      "size": 16563,
+      "elapsed_ms": 1000.925,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/ftp",
+      "status": 200,
+      "size": 11307,
+      "elapsed_ms": 877.174,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/metrics",
+      "status": 200,
+      "size": 26124,
+      "elapsed_ms": 971.81,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/swagger.json",
+      "status": 200,
+      "size": 9393,
+      "elapsed_ms": 976.35,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/graphql",
+      "status": 200,
+      "size": 9393,
+      "elapsed_ms": 987.817,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/main.js",
+      "status": 200,
+      "size": 1207722,
+      "elapsed_ms": 997.85,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://127.0.0.1:3000/styles.css",
+      "status": 200,
+      "size": 151316,
+      "elapsed_ms": 971.19,
+      "is_dir": false,
+      "depth": 0
+    }
+  ]
+}

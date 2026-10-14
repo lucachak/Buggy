@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "tool": "Buggy",
+    "target": "http://localhost:8000/",
+    "domain": "localhost",
+    "timestamp": "20260806_185731"
+  },
+  "results": {
+    "target": "http://localhost:8000/",
+    "domain": "localhost",
+    "subdomains": [
+      "localhost"
+    ],
+    "live_ips": [
+      "localhost"
+    ],
+    "discovered_paths": [
+      "http://localhost:8000/admin/",
+      "http://localhost:8000/api/"
+    ]
+  }
+}

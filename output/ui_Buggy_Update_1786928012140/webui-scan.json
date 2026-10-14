@@ -1,0 +1,11 @@
+{
+  "module": "all",
+  "profile": "safe",
+  "threads": 10,
+  "rate": 5.0,
+  "timeout": 10.0,
+  "recursive": false,
+  "max_depth": 2,
+  "skip_deps": false,
+  "requests_per_minute": 300
+}

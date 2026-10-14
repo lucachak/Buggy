@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "digest": "8fb8f1abbb0a793cc04ff9e9f94855601e49497f1196eb4d013e9d28287e3594",
+  "validators": [
+    {
+      "validator_id": "apache.path-traversal-applicability",
+      "name": "Apache HTTP path traversal applicability",
+      "cves": [
+        "CVE-2021-41773",
+        "CVE-2021-42013"
+      ],
+      "risk": "safe",
+      "description": "Checks the exposed Apache version only; it never sends a path-traversal or command-execution payload.",
+      "executor": "python",
+      "implementation": "modules.Validators.apache.validate_path_traversal",
+      "methods": [
+        "GET"
+      ],
+      "timeout": 8.0,
+      "reversible": true,
+      "requires_auth": false,
+      "enabled": true,
+      "source": "builtin"
+    },
+    {
+      "validator_id": "tomcat.put-applicability",
+      "name": "Tomcat PUT applicability",
+      "cves": [
+        "CVE-2017-12615"
+      ],
+      "risk": "safe",
+      "description": "Checks the exposed Tomcat version and OPTIONS capabilities; it never uploads or writes a file.",
+      "executor": "python",
+      "implementation": "modules.Validators.tomcat.validate_put",
+      "methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "timeout": 8.0,
+      "reversible": true,
+      "requires_auth": false,
+      "enabled": true,
+      "source": "builtin"
+    }
+  ]
+}

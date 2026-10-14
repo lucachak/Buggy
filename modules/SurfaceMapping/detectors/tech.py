@@ -4,9 +4,9 @@ Substitui o binário Go tech_detector.
 """
 
 import re
-import ssl
 import json
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from modules.utils.http_client import scoped_urlopen
 from urllib.error import HTTPError
 from typing import Dict, List
 
@@ -35,6 +35,7 @@ SIGNATURES = {
         (r"rails",                           "cookie", "Ruby on Rails"),
     ],
     "framework": [
+        (r"<app-root|ng-version|(?:main|polyfills)\.js", "body", "Angular"),
         (r"x-powered-by.*express",          "header", "Express.js"),
         (r"x-powered-by.*php",              "header", "PHP"),
         (r"x-powered-by.*asp\.net",         "header", "ASP.NET"),
@@ -46,15 +47,10 @@ SIGNATURES = {
     ],
 }
 
-SSL_CTX = ssl.create_default_context()
-SSL_CTX.check_hostname = False
-SSL_CTX.verify_mode = ssl.CERT_NONE
-
-
 def _fetch(url: str, timeout: int = 8) -> dict | None:
     try:
         req = Request(url, headers=HEADERS)
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
+        resp = scoped_urlopen(req, timeout=timeout)
         headers = {k.lower(): v.lower() for k, v in resp.headers.items()}
         body    = resp.read(256 * 1024).decode("utf-8", errors="ignore").lower()
         cookies = headers.get("set-cookie", "").lower()
@@ -91,8 +87,20 @@ def detect(urls: list[str], threads: int = 10, timeout: float = 8.0) -> dict:
             data = fut.result()
             if not data:
                 continue
+            software = []
+            fingerprint_text = " ".join([
+                data["headers"].get("server", ""),
+                data["headers"].get("x-powered-by", ""),
+            ])
+            for name, pattern in (("nginx", r"nginx/([0-9][\w.~-]*)"),
+                                  ("apache", r"apache/([0-9][\w.~-]*)"),
+                                  ("php", r"php/([0-9][\w.~-]*)"),
+                                  ("tomcat", r"tomcat/([0-9][\w.~-]*)")):
+                match = re.search(pattern, fingerprint_text, re.I)
+                if match:
+                    software.append(f"{name}/{match.group(1)}")
             entry = {"url": data["url"], "status": data["status"],
-                     "waf": [], "cms": [], "framework": []}
+                     "waf": [], "cms": [], "framework": [], "software": software}
             for cat, sigs in SIGNATURES.items():
                 entry[cat] = _match(data, sigs)
             results_per_url.append(entry)
@@ -106,6 +114,7 @@ def detect(urls: list[str], threads: int = 10, timeout: float = 8.0) -> dict:
         if r["framework"] and any(s in r["framework"][0].lower()
                                    for s in ["nginx", "apache", "tomcat", "gunicorn"])
     })
+    all_software = sorted({s for r in results_per_url for s in r["software"]})
 
     return {
         "results": results_per_url,
@@ -116,6 +125,7 @@ def detect(urls: list[str], threads: int = 10, timeout: float = 8.0) -> dict:
             "all_cms":         all_cms,
             "all_frameworks":  all_frameworks,
             "all_servers":     all_servers,
+            "all_software":    all_software,
             "total_urls":      len(results_per_url),
         },
     }

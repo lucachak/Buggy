@@ -1,0 +1,304 @@
+Detailed logging initialized at /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/logs/buggy.log
+
+[1m[>] Starting Full Pipeline on http://localhost:3000[0m
+
+[96m============================================================[0m
+[96m  PHASE 1/9: Reconnaissance[0m
+[96m============================================================[0m
+
+[1m[>] Starting Reconnaissance on http://localhost:3000[0m
+
+
+[1m🔍  Buggy Recon  —  target: localhost[0m
+     [96mOutput: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140[0m
+
+[95m[1m────────────────────────────────────────────────────────────
+  [1/4] SUBDOMAIN ENUMERATION  →  localhost
+────────────────────────────────────────────────────────────[0m
+[93m  [i] Local/private target — skipping external subdomain enum.[0m
+
+[96m[1m────────────────────────────────────────────────────────────
+  [2/4] DNS RESOLUTION & ZONE TRANSFER  →  localhost
+────────────────────────────────────────────────────────────[0m
+[93m  [i] Local/private target — skipping DNS resolution.[0m
+
+[93m[1m────────────────────────────────────────────────────────────
+  [3/4] ORIGIN IP DISCOVERY  →  localhost
+────────────────────────────────────────────────────────────[0m
+[93m  [i] Local/private target — skipping origin IP discovery.[0m
+
+[35m[1m────────────────────────────────────────────────────────────
+  [4/4] DIRECTORY BRUTEFORCE  (Dirpy v2 Go)
+────────────────────────────────────────────────────────────[0m
+[96m  [i] Using binary: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/modules/Reconnaissance/DirGO/DirGo[0m
+[93m  ▶ [0mWordlist: default.txt  (4613 words)  |  Threads: 10  |  Rate: 300 req/min  |  ETA base: 15.4 min
+
+[93m  ▶ [0mBusting: [1mhttp://localhost:3000[0m
+
+[90m  Dirpy v2  |  async directory bruteforcer[0m
+
+  [1mTargets:[0m http://localhost:3000
+  [1mWordlist:[0m 4612 paths
+  [1mConcurrency:[0m 10 workers
+
+[90m  ──────────────────────────────────────────────────────────────────────[0m
+  Status        Size        Time  URL
+[90m  ──────────────────────────────────────────────────────────────────────[0m
+  [96m[i][0m soft-404 template detected (HTTP 200)
+  [96m►[0m 25/4612 (0.5%)  [92m5 req/s[0m  ETA 958s  found: [1m0[0m            [96m►[0m 50/4612 (1.1%)  [92m5 req/s[0m  ETA 934s  found: [1m0[0m            [96m►[0m 75/4612 (1.6%)  [92m5 req/s[0m  ETA 922s  found: [1m0[0m            [96m►[0m 100/4612 (2.2%)  [92m5 req/s[0m  ETA 915s  found: [1m0[0m            [96m►[0m 125/4612 (2.7%)  [92m5 req/s[0m  ETA 908s  found: [1m0[0m            [96m►[0m 150/4612 (3.3%)  [92m5 req/s[0m  ETA 902s  found: [1m0[0m            [96m►[0m 175/4612 (3.8%)  [92m5 req/s[0m  ETA 896s  found: [1m0[0m            [96m►[0m 200/4612 (4.3%)  [92m5 req/s[0m  ETA 890s  found: [1m0[0m            [96m►[0m 225/4612 (4.9%)  [92m5 req/s[0m  ETA 884s  found: [1m0[0m            [96m►[0m 250/4612 (5.4%)  [92m5 req/s[0m  ETA 879s  found: [1m0[0m            [96m►[0m 275/4612 (6.0%)  [92m5 req/s[0m  ETA 873s  found: [1m0[0m            [96m►[0m 300/4612 (6.5%)  [92m5 req/s[0m  ETA 868s  found: [1m0[0m            [96m►[0m 325/4612 (7.0%)  [92m5 req/s[0m  ETA 862s  found: [1m0[0m            [96m►[0m 350/4612 (7.6%)  [92m5 req/s[0m  ETA 857s  found: [1m0[0m            [96m►[0m 375/4612 (8.1%)  [92m5 req/s[0m  ETA 852s  found: [1m0[0m            [96m►[0m 400/4612 (8.7%)  [92m5 req/s[0m  ETA 847s  found: [1m0[0m            [96m►[0m 425/4612 (9.2%)  [92m5 req/s[0m  ETA 842s  found: [1m0[0m            [91m500[0m  [90m    2408 B[0m  [90m 1993.1ms[0m  http://localhost:3000/api
+  [91m500[0m  [90m    2410 B[0m  [90m 2003.2ms[0m  http://localhost:3000/apis
+  [96m►[0m 450/4612 (9.8%)  [92m5 req/s[0m  ETA 837s  found: [1m2[0m            [96m►[0m 475/4612 (10.3%)  [92m5 req/s[0m  ETA 832s  found: [1m2[0m            [96m301[0m  [90m     156 B[0m  [90m 2038.9ms[0m  http://localhost:3000/assets[96m  → /assets/[0m
+  [96m►[0m 500/4612 (10.8%)  [92m5 req/s[0m  ETA 827s  found: [1m3[0m            [96m►[0m 525/4612 (11.4%)  [92m5 req/s[0m  ETA 821s  found: [1m3[0m            [96m►[0m 550/4612 (11.9%)  [92m5 req/s[0m  ETA 816s  found: [1m3[0m            [96m►[0m 575/4612 (12.5%)  [92m5 req/s[0m  ETA 811s  found: [1m3[0m            [96m►[0m 600/4612 (13.0%)  [92m5 req/s[0m  ETA 806s  found: [1m3[0m            [96m►[0m 625/4612 (13.6%)  [92m5 req/s[0m  ETA 801s  found: [1m3[0m            [96m►[0m 650/4612 (14.1%)  [92m5 req/s[0m  ETA 796s  found: [1m3[0m            [96m►[0m 675/4612 (14.6%)  [92m5 req/s[0m  ETA 791s  found: [1m3[0m            [96m►[0m 700/4612 (15.2%)  [92m5 req/s[0m  ETA 786s  found: [1m3[0m            [96m►[0m 725/4612 (15.7%)  [92m5 req/s[0m  ETA 781s  found: [1m3[0m            [96m►[0m 750/4612 (16.3%)  [92m5 req/s[0m  ETA 776s  found: [1m3[0m            [96m►[0m 775/4612 (16.8%)  [92m5 req/s[0m  ETA 770s  found: [1m3[0m            [96m►[0m 800/4612 (17.3%)  [92m5 req/s[0m  ETA 766s  found: [1m3[0m            [96m►[0m 825/4612 (17.9%)  [92m5 req/s[0m  ETA 760s  found: [1m3[0m            [96m►[0m 850/4612 (18.4%)  [92m5 req/s[0m  ETA 756s  found: [1m3[0m            [96m►[0m 875/4612 (19.0%)  [92m5 req/s[0m  ETA 750s  found: [1m3[0m            [96m►[0m 900/4612 (19.5%)  [92m5 req/s[0m  ETA 745s  found: [1m3[0m            [96m►[0m 925/4612 (20.1%)  [92m5 req/s[0m  ETA 740s  found: [1m3[0m            [96m►[0m 950/4612 (20.6%)  [92m5 req/s[0m  ETA 735s  found: [1m3[0m            [96m►[0m 975/4612 (21.1%)  [92m5 req/s[0m  ETA 730s  found: [1m3[0m            [96m►[0m 1000/4612 (21.7%)  [92m5 req/s[0m  ETA 725s  found: [1m3[0m            [96m►[0m 1025/4612 (22.2%)  [92m5 req/s[0m  ETA 720s  found: [1m3[0m            [96m►[0m 1050/4612 (22.8%)  [92m5 req/s[0m  ETA 715s  found: [1m3[0m            [96m►[0m 1075/4612 (23.3%)  [92m5 req/s[0m  ETA 710s  found: [1m3[0m            [96m►[0m 1100/4612 (23.9%)  [92m5 req/s[0m  ETA 705s  found: [1m3[0m            [96m►[0m 1125/4612 (24.4%)  [92m5 req/s[0m  ETA 700s  found: [1m3[0m            [96m►[0m 1150/4612 (24.9%)  [92m5 req/s[0m  ETA 695s  found: [1m3[0m            [96m►[0m 1175/4612 (25.5%)  [92m5 req/s[0m  ETA 690s  found: [1m3[0m            [96m►[0m 1200/4612 (26.0%)  [92m5 req/s[0m  ETA 685s  found: [1m3[0m            [96m►[0m 1225/4612 (26.6%)  [92m5 req/s[0m  ETA 680s  found: [1m3[0m            [96m►[0m 1250/4612 (27.1%)  [92m5 req/s[0m  ETA 675s  found: [1m3[0m            [96m►[0m 1275/4612 (27.6%)  [92m5 req/s[0m  ETA 670s  found: [1m3[0m            [96m►[0m 1300/4612 (28.2%)  [92m5 req/s[0m  ETA 665s  found: [1m3[0m            [96m►[0m 1325/4612 (28.7%)  [92m5 req/s[0m  ETA 660s  found: [1m3[0m            [96m►[0m 1350/4612 (29.3%)  [92m5 req/s[0m  ETA 655s  found: [1m3[0m            [96m►[0m 1375/4612 (29.8%)  [92m5 req/s[0m  ETA 650s  found: [1m3[0m            [96m►[0m 1400/4612 (30.4%)  [92m5 req/s[0m  ETA 645s  found: [1m3[0m            [96m►[0m 1425/4612 (30.9%)  [92m5 req/s[0m  ETA 640s  found: [1m3[0m            [96m►[0m 1450/4612 (31.4%)  [92m5 req/s[0m  ETA 635s  found: [1m3[0m            [96m►[0m 1475/4612 (32.0%)  [92m5 req/s[0m  ETA 630s  found: [1m3[0m            [96m►[0m 1500/4612 (32.5%)  [92m5 req/s[0m  ETA 624s  found: [1m3[0m            [96m►[0m 1525/4612 (33.1%)  [92m5 req/s[0m  ETA 619s  found: [1m3[0m            [96m►[0m 1550/4612 (33.6%)  [92m5 req/s[0m  ETA 614s  found: [1m3[0m            [96m►[0m 1575/4612 (34.2%)  [92m5 req/s[0m  ETA 609s  found: [1m3[0m            [96m►[0m 1600/4612 (34.7%)  [92m5 req/s[0m  ETA 604s  found: [1m3[0m            [96m►[0m 1625/4612 (35.2%)  [92m5 req/s[0m  ETA 599s  found: [1m3[0m            [96m►[0m 1650/4612 (35.8%)  [92m5 req/s[0m  ETA 594s  found: [1m3[0m            [96m►[0m 1675/4612 (36.3%)  [92m5 req/s[0m  ETA 589s  found: [1m3[0m            [96m►[0m 1700/4612 (36.9%)  [92m5 req/s[0m  ETA 584s  found: [1m3[0m            [92m[1m200[0m  [90m   11307 B[0m  [90m 2036.6ms[0m  [1mhttp://localhost:3000/ftp[0m
+  [96m►[0m 1725/4612 (37.4%)  [92m5 req/s[0m  ETA 579s  found: [1m4[0m            [96m►[0m 1750/4612 (37.9%)  [92m5 req/s[0m  ETA 574s  found: [1m4[0m            [96m►[0m 1775/4612 (38.5%)  [92m5 req/s[0m  ETA 569s  found: [1m4[0m            [96m►[0m 1800/4612 (39.0%)  [92m5 req/s[0m  ETA 564s  found: [1m4[0m            [96m►[0m 1825/4612 (39.6%)  [92m5 req/s[0m  ETA 559s  found: [1m4[0m            [96m►[0m 1850/4612 (40.1%)  [92m5 req/s[0m  ETA 554s  found: [1m4[0m            [96m►[0m 1875/4612 (40.7%)  [92m5 req/s[0m  ETA 549s  found: [1m4[0m            [96m►[0m 1900/4612 (41.2%)  [92m5 req/s[0m  ETA 544s  found: [1m4[0m            [96m►[0m 1925/4612 (41.7%)  [92m5 req/s[0m  ETA 539s  found: [1m4[0m            [96m►[0m 1950/4612 (42.3%)  [92m5 req/s[0m  ETA 534s  found: [1m4[0m            [96m►[0m 1975/4612 (42.8%)  [92m5 req/s[0m  ETA 529s  found: [1m4[0m            [96m►[0m 2000/4612 (43.4%)  [92m5 req/s[0m  ETA 524s  found: [1m4[0m            [96m►[0m 2025/4612 (43.9%)  [92m5 req/s[0m  ETA 519s  found: [1m4[0m            [96m►[0m 2050/4612 (44.4%)  [92m5 req/s[0m  ETA 514s  found: [1m4[0m            [96m►[0m 2075/4612 (45.0%)  [92m5 req/s[0m  ETA 509s  found: [1m4[0m            [96m►[0m 2100/4612 (45.5%)  [92m5 req/s[0m  ETA 504s  found: [1m4[0m            [96m►[0m 2125/4612 (46.1%)  [92m5 req/s[0m  ETA 499s  found: [1m4[0m            [96m►[0m 2150/4612 (46.6%)  [92m5 req/s[0m  ETA 494s  found: [1m4[0m            [96m►[0m 2175/4612 (47.2%)  [92m5 req/s[0m  ETA 489s  found: [1m4[0m            [96m►[0m 2200/4612 (47.7%)  [92m5 req/s[0m  ETA 484s  found: [1m4[0m            [96m►[0m 2225/4612 (48.2%)  [92m5 req/s[0m  ETA 479s  found: [1m4[0m            [96m►[0m 2250/4612 (48.8%)  [92m5 req/s[0m  ETA 474s  found: [1m4[0m            [96m►[0m 2275/4612 (49.3%)  [92m5 req/s[0m  ETA 469s  found: [1m4[0m            [96m►[0m 2300/4612 (49.9%)  [92m5 req/s[0m  ETA 464s  found: [1m4[0m            [96m►[0m 2325/4612 (50.4%)  [92m5 req/s[0m  ETA 459s  found: [1m4[0m            [96m►[0m 2350/4612 (51.0%)  [92m5 req/s[0m  ETA 454s  found: [1m4[0m            [96m►[0m 2375/4612 (51.5%)  [92m5 req/s[0m  ETA 449s  found: [1m4[0m            [96m►[0m 2400/4612 (52.0%)  [92m5 req/s[0m  ETA 444s  found: [1m4[0m            [96m►[0m 2425/4612 (52.6%)  [92m5 req/s[0m  ETA 439s  found: [1m4[0m            [96m►[0m 2450/4612 (53.1%)  [92m5 req/s[0m  ETA 434s  found: [1m4[0m            [96m301[0m  [90m     155 B[0m  [90m 2002.3ms[0m  http://localhost:3000/media[96m  → /media/[0m
+  [96m►[0m 2475/4612 (53.7%)  [92m5 req/s[0m  ETA 429s  found: [1m5[0m            [96m►[0m 2500/4612 (54.2%)  [92m5 req/s[0m  ETA 424s  found: [1m5[0m            [96m►[0m 2525/4612 (54.7%)  [92m5 req/s[0m  ETA 419s  found: [1m5[0m            [96m►[0m 2550/4612 (55.3%)  [92m5 req/s[0m  ETA 414s  found: [1m5[0m            [96m►[0m 2575/4612 (55.8%)  [92m5 req/s[0m  ETA 409s  found: [1m5[0m            [96m►[0m 2600/4612 (56.4%)  [92m5 req/s[0m  ETA 404s  found: [1m5[0m            [96m►[0m 2625/4612 (56.9%)  [92m5 req/s[0m  ETA 399s  found: [1m5[0m            [96m►[0m 2650/4612 (57.5%)  [92m5 req/s[0m  ETA 394s  found: [1m5[0m            [96m►[0m 2675/4612 (58.0%)  [92m5 req/s[0m  ETA 389s  found: [1m5[0m            [96m►[0m 2700/4612 (58.5%)  [92m5 req/s[0m  ETA 384s  found: [1m5[0m            [96m►[0m 2725/4612 (59.1%)  [92m5 req/s[0m  ETA 379s  found: [1m5[0m            [96m►[0m 2750/4612 (59.6%)  [92m5 req/s[0m  ETA 374s  found: [1m5[0m            [96m►[0m 2775/4612 (60.2%)  [92m5 req/s[0m  ETA 369s  found: [1m5[0m            [96m►[0m 2800/4612 (60.7%)  [92m5 req/s[0m  ETA 364s  found: [1m5[0m            [96m►[0m 2825/4612 (61.3%)  [92m5 req/s[0m  ETA 359s  found: [1m5[0m            [96m►[0m 2850/4612 (61.8%)  [92m5 req/s[0m  ETA 353s  found: [1m5[0m            [96m►[0m 2875/4612 (62.3%)  [92m5 req/s[0m  ETA 348s  found: [1m5[0m            [96m►[0m 2900/4612 (62.9%)  [92m5 req/s[0m  ETA 343s  found: [1m5[0m            [96m►[0m 2925/4612 (63.4%)  [92m5 req/s[0m  ETA 338s  found: [1m5[0m            [96m►[0m 2950/4612 (64.0%)  [92m5 req/s[0m  ETA 333s  found: [1m5[0m            [96m►[0m 2975/4612 (64.5%)  [92m5 req/s[0m  ETA 328s  found: [1m5[0m            [96m►[0m 3000/4612 (65.0%)  [92m5 req/s[0m  ETA 323s  found: [1m5[0m            [96m►[0m 3025/4612 (65.6%)  [92m5 req/s[0m  ETA 318s  found: [1m5[0m            [96m►[0m 3050/4612 (66.1%)  [92m5 req/s[0m  ETA 313s  found: [1m5[0m            [96m►[0m 3075/4612 (66.7%)  [92m5 req/s[0m  ETA 308s  found: [1m5[0m            [96m►[0m 3100/4612 (67.2%)  [92m5 req/s[0m  ETA 303s  found: [1m5[0m            [96m►[0m 3125/4612 (67.8%)  [92m5 req/s[0m  ETA 298s  found: [1m5[0m            [96m►[0m 3150/4612 (68.3%)  [92m5 req/s[0m  ETA 293s  found: [1m5[0m            [91m500[0m  [90m    1043 B[0m  [90m 2131.9ms[0m  http://localhost:3000/profile
+  [92m[1m200[0m  [90m    5863 B[0m  [90m 2139.9ms[0m  [1mhttp://localhost:3000/promotion[0m
+  [96m►[0m 3175/4612 (68.8%)  [92m5 req/s[0m  ETA 288s  found: [1m7[0m            [96m►[0m 3200/4612 (69.4%)  [92m5 req/s[0m  ETA 283s  found: [1m7[0m            [96m►[0m 3225/4612 (69.9%)  [92m5 req/s[0m  ETA 278s  found: [1m7[0m            [96m►[0m 3250/4612 (70.5%)  [92m5 req/s[0m  ETA 273s  found: [1m7[0m            [96m►[0m 3275/4612 (71.0%)  [92m5 req/s[0m  ETA 268s  found: [1m7[0m            [96m►[0m 3300/4612 (71.6%)  [92m5 req/s[0m  ETA 263s  found: [1m7[0m            [91m500[0m  [90m    2531 B[0m  [90m 2020.6ms[0m  http://localhost:3000/redirect
+  [96m►[0m 3325/4612 (72.1%)  [92m5 req/s[0m  ETA 258s  found: [1m8[0m            [96m►[0m 3350/4612 (72.6%)  [92m5 req/s[0m  ETA 253s  found: [1m8[0m            [96m►[0m 3375/4612 (73.2%)  [92m5 req/s[0m  ETA 248s  found: [1m8[0m            [96m►[0m 3400/4612 (73.7%)  [92m5 req/s[0m  ETA 243s  found: [1m8[0m            [91m500[0m  [90m    2410 B[0m  [90m 2000.4ms[0m  http://localhost:3000/rest
+  [91m500[0m  [90m    2424 B[0m  [90m 2003.2ms[0m  http://localhost:3000/restaurants
+  [91m500[0m  [90m    2416 B[0m  [90m 2004.3ms[0m  http://localhost:3000/restore
+  [91m500[0m  [90m    2418 B[0m  [90m 2001.1ms[0m  http://localhost:3000/restored
+  [91m500[0m  [90m    2422 B[0m  [90m 2003.3ms[0m  http://localhost:3000/restricted
+  [96m►[0m 3425/4612 (74.3%)  [92m5 req/s[0m  ETA 238s  found: [1m13[0m            [92m[1m200[0m  [90m      28 B[0m  [90m 1976.8ms[0m  [1mhttp://localhost:3000/robots.txt[0m
+  [96m►[0m 3450/4612 (74.8%)  [92m5 req/s[0m  ETA 233s  found: [1m14[0m            [96m►[0m 3475/4612 (75.3%)  [92m5 req/s[0m  ETA 228s  found: [1m14[0m            [96m►[0m 3500/4612 (75.9%)  [92m5 req/s[0m  ETA 223s  found: [1m14[0m            [96m►[0m 3525/4612 (76.4%)  [92m5 req/s[0m  ETA 218s  found: [1m14[0m            [96m►[0m 3550/4612 (77.0%)  [92m5 req/s[0m  ETA 213s  found: [1m14[0m            [96m►[0m 3575/4612 (77.5%)  [92m5 req/s[0m  ETA 208s  found: [1m14[0m            [96m►[0m 3600/4612 (78.1%)  [92m5 req/s[0m  ETA 203s  found: [1m14[0m            [96m►[0m 3625/4612 (78.6%)  [92m5 req/s[0m  ETA 198s  found: [1m14[0m            [96m►[0m 3650/4612 (79.1%)  [92m5 req/s[0m  ETA 193s  found: [1m14[0m            [96m►[0m 3675/4612 (79.7%)  [92m5 req/s[0m  ETA 188s  found: [1m14[0m            [96m►[0m 3700/4612 (80.2%)  [92m5 req/s[0m  ETA 183s  found: [1m14[0m            [96m►[0m 3725/4612 (80.8%)  [92m5 req/s[0m  ETA 178s  found: [1m14[0m            [96m►[0m 3750/4612 (81.3%)  [92m5 req/s[0m  ETA 173s  found: [1m14[0m            [96m►[0m 3775/4612 (81.9%)  [92m5 req/s[0m  ETA 168s  found: [1m14[0m            [96m►[0m 3800/4612 (82.4%)  [92m5 req/s[0m  ETA 163s  found: [1m14[0m            [96m►[0m 3825/4612 (82.9%)  [92m5 req/s[0m  ETA 158s  found: [1m14[0m            [96m►[0m 3850/4612 (83.5%)  [92m5 req/s[0m  ETA 153s  found: [1m14[0m            [96m►[0m 3875/4612 (84.0%)  [92m5 req/s[0m  ETA 148s  found: [1m14[0m            [96m►[0m 3900/4612 (84.6%)  [92m5 req/s[0m  ETA 143s  found: [1m14[0m            [96m►[0m 3925/4612 (85.1%)  [92m5 req/s[0m  ETA 138s  found: [1m14[0m            [96m►[0m 3950/4612 (85.6%)  [92m5 req/s[0m  ETA 133s  found: [1m14[0m            [96m►[0m 3975/4612 (86.2%)  [92m5 req/s[0m  ETA 128s  found: [1m14[0m            [96m►[0m 4000/4612 (86.7%)  [92m5 req/s[0m  ETA 123s  found: [1m14[0m            [96m►[0m 4025/4612 (87.3%)  [92m5 req/s[0m  ETA 118s  found: [1m14[0m            [96m►[0m 4050/4612 (87.8%)  [92m5 req/s[0m  ETA 113s  found: [1m14[0m            [96m►[0m 4075/4612 (88.4%)  [92m5 req/s[0m  ETA 108s  found: [1m14[0m            [96m►[0m 4100/4612 (88.9%)  [92m5 req/s[0m  ETA 103s  found: [1m14[0m            [96m►[0m 4125/4612 (89.4%)  [92m5 req/s[0m  ETA 98s  found: [1m14[0m            [96m►[0m 4150/4612 (90.0%)  [92m5 req/s[0m  ETA 93s  found: [1m14[0m            [96m►[0m 4175/4612 (90.5%)  [92m5 req/s[0m  ETA 88s  found: [1m14[0m            [96m►[0m 4200/4612 (91.1%)  [92m5 req/s[0m  ETA 83s  found: [1m14[0m            [96m►[0m 4225/4612 (91.6%)  [92m5 req/s[0m  ETA 78s  found: [1m14[0m            [96m►[0m 4250/4612 (92.2%)  [92m5 req/s[0m  ETA 73s  found: [1m14[0m            [96m►[0m 4275/4612 (92.7%)  [92m5 req/s[0m  ETA 68s  found: [1m14[0m            [92m[1m200[0m  [90m 2097152 B[0m  [90m 2011.8ms[0m  [1mhttp://localhost:3000/video[0m
+  [92m[1m200[0m  [90m 2097152 B[0m  [90m 1984.0ms[0m  [1mhttp://localhost:3000/Video[0m
+  [96m►[0m 4300/4612 (93.2%)  [92m5 req/s[0m  ETA 63s  found: [1m16[0m            [96m►[0m 4325/4612 (93.8%)  [92m5 req/s[0m  ETA 58s  found: [1m16[0m            [96m►[0m 4350/4612 (94.3%)  [92m5 req/s[0m  ETA 53s  found: [1m16[0m            [96m►[0m 4375/4612 (94.9%)  [92m5 req/s[0m  ETA 48s  found: [1m16[0m            [96m►[0m 4400/4612 (95.4%)  [92m5 req/s[0m  ETA 43s  found: [1m16[0m            [96m►[0m 4425/4612 (95.9%)  [92m5 req/s[0m  ETA 38s  found: [1m16[0m            [96m►[0m 4450/4612 (96.5%)  [92m5 req/s[0m  ETA 32s  found: [1m16[0m            [96m►[0m 4475/4612 (97.0%)  [92m5 req/s[0m  ETA 27s  found: [1m16[0m            [96m►[0m 4500/4612 (97.6%)  [92m5 req/s[0m  ETA 22s  found: [1m16[0m            [96m►[0m 4525/4612 (98.1%)  [92m5 req/s[0m  ETA 17s  found: [1m16[0m            [96m►[0m 4550/4612 (98.7%)  [92m5 req/s[0m  ETA 12s  found: [1m16[0m            [96m►[0m 4575/4612 (99.2%)  [92m5 req/s[0m  ETA 7s  found: [1m16[0m            [96m►[0m 4600/4612 (99.7%)  [92m5 req/s[0m  ETA 2s  found: [1m16[0m          
+[90m  ──────────────────────────────────────────────────────────────────────[0m
+  [92m[1mDone![0m  4612 requests  [1m16[0m found  in 925.07s  (5 req/s)
+
+[92m  [✓] JSON saved to: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/recon/dirbust/scan_http_localhost-3000.json[0m
+  16 result(s) found.
+
+
+[92m  [✔] 7 paths across 1 target(s)  (925.1s)[0m
+
+[92m[1m  ✅  Recon complete in 925.1s[0m
+       Subdomains      : 1
+       Live IPs        : 1
+       Origin IPs      : 0
+       Paths found     : 7
+
+
+[92m[1m  📄  Report saved:[0m
+      [96mTXT     [0m→  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/reports/localhost_recon_20260816_220857.txt
+      [96mJSON    [0m→  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/reports/localhost_recon_20260816_220857.json
+      [96mSESSION [0m→  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/recon/discovery_summary.json
+
+[96m============================================================[0m
+[96m  PHASE 2/9: Surface Mapping[0m
+[96m============================================================[0m
+
+[1m[>] Starting Surface Mapping on http://localhost:3000[0m
+
+
+============================================================
+  SurfaceMapping Pipeline - http://localhost:3000
+============================================================
+
+📂 Loaded Recon data: 1 URLs, 7 paths, 1 hosts
+[1/6] 🔍 Tech Detection (WAF, CMS, Frameworks)...
+  running tech detection (Python)...
+  ├─ CMS: None
+  ├─ WAF: None detected
+  ├─ Frameworks: Angular
+  └─ Servers: Unknown
+
+[2/6] 🗺️  Endpoint Mapping (robots.txt, sitemap)...
+  └─ Discovered: 7 endpoints
+
+[3/6] 📜 JS Analysis (secrets, API keys)...
+  ├─ Files analyzed: 16
+  └─ Secrets found: 0 (0 high/critical)
+
+[4/6] 📝 Form Mapping (injection points)...
+  ├─ Forms found: 0
+  └─ Injection points: 0
+
+[5/6] 🚀 API Discovery (Swagger, GraphQL)...
+  ├─ APIs found: 44
+  └─ OpenAPI specs: 0
+
+[6/6] 🔌 Port Scanning (exposed services)...
+  ├─ Open ports: 0
+  └─ Exposed databases: 0
+
+📁 Results saved to: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/surface/
+
+============================================================
+  ✅ SurfaceMapping Complete! (19.0s)
+============================================================
+
+============================================================
+  EXECUTIVE SUMMARY
+============================================================
+  Attack Surface:
+    • Endpoints: 51
+    • Forms: 0
+    • APIs: 44
+    • JS Secrets: 0
+    • Open Ports: 0
+
+  Risk Indicators:
+    • WAF: ✅ None
+    • Admin route observed: ⚠️  Yes
+    • DB exposed: ✅ No
+    • JS leaks: ✅ No
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 3/9: CVE Intelligence & Prioritization[0m
+[96m============================================================[0m
+
+  CVE Intelligence: 1 componentes, 0 CVEs, 0 KEV
+  Output: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/intelligence/cves.json
+
+  Validation plan: 0 validators
+  Output: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/validation/plan.json
+
+  Validation execution: 0 result(s)
+
+[96m============================================================[0m
+[96m  PHASE 4/9: Infrastructure Security[0m
+[96m============================================================[0m
+
+[1m[>] Starting Infra Scan on http://localhost:3000[0m
+
+
+============================================================
+  InfraScanner — http://localhost:3000
+============================================================
+
+  [+] 1 hosts identificados para infra scan
+  [+] 12 tarefas totais
+
+  ... 10/12 tasks, 9 findings
+
+============================================================
+  ✅ Infra scan complete — 10 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/infra/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 5/9: Authentication & Authorization[0m
+[96m============================================================[0m
+
+[1m[>] Starting Auth Scan on http://localhost:3000[0m
+
+
+============================================================
+  AuthScanner — http://localhost:3000
+============================================================
+
+  [+] 10 tarefas totais
+
+  ... 10/10 tasks, 5 findings
+
+  [+] Running SSO brute scanner...
+
+────────────────────────────────────────────────────────────
+  SSO Brute Scanner — http://localhost:3000
+────────────────────────────────────────────────────────────
+
+  [SSO] Brute-forcing SSO endpoints...
+  [SSO] No SSO endpoints found.
+  [SSO] No endpoints to test for open redirect.
+  [SSO] Checking for token leakage in URLs...
+  [SSO] No token leakage detected.
+
+  [SSO] Complete — 0 total finding(s)
+
+============================================================
+  ✅ Auth scan complete — 5 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/auth/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 6/9: Business Logic[0m
+[96m============================================================[0m
+
+[1m[>] Starting Business Logic Scan on http://localhost:3000[0m
+
+
+============================================================
+  BusinessLogicScanner — http://localhost:3000
+============================================================
+
+  [+] 3 tarefas totais
+
+
+============================================================
+  ✅ Business Logic scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/business/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 7/9: Injection Attacks[0m
+[96m============================================================[0m
+
+[1m[>] Starting Injection Scan on http://localhost:3000[0m
+
+
+============================================================
+  InjectionScanner — http://localhost:3000
+============================================================
+
+  [+] 38 parâmetros GET para testar
+  [+] 0 formulários para testar
+  [+] 158 tarefas totais
+
+  ... 20/158 tasks, 0 findings
+  ... 40/158 tasks, 0 findings
+  ... 60/158 tasks, 0 findings
+  ... 80/158 tasks, 0 findings
+  ... 100/158 tasks, 0 findings
+  ... 120/158 tasks, 0 findings
+  ... 140/158 tasks, 0 findings
+
+============================================================
+  ✅ Injection scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/injection/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 8/9: XSS & Client-Side[0m
+[96m============================================================[0m
+
+[1m[>] Starting XSS/Client Scan on http://localhost:3000[0m
+
+
+============================================================
+  XSSScanner — http://localhost:3000
+============================================================
+
+  [+] 0 forms | 5 search endpoints
+  [+] 8 tarefas totais
+
+
+============================================================
+  ✅ XSS scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/xss/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 9/9: SSRF & Server-Side[0m
+[96m============================================================[0m
+
+============================================================
+  SSRFScanner — http://localhost:3000
+============================================================
+
+  [+] 0 param tasks + 0 form tasks
+
+
+============================================================
+  ✅ SSRF scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/ssrf/findings.json
+============================================================
+
+[92m  📊  Report gerado:[0m  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/reports/report.html
+
+[92m  📊  Report: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/reports/report.html[0m
+
+[92m============================================================[0m
+[92m  ✅ Full Pipeline Complete![0m
+[92m  Output: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140[0m
+[92m============================================================[0m

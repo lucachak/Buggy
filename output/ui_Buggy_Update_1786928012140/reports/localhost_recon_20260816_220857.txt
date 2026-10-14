@@ -1,0 +1,24 @@
+════════════════════════════════════════════════════════════════
+  BUGGY RECON REPORT
+  Target  : http://localhost:3000
+  Domain  : localhost
+  Date    : 2026-08-16 22:08:57
+════════════════════════════════════════════════════════════════
+
+┌─ SUBDOMAINS (1 entries)
+────────────────────────────────────────────────────────────────
+  localhost
+
+┌─ LIVE IPs  (DNS resolution) (1 entries)
+────────────────────────────────────────────────────────────────
+  localhost
+
+┌─ DISCOVERED PATHS  (dir-bust) (7 entries)
+────────────────────────────────────────────────────────────────
+  http://localhost:3000/assets/
+  http://localhost:3000/ftp
+  http://localhost:3000/media/
+  http://localhost:3000/promotion
+  http://localhost:3000/robots.txt
+  http://localhost:3000/video
+  http://localhost:3000/Video

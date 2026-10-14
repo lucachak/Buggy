@@ -199,8 +199,8 @@ build_dirpy() {
     if [ "$built" = true ]; then
         success "Dirpy v2 Go binary ready."
     else
-        warn "Dirpy Go binary not built. Buggy will fall back to Python dir busting."
-        warn "Install Go and run: cd modules/Reconnaissance/Dirpy && make build"
+        warn "Dirpy Go binary not built; o módulo recon seguirá sem dir busting."
+        warn "Instale Go e execute: cd modules/Reconnaissance/DirGO && make build"
     fi
 }
 
@@ -256,7 +256,7 @@ print_summary() {
     echo -e "    ${CYAN}./buggy -t http://localhost:8000 -m recon --recursive${RESET}"
     echo ""
     echo -e "  ${BOLD}Dirpy standalone:${RESET}"
-    echo -e "    ${CYAN}./modules/Reconnaissance/Dirpy/DirGo -u http://localhost:8000${RESET}"
+    echo -e "    ${CYAN}./modules/Reconnaissance/DirGO/DirGo -u http://localhost:8000${RESET}"
     echo ""
     echo -e "  ${BOLD}Help:${RESET}"
     echo -e "    ${CYAN}./buggy --help${RESET}"

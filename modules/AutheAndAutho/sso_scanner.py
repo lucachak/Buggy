@@ -27,6 +27,20 @@ class SSOScanner:
         self.findings: list[dict] = []
         self._domain = urllib.parse.urlparse(self.target).hostname or ""
         self._discovered_endpoints: list[str] = []
+        self._soft_404 = None
+
+    MAX_ENDPOINTS = 12
+    MAX_REDIRECT_TESTS = 200
+    MAX_IDP_TESTS = 100
+
+    def _looks_like_soft_404(self, response) -> bool:
+        baseline = self._soft_404
+        return bool(
+            baseline
+            and response.status == baseline.status
+            and abs(len(response.body) - len(baseline.body)) < 32
+            and response.body[:512] == baseline.body[:512]
+        )
 
     # ── 1. SSO Endpoint Discovery ────────────────────────────────────────────
 
@@ -34,10 +48,15 @@ class SSOScanner:
         url = self.target + path
         resp = self.client.get(url)
 
+        if self._looks_like_soft_404(resp):
+            return None
+
         # Endpoints SSO geralmente retornam 200, 302 (redirect ao IdP),
         # 401 (não autenticado), ou 400 (falta de params).
         # 404 = não existe, ignorar.
         if resp.status in (200, 301, 302, 303, 307, 308, 400, 401, 403):
+            if len(self._discovered_endpoints) >= self.MAX_ENDPOINTS:
+                return None
             self._discovered_endpoints.append(url)
 
             finding = {
@@ -65,6 +84,10 @@ class SSOScanner:
     def discover_endpoints(self, threads: int = 10) -> list[dict]:
         buggy_logger.info("  [SSO] Brute-forcing SSO endpoints...")
         findings = []
+        self._soft_404 = self.client.get(
+            self.target + "/.buggy-sso-not-found-canary-7d913f4c",
+            allow_redirects=False,
+        )
 
         with ThreadPoolExecutor(max_workers=threads) as ex:
             futures = {
@@ -93,7 +116,7 @@ class SSOScanner:
         sep = "&" if "?" in endpoint else "?"
         test_url = f"{endpoint}{sep}{param}={urllib.parse.quote(payload, safe='')}"
 
-        resp = self.client.get(test_url)
+        resp = self.client.get(test_url, allow_redirects=False)
 
         # Checamos se o servidor redireciona para o domínio malicioso
         location = resp.headers.get("location", "")
@@ -138,6 +161,8 @@ class SSOScanner:
                 for raw_payload in P.SSO_REDIRECT_PAYLOADS:
                     payload = raw_payload.replace("{domain}", self._domain)
                     tasks.append((endpoint, param, payload))
+
+        tasks = tasks[:self.MAX_REDIRECT_TESTS]
 
         buggy_logger.info(f"  [SSO] {len(tasks)} redirect test(s) queued.")
 
@@ -224,6 +249,8 @@ class SSOScanner:
             for hint_param in P.IDP_HINT_PARAMS:
                 for hint_val in P.IDP_HINT_VALUES:
                     tasks.append((endpoint, hint_param, hint_val))
+
+        tasks = tasks[:self.MAX_IDP_TESTS]
 
         def _test_idp(endpoint: str, param: str, value: str) -> dict | None:
             sep = "&" if "?" in endpoint else "?"

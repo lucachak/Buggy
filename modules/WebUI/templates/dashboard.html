@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Buggy Dashboard{% endblock %}
+{% block content %}
+<section class="hero">
+  <span class="eyebrow">BUGGY WORKSPACE</span>
+  <h1>Encontre, priorize e valide.</h1>
+  <p>Scans locais, inteligência de CVEs e validações com controle de risco.</p>
+</section>
+
+<section class="onboarding-card">
+  <div>
+    <span class="badge demo-badge">DEMO OFFLINE</span>
+    <h2>Conheça o Buggy em dois minutos</h2>
+    <p>Abra um scan completo de exemplo e veja como inventário, CVEs, plano e validators se conectam. Nenhum alvo será acessado.</p>
+    <ol class="mini-steps"><li>Inventário</li><li>Priorização</li><li>Plano seguro</li><li>Resultado</li></ol>
+  </div>
+  <form method="post" action="/ui/demo">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button class="large">Iniciar demonstração <span>→</span></button>
+  </form>
+</section>
+
+<div class="grid">
+  <section class="card">
+    <h2>Novo projeto</h2>
+    <p class="section-help">Use somente um alvo próprio ou expressamente autorizado.</p>
+    <form method="post" action="/ui/projects">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <label>Nome<input name="name" required maxlength="80"></label>
+      <label>Alvo autorizado<input name="target" required placeholder="https://app.example.com"></label>
+      <label class="check"><input type="checkbox" name="authorized" value="yes" required> Confirmo autorização explícita</label>
+      <button>Criar projeto</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Projetos</h2>
+    {% for project in projects %}
+    <article>
+      <strong>{{ project.name }}</strong><code>{{ project.target }}</code>
+      {% if project.target == demo_target %}
+      <span class="badge">somente leitura</span>
+      {% else %}
+      <form method="post" action="/ui/projects/{{ project.id }}/scans">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <div class="scan-basics">
+          <label>Módulo<select name="module"><option>all</option><option>recon</option><option>surface</option><option>cve</option></select></label>
+          <label>Perfil<select name="profile"><option>safe</option><option>standard</option></select></label>
+        </div>
+        <details class="scan-tuning">
+          <summary>Ajustar desempenho</summary>
+          <div class="tuning-grid" data-scan-tuning data-word-count="4613">
+            <label>Workers<input type="number" name="threads" value="10" min="1" max="50" required></label>
+            <label>Requisições/minuto<input type="number" name="requests_per_minute" value="300" min="60" max="6000" step="60" required></label>
+            <label>Timeout por requisição<input type="number" name="timeout" value="10" min="1" max="60" step="1" required></label>
+            <label>Profundidade máxima<input type="number" name="max_depth" value="2" min="1" max="5" required></label>
+            <label class="check"><input type="checkbox" name="recursive" value="yes"> Revisitar diretórios encontrados</label>
+            <label class="check"><input type="checkbox" name="skip_deps" value="yes"> Pular verificação de dependências</label>
+          </div>
+          <p class="scan-estimate" data-scan-estimate>Estimativa da lista base: 15 min 23 s.</p>
+          <p class="section-help">Recursão repete a lista em diretórios válidos e pode multiplicar a duração. Aumente a carga somente dentro das regras do alvo.</p>
+        </details>
+        <button>Iniciar</button>
+      </form>
+      {% endif %}
+    </article>
+    {% else %}<p class="muted">Nenhum projeto. Comece pela demonstração acima.</p>{% endfor %}
+  </section>
+</div>
+
+<section class="card"><h2>Scans recentes</h2>
+  {% include "recent_scans.html" %}
+</section>
+{% endblock %}

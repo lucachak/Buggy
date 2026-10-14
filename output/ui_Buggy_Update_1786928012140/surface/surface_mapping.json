@@ -1,0 +1,1492 @@
+{
+  "target": "http://localhost:3000",
+  "timestamp": 1786928937.4347892,
+  "technologies": {
+    "results": [
+      {
+        "url": "http://localhost:3000",
+        "status": 200,
+        "waf": [],
+        "cms": [],
+        "framework": [
+          "Angular"
+        ],
+        "software": []
+      }
+    ],
+    "summary": {
+      "waf_detected": false,
+      "waf_type": null,
+      "all_waf": [],
+      "all_cms": [],
+      "all_frameworks": [
+        "Angular"
+      ],
+      "all_servers": [],
+      "all_software": [],
+      "total_urls": 1
+    }
+  },
+  "endpoints": {
+    "endpoints": [
+      "http://localhost:3000/promotion",
+      "http://localhost:3000/media/",
+      "http://localhost:3000/Video",
+      "http://localhost:3000/ftp",
+      "http://localhost:3000/video",
+      "http://localhost:3000/assets/",
+      "http://localhost:3000/robots.txt",
+      "http://localhost:3000/api/Feedbacks",
+      "http://localhost:3000/rest/web3",
+      "http://localhost:3000/api/Challenges/?key=nftMintChallenge",
+      "http://localhost:3000/api/Challenges",
+      "http://localhost:3000/rest/repeat-notification",
+      "http://localhost:3000/rest/continue-code",
+      "http://localhost:3000/rest/continue-code-findIt",
+      "http://localhost:3000/rest/continue-code-fixIt",
+      "http://localhost:3000/rest/continue-code/apply/",
+      "http://localhost:3000/rest/continue-code-findIt/apply/",
+      "http://localhost:3000/rest/continue-code-fixIt/apply/",
+      "http://localhost:3000/api/Users",
+      "http://localhost:3000/rest/user/authentication-details/",
+      "http://localhost:3000/rest/user/login",
+      "http://localhost:3000/rest/user/change-password?current=",
+      "http://localhost:3000/rest/user/reset-password",
+      "http://localhost:3000/rest/user/whoami",
+      "http://localhost:3000/rest/saveLoginIp",
+      "http://localhost:3000/rest/deluxe-membership",
+      "http://localhost:3000/api/Addresss",
+      "http://localhost:3000/api/Recycles",
+      "http://localhost:3000/rest/admin",
+      "http://localhost:3000/rest/country-mapping",
+      "http://localhost:3000/api/BasketItems",
+      "http://localhost:3000/api/Products",
+      "http://localhost:3000/rest/track-order",
+      "http://localhost:3000/rest/captcha",
+      "http://localhost:3000/api/SecurityAnswers",
+      "http://localhost:3000/api/SecurityQuestions",
+      "http://localhost:3000/rest/user/security-question?email=",
+      "http://localhost:3000/api/Quantitys",
+      "http://localhost:3000/rest/products",
+      "http://localhost:3000/api/Complaints",
+      "http://localhost:3000/rest/image-captcha/",
+      "http://localhost:3000/rest/user",
+      "http://localhost:3000/rest/wallet/balance",
+      "http://localhost:3000/api/Deliverys",
+      "http://localhost:3000/api/Cards",
+      "http://localhost:3000/rest/order-history",
+      "http://localhost:3000/rest/memories",
+      "http://localhost:3000/api/Hints",
+      "http://localhost:3000/rest/chat",
+      "http://localhost:3000/api/Challenges/",
+      "http://localhost:3000/rest/admin/application-configuration"
+    ],
+    "total_discovered": 7,
+    "categorized": {
+      "admin_panels": [],
+      "api_endpoints": [
+        "http://localhost:3000/api/Feedbacks",
+        "http://localhost:3000/rest/web3",
+        "http://localhost:3000/api/Challenges/?key=nftMintChallenge",
+        "http://localhost:3000/api/Challenges",
+        "http://localhost:3000/rest/repeat-notification",
+        "http://localhost:3000/rest/continue-code",
+        "http://localhost:3000/rest/continue-code-findIt",
+        "http://localhost:3000/rest/continue-code-fixIt",
+        "http://localhost:3000/rest/continue-code/apply/",
+        "http://localhost:3000/rest/continue-code-findIt/apply/",
+        "http://localhost:3000/rest/continue-code-fixIt/apply/",
+        "http://localhost:3000/api/Users",
+        "http://localhost:3000/rest/user/authentication-details/",
+        "http://localhost:3000/rest/user/login",
+        "http://localhost:3000/rest/user/change-password?current=",
+        "http://localhost:3000/rest/user/reset-password",
+        "http://localhost:3000/rest/user/whoami",
+        "http://localhost:3000/rest/saveLoginIp",
+        "http://localhost:3000/rest/deluxe-membership",
+        "http://localhost:3000/api/Addresss",
+        "http://localhost:3000/api/Recycles",
+        "http://localhost:3000/rest/admin",
+        "http://localhost:3000/rest/country-mapping",
+        "http://localhost:3000/api/BasketItems",
+        "http://localhost:3000/api/Products",
+        "http://localhost:3000/rest/track-order",
+        "http://localhost:3000/rest/captcha",
+        "http://localhost:3000/api/SecurityAnswers",
+        "http://localhost:3000/api/SecurityQuestions",
+        "http://localhost:3000/rest/user/security-question?email=",
+        "http://localhost:3000/api/Quantitys",
+        "http://localhost:3000/rest/products",
+        "http://localhost:3000/api/Complaints",
+        "http://localhost:3000/rest/image-captcha/",
+        "http://localhost:3000/rest/user",
+        "http://localhost:3000/rest/wallet/balance",
+        "http://localhost:3000/api/Deliverys",
+        "http://localhost:3000/api/Cards",
+        "http://localhost:3000/rest/order-history",
+        "http://localhost:3000/rest/memories",
+        "http://localhost:3000/api/Hints",
+        "http://localhost:3000/rest/chat",
+        "http://localhost:3000/api/Challenges/",
+        "http://localhost:3000/rest/admin/application-configuration"
+      ],
+      "backup_files": [],
+      "config_files": [],
+      "login_pages": [
+        "http://localhost:3000/rest/user/authentication-details/",
+        "http://localhost:3000/rest/user/login",
+        "http://localhost:3000/rest/saveLoginIp"
+      ],
+      "uploads": [
+        "http://localhost:3000/media/"
+      ],
+      "debug": []
+    },
+    "interesting": [
+      {
+        "type": "robots_disallow",
+        "url": "http://localhost:3000/ftp",
+        "severity": "high",
+        "description": "Path explicitly hidden in robots.txt"
+      },
+      {
+        "type": "security_contact",
+        "contact": "mailto:donotreply@owasp-juice.shop",
+        "url": "http://localhost:3000/.well-known/security.txt",
+        "severity": "info",
+        "description": "Security contact found: mailto:donotreply@owasp-juice.shop"
+      }
+    ],
+    "discovery_sources": [
+      "robots.txt"
+    ]
+  },
+  "js_secrets": {
+    "results": [
+      {
+        "url": "http://localhost:3000/polyfills.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/scripts.js",
+        "secrets": [],
+        "endpoints": [
+          "https://www.cookiesandyou.com"
+        ],
+        "endpoint_details": [
+          {
+            "path": "https://www.cookiesandyou.com",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/scripts.js"
+          }
+        ],
+        "script_refs": [
+          "//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/main.js",
+        "secrets": [],
+        "endpoints": [
+          "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=",
+          "/api/Feedbacks",
+          "/rest/web3",
+          "/api/Challenges/?key=nftMintChallenge",
+          "/api/Challenges",
+          "/rest/repeat-notification",
+          "/rest/continue-code",
+          "/rest/continue-code-findIt",
+          "/rest/continue-code-fixIt",
+          "/rest/continue-code/apply/",
+          "/rest/continue-code-findIt/apply/",
+          "/rest/continue-code-fixIt/apply/",
+          "http://www.w3.org/2000/svg",
+          "/api/Users",
+          "/rest/user/authentication-details/",
+          "/rest/user/login",
+          "/rest/user/change-password?current=",
+          "/rest/user/reset-password",
+          "/rest/user/whoami",
+          "/rest/saveLoginIp",
+          "/rest/deluxe-membership",
+          "/api/Addresss",
+          "/api/Recycles",
+          "/rest/admin",
+          "https://owasp.org",
+          "https://owasp-juice.shop",
+          "/rest/country-mapping",
+          "/api/BasketItems",
+          "https://ponzico.win/ponzico.pdf",
+          "https://www.sec.gov/investor/alerts/ia_virtualcurrencies.pdf",
+          "/api/Products",
+          "/rest/track-order",
+          "/rest/captcha",
+          "/api/SecurityAnswers",
+          "/api/SecurityQuestions",
+          "/rest/user/security-question?email=",
+          "/api/Quantitys",
+          "/rest/products",
+          "https://accounts.google.com/o/oauth2/v2/auth",
+          "/api/Complaints",
+          "/rest/image-captcha/",
+          "/rest/user",
+          "https://www.freeprivacypolicy.com/",
+          "/rest/wallet/balance",
+          "/api/Deliverys",
+          "/api/Cards",
+          "https://pwning.owasp-juice.shop/companion-guide/latest/part3/donations.html",
+          "https://opensea.io/collection/juice-shop",
+          "/rest/order-history",
+          "https://twitter.com/",
+          "https://twitter.com/intent/tweet?text=",
+          "/rest/memories",
+          "https://bsky.app/intent/compose?text=",
+          "https://mastodonshare.com/?text=",
+          "https://bsky.app/profile/",
+          "https://testnets.opensea.io/assets/mumbai/0xf4817631372dca68a25a18eb7a0b36d54f3dbcf7/0",
+          "https://testnets.opensea.io/0x8343d2eb2B13A2495De435a1b15e85b98115Ce05",
+          "/api/Hints",
+          "/rest/chat"
+        ],
+        "endpoint_details": [
+          {
+            "path": "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Feedbacks",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/web3",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Challenges/?key=nftMintChallenge",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Challenges",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/repeat-notification",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/continue-code",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/continue-code-findIt",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/continue-code-fixIt",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/continue-code/apply/",
+            "method": "PUT",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/continue-code-findIt/apply/",
+            "method": "PUT",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/continue-code-fixIt/apply/",
+            "method": "PUT",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "http://www.w3.org/2000/svg",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Users",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user/authentication-details/",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user/login",
+            "method": "POST",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user/change-password?current=",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user/reset-password",
+            "method": "POST",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user/whoami",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/saveLoginIp",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/deluxe-membership",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Addresss",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Recycles",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/admin",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://owasp.org",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://owasp-juice.shop",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/country-mapping",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/BasketItems",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://ponzico.win/ponzico.pdf",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://www.sec.gov/investor/alerts/ia_virtualcurrencies.pdf",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Products",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/track-order",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/captcha",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/SecurityAnswers",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/SecurityQuestions",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user/security-question?email=",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Quantitys",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/products",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://accounts.google.com/o/oauth2/v2/auth",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Complaints",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/image-captcha/",
+            "method": "GET",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/user",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://www.freeprivacypolicy.com/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/wallet/balance",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Deliverys",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Cards",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://pwning.owasp-juice.shop/companion-guide/latest/part3/donations.html",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://opensea.io/collection/juice-shop",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/order-history",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://twitter.com/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://twitter.com/intent/tweet?text=",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/memories",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://bsky.app/intent/compose?text=",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://mastodonshare.com/?text=",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://bsky.app/profile/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://testnets.opensea.io/assets/mumbai/0xf4817631372dca68a25a18eb7a0b36d54f3dbcf7/0",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "https://testnets.opensea.io/0x8343d2eb2B13A2495De435a1b15e85b98115Ce05",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/api/Hints",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          },
+          {
+            "path": "/rest/chat",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/main.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js",
+          "./chunk-DAJ4olp_.js",
+          "./hacking-instructor-BXwB7EFQ.js",
+          "./confetti-DoPrSMNP.js",
+          "./faucet.module-60SLa5Cr.js",
+          "./wallet-web3.module-s802s5aS.js",
+          "./web3-sandbox.module-C8MIIA8b.js",
+          "./coding-challenge-page.component-VgIt3B-z.js",
+          "./recycle.component-BMXcwerA.js",
+          "./about.component-CZcG2819.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/vendor/beercss/beer.min.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/rolldown-runtime-BoHGiXSq.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/chunk-DBPdFzgj.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/chunk-eYAgyLdn.js",
+        "secrets": [],
+        "endpoints": [
+          "https://angular.dev/best-practices/security#preventing-cross-site-scripting-xss",
+          "http://www.w3.org/2000/svg",
+          "http://www.w3.org/1998/Math/MathML",
+          "http://www.w3.org/1999/xhtml",
+          "http://www.w3.org/1999/xlink",
+          "http://www.w3.org/XML/1998/namespace",
+          "http://www.w3.org/2000/xmlns/"
+        ],
+        "endpoint_details": [
+          {
+            "path": "https://angular.dev/best-practices/security#preventing-cross-site-scripting-xss",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          },
+          {
+            "path": "http://www.w3.org/2000/svg",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          },
+          {
+            "path": "http://www.w3.org/1998/Math/MathML",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          },
+          {
+            "path": "http://www.w3.org/1999/xhtml",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          },
+          {
+            "path": "http://www.w3.org/1999/xlink",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          },
+          {
+            "path": "http://www.w3.org/XML/1998/namespace",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          },
+          {
+            "path": "http://www.w3.org/2000/xmlns/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/chunk-eYAgyLdn.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/chunk-DAJ4olp_.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js",
+        "secrets": [],
+        "endpoints": [
+          "/api/Challenges/",
+          "/rest/admin/application-configuration",
+          "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/771984076&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true"
+        ],
+        "endpoint_details": [
+          {
+            "path": "/api/Challenges/",
+            "method": "GET",
+            "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+          },
+          {
+            "path": "/rest/admin/application-configuration",
+            "method": "GET",
+            "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+          },
+          {
+            "path": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/771984076&color=%23ff5500&auto_play=true&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./main.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/confetti-DoPrSMNP.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/faucet.module-60SLa5Cr.js",
+        "secrets": [],
+        "endpoints": [
+          "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+          "https://sepolia.etherscan.io/"
+        ],
+        "endpoint_details": [
+          {
+            "path": "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/faucet.module-60SLa5Cr.js"
+          },
+          {
+            "path": "https://sepolia.etherscan.io/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/faucet.module-60SLa5Cr.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js",
+          "./chunk-DAJ4olp_.js",
+          "./main.js",
+          "./chunk-LgKEbQmx.js",
+          "./chunk-v9EE5s4z.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/wallet-web3.module-s802s5aS.js",
+        "secrets": [],
+        "endpoints": [
+          "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+          "https://sepolia.etherscan.io/"
+        ],
+        "endpoint_details": [
+          {
+            "path": "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/wallet-web3.module-s802s5aS.js"
+          },
+          {
+            "path": "https://sepolia.etherscan.io/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/wallet-web3.module-s802s5aS.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js",
+          "./chunk-DAJ4olp_.js",
+          "./main.js",
+          "./chunk-LgKEbQmx.js",
+          "./chunk-v9EE5s4z.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/web3-sandbox.module-C8MIIA8b.js",
+        "secrets": [],
+        "endpoints": [
+          "https://binaries.soliditylang.org/bin/list.json",
+          "https://binaries.soliditylang.org/bin/${i}",
+          "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+          "https://sepolia.etherscan.io/"
+        ],
+        "endpoint_details": [
+          {
+            "path": "https://binaries.soliditylang.org/bin/list.json",
+            "method": "GET",
+            "source": "http://localhost:3000/web3-sandbox.module-C8MIIA8b.js"
+          },
+          {
+            "path": "https://binaries.soliditylang.org/bin/${i}",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/web3-sandbox.module-C8MIIA8b.js"
+          },
+          {
+            "path": "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/web3-sandbox.module-C8MIIA8b.js"
+          },
+          {
+            "path": "https://sepolia.etherscan.io/",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/web3-sandbox.module-C8MIIA8b.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js",
+          "./chunk-DAJ4olp_.js",
+          "./main.js",
+          "./chunk-BJ5LcrCb.js",
+          "./chunk-v9EE5s4z.js",
+          "soljson-v0.8.21+commit.d9974bed.js",
+          "soljson-v0.8.9+commit.e5eed63a.js",
+          "soljson-v0.7.6+commit.7338295f.js",
+          "soljson-v0.6.12+commit.27d51765.js",
+          "soljson-v0.5.17+commit.d19bba13.js",
+          "soljson-v0.4.26+commit.4563c3fc.js",
+          "soljson-v0.3.6+commit.3fc68da5.js",
+          "soljson-v0.2.2+commit.ef92f566.js",
+          "soljson-v0.1.7+commit.b4e666cc.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/coding-challenge-page.component-VgIt3B-z.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js",
+          "./chunk-DAJ4olp_.js",
+          "./main.js",
+          "./chunk-BJ5LcrCb.js",
+          "./confetti-DoPrSMNP.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/recycle.component-BMXcwerA.js",
+        "secrets": [],
+        "endpoints": [],
+        "endpoint_details": [],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-eYAgyLdn.js",
+          "./chunk-DAJ4olp_.js",
+          "./main.js"
+        ],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/about.component-CZcG2819.js",
+        "secrets": [],
+        "endpoints": [
+          "http://www.w3.org/2000/svg",
+          "https://youtube.com/embed/${r.src}",
+          "https://player.vimeo.com/video/${r.src}"
+        ],
+        "endpoint_details": [
+          {
+            "path": "http://www.w3.org/2000/svg",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/about.component-CZcG2819.js"
+          },
+          {
+            "path": "https://youtube.com/embed/${r.src}",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/about.component-CZcG2819.js"
+          },
+          {
+            "path": "https://player.vimeo.com/video/${r.src}",
+            "method": "UNKNOWN",
+            "source": "http://localhost:3000/about.component-CZcG2819.js"
+          }
+        ],
+        "script_refs": [
+          "./rolldown-runtime-BoHGiXSq.js",
+          "./chunk-DBPdFzgj.js",
+          "./chunk-eYAgyLdn.js",
+          "./main.js"
+        ],
+        "secret_count": 0
+      }
+    ],
+    "summary": {
+      "total_files": 16,
+      "attempted_files": 25,
+      "total_secrets": 0,
+      "high_severity": 0
+    }
+  },
+  "forms": {
+    "total_forms": 0,
+    "forms": [],
+    "categorized": {
+      "login_forms": [],
+      "search_forms": [],
+      "contact_forms": [],
+      "upload_forms": [],
+      "registration_forms": [],
+      "payment_forms": [],
+      "other": []
+    },
+    "high_value_targets": [],
+    "injection_points": [],
+    "summary": {
+      "total_forms": 0,
+      "total_injection_points": 0,
+      "forms_by_risk": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0
+      },
+      "csrf_protection": 0,
+      "upload_forms": 0
+    }
+  },
+  "apis": {
+    "results": [
+      {
+        "url": "http://localhost:3000/api/Feedbacks",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/web3",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Challenges/?key=nftMintChallenge",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Challenges",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/repeat-notification",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-findIt",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-fixIt",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code/apply/",
+        "type": "API route (JavaScript)",
+        "method": "PUT",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-findIt/apply/",
+        "type": "API route (JavaScript)",
+        "method": "PUT",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-fixIt/apply/",
+        "type": "API route (JavaScript)",
+        "method": "PUT",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Users",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/authentication-details/",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/login",
+        "type": "API route (JavaScript)",
+        "method": "POST",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/change-password?current=",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/reset-password",
+        "type": "API route (JavaScript)",
+        "method": "POST",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/whoami",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/saveLoginIp",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/deluxe-membership",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Addresss",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Recycles",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/admin",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/country-mapping",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/BasketItems",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Products",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/track-order",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/captcha",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/SecurityAnswers",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/SecurityQuestions",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/security-question?email=",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Quantitys",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/products",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Complaints",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/image-captcha/",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/wallet/balance",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Deliverys",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Cards",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/order-history",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/memories",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Hints",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/chat",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Challenges/",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/admin/application-configuration",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+      }
+    ],
+    "openapi_specs": [],
+    "graphqls": [],
+    "rest_apis": [
+      {
+        "url": "http://localhost:3000/api/Feedbacks",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/web3",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Challenges/?key=nftMintChallenge",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Challenges",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/repeat-notification",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-findIt",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-fixIt",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code/apply/",
+        "type": "API route (JavaScript)",
+        "method": "PUT",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-findIt/apply/",
+        "type": "API route (JavaScript)",
+        "method": "PUT",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/continue-code-fixIt/apply/",
+        "type": "API route (JavaScript)",
+        "method": "PUT",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Users",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/authentication-details/",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/login",
+        "type": "API route (JavaScript)",
+        "method": "POST",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/change-password?current=",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/reset-password",
+        "type": "API route (JavaScript)",
+        "method": "POST",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/whoami",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/saveLoginIp",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/deluxe-membership",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Addresss",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Recycles",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/admin",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/country-mapping",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/BasketItems",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Products",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/track-order",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/captcha",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/SecurityAnswers",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/SecurityQuestions",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user/security-question?email=",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Quantitys",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/products",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Complaints",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/image-captcha/",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/user",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/wallet/balance",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Deliverys",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Cards",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/order-history",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/memories",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Hints",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/chat",
+        "type": "API route (JavaScript)",
+        "method": "UNKNOWN",
+        "source": "http://localhost:3000/main.js"
+      },
+      {
+        "url": "http://localhost:3000/api/Challenges/",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+      },
+      {
+        "url": "http://localhost:3000/rest/admin/application-configuration",
+        "type": "API route (JavaScript)",
+        "method": "GET",
+        "source": "http://localhost:3000/hacking-instructor-BXwB7EFQ.js"
+      }
+    ],
+    "total_apis": 44
+  },
+  "open_ports": {
+    "localhost": {
+      "open_ports": [],
+      "services": {},
+      "high_risk": []
+    }
+  },
+  "summary": {
+    "target": "http://localhost:3000",
+    "timestamp": 1786928956.4242713,
+    "attack_surface": {
+      "total_endpoints": 51,
+      "total_forms": 0,
+      "total_apis": 44,
+      "js_secrets_found": 0,
+      "open_ports_count": 0
+    },
+    "technologies": {
+      "cms": [],
+      "waf": false,
+      "waf_type": null,
+      "frameworks": [
+        "Angular"
+      ],
+      "servers": [],
+      "software": []
+    },
+    "high_value_targets": {
+      "admin_panels": [
+        "http://localhost:3000/rest/admin",
+        "http://localhost:3000/rest/admin/application-configuration"
+      ],
+      "api_specs": [],
+      "graphql": [],
+      "exposed_dbs": []
+    },
+    "risk_indicators": {
+      "waf_present": false,
+      "exposed_admin": true,
+      "exposed_databases": false,
+      "js_secrets_leaked": false
+    }
+  }
+}

@@ -1,0 +1,292 @@
+Detailed logging initialized at /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/logs/buggy.log
+
+[1m[>] Starting Full Pipeline on http://localhost:3000[0m
+
+[96m============================================================[0m
+[96m  PHASE 1/9: Reconnaissance[0m
+[96m============================================================[0m
+
+[1m[>] Starting Reconnaissance on http://localhost:3000[0m
+
+
+[1m🔍  Buggy Recon  —  target: localhost[0m
+     [96mOutput: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861[0m
+
+[95m[1m────────────────────────────────────────────────────────────
+  [1/4] SUBDOMAIN ENUMERATION  →  localhost
+────────────────────────────────────────────────────────────[0m
+[93m  [i] Local/private target — skipping external subdomain enum.[0m
+
+[96m[1m────────────────────────────────────────────────────────────
+  [2/4] DNS RESOLUTION & ZONE TRANSFER  →  localhost
+────────────────────────────────────────────────────────────[0m
+[93m  [i] Local/private target — skipping DNS resolution.[0m
+
+[93m[1m────────────────────────────────────────────────────────────
+  [3/4] ORIGIN IP DISCOVERY  →  localhost
+────────────────────────────────────────────────────────────[0m
+[93m  [i] Local/private target — skipping origin IP discovery.[0m
+
+[35m[1m────────────────────────────────────────────────────────────
+  [4/4] DIRECTORY BRUTEFORCE  (Dirpy v2 Go)
+────────────────────────────────────────────────────────────[0m
+[96m  [i] Using binary: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/modules/Reconnaissance/DirGO/DirGo[0m
+[93m  ▶ [0mWordlist: default.txt  (4613 words)  |  Threads: 10
+
+[93m  ▶ [0mBusting: [1mhttp://localhost:3000[0m
+[90m  Dirpy v2  |  async directory bruteforcer[0m
+
+  [1mTargets:[0m http://localhost:3000
+  [1mWordlist:[0m 4612 paths
+  [1mConcurrency:[0m 10 workers
+
+[90m  ──────────────────────────────────────────────────────────────────────[0m
+  Status        Size        Time  URL
+[90m  ──────────────────────────────────────────────────────────────────────[0m
+
+[90m  ──────────────────────────────────────────────────────────────────────[0m
+  [92m[1mDone![0m  4612 requests  [1m4612[0m found  in 924.68s  (5 req/s)
+
+[92m  [✓] JSON saved to: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/recon/dirbust/scan_http_localhost-3000.json[0m
+  4612 result(s) found.
+
+[92m  [✔] 4603 paths across 1 target(s)  (924.7s)[0m
+
+[92m[1m  ✅  Recon complete in 924.7s[0m
+       Subdomains      : 1
+       Live IPs        : 1
+       Origin IPs      : 0
+       Paths found     : 4603
+
+
+[92m[1m  📄  Report saved:[0m
+      [96mTXT     [0m→  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/reports/localhost_recon_20260816_161745.txt
+      [96mJSON    [0m→  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/reports/localhost_recon_20260816_161745.json
+      [96mSESSION [0m→  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/recon/discovery_summary.json
+
+[96m============================================================[0m
+[96m  PHASE 2/9: Surface Mapping[0m
+[96m============================================================[0m
+
+[1m[>] Starting Surface Mapping on http://localhost:3000[0m
+
+
+============================================================
+  SurfaceMapping Pipeline - http://localhost:3000
+============================================================
+
+📂 Loaded Recon data: 1 URLs, 4603 paths, 1 hosts
+[1/6] 🔍 Tech Detection (WAF, CMS, Frameworks)...
+  running tech detection (Python)...
+  ├─ CMS: None
+  ├─ WAF: None detected
+  ├─ Frameworks: Angular
+  └─ Servers: Unknown
+
+[2/6] 🗺️  Endpoint Mapping (robots.txt, sitemap)...
+  └─ Discovered: 4603 endpoints
+
+[3/6] 📜 JS Analysis (secrets, API keys)...
+  ├─ Files analyzed: 1
+  └─ Secrets found: 0 (0 high/critical)
+
+[4/6] 📝 Form Mapping (injection points)...
+  ├─ Forms found: 0
+  └─ Injection points: 0
+
+[5/6] 🚀 API Discovery (Swagger, GraphQL)...
+  ├─ APIs found: 0
+  └─ OpenAPI specs: 0
+
+[6/6] 🔌 Port Scanning (exposed services)...
+  ├─ Open ports: 0
+  └─ Exposed databases: 0
+
+📁 Results saved to: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/surface/
+
+============================================================
+  ✅ SurfaceMapping Complete! (13.5s)
+============================================================
+
+============================================================
+  EXECUTIVE SUMMARY
+============================================================
+  Attack Surface:
+    • Endpoints: 4603
+    • Forms: 0
+    • APIs: 0
+    • JS Secrets: 0
+    • Open Ports: 0
+
+  Risk Indicators:
+    • WAF: ✅ None
+    • Admin route observed: ⚠️  Yes
+    • DB exposed: ✅ No
+    • JS leaks: ✅ No
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 3/9: CVE Intelligence & Prioritization[0m
+[96m============================================================[0m
+
+  CVE Intelligence: 1 componentes, 0 CVEs, 0 KEV
+  Output: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/intelligence/cves.json
+
+  Validation plan: 0 validators
+  Output: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/validation/plan.json
+
+  Validation execution: 0 result(s)
+
+[96m============================================================[0m
+[96m  PHASE 4/9: Infrastructure Security[0m
+[96m============================================================[0m
+
+[1m[>] Starting Infra Scan on http://localhost:3000[0m
+
+
+============================================================
+  InfraScanner — http://localhost:3000
+============================================================
+
+  [+] 1 hosts identificados para infra scan
+  [+] 2 tarefas totais
+
+
+============================================================
+  ✅ Infra scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/attacks/infra/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 5/9: Authentication & Authorization[0m
+[96m============================================================[0m
+
+[1m[>] Starting Auth Scan on http://localhost:3000[0m
+
+
+============================================================
+  AuthScanner — http://localhost:3000
+============================================================
+
+  [+] 10 tarefas totais
+
+  ... 10/10 tasks, 10 findings
+
+  [+] Running SSO brute scanner...
+
+────────────────────────────────────────────────────────────
+  SSO Brute Scanner — http://localhost:3000
+────────────────────────────────────────────────────────────
+
+  [SSO] Brute-forcing SSO endpoints...
+  [SSO] No SSO endpoints found.
+  [SSO] No endpoints to test for open redirect.
+  [SSO] Checking for token leakage in URLs...
+  [SSO] No token leakage detected.
+
+  [SSO] Complete — 0 total finding(s)
+
+============================================================
+  ✅ Auth scan complete — 10 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/attacks/auth/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 6/9: Business Logic[0m
+[96m============================================================[0m
+
+[1m[>] Starting Business Logic Scan on http://localhost:3000[0m
+
+
+============================================================
+  BusinessLogicScanner — http://localhost:3000
+============================================================
+
+  [+] 0 tarefas totais
+
+
+============================================================
+  ✅ Business Logic scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/attacks/business/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 7/9: Injection Attacks[0m
+[96m============================================================[0m
+
+[1m[>] Starting Injection Scan on http://localhost:3000[0m
+
+
+============================================================
+  InjectionScanner — http://localhost:3000
+============================================================
+
+  [+] 60 parâmetros GET para testar
+  [+] 0 formulários para testar
+  [+] 240 tarefas totais
+
+  ... 20/240 tasks, 7 findings
+  ... 40/240 tasks, 12 findings
+  ... 60/240 tasks, 17 findings
+  ... 80/240 tasks, 22 findings
+  ... 100/240 tasks, 27 findings
+  ... 120/240 tasks, 32 findings
+  ... 140/240 tasks, 37 findings
+  ... 160/240 tasks, 42 findings
+  ... 180/240 tasks, 47 findings
+  ... 200/240 tasks, 52 findings
+  ... 220/240 tasks, 57 findings
+  ... 240/240 tasks, 60 findings
+
+============================================================
+  ✅ Injection scan complete — 60 findings
+     CRITICAL: 60
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/attacks/injection/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 8/9: XSS & Client-Side[0m
+[96m============================================================[0m
+
+[1m[>] Starting XSS/Client Scan on http://localhost:3000[0m
+
+
+============================================================
+  XSSScanner — http://localhost:3000
+============================================================
+
+  [+] 0 forms | 26 search endpoints
+  [+] 20 tarefas totais
+
+  ... 10/20 tasks, 0 findings
+  ... 20/20 tasks, 0 findings
+
+============================================================
+  ✅ XSS scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/attacks/xss/findings.json
+============================================================
+
+[96m============================================================[0m
+[96m  PHASE 9/9: SSRF & Server-Side[0m
+[96m============================================================[0m
+
+============================================================
+  SSRFScanner — http://localhost:3000
+============================================================
+
+  [+] 0 param tasks + 0 form tasks
+
+
+============================================================
+  ✅ SSRF scan complete — 0 findings
+  📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/attacks/ssrf/findings.json
+============================================================
+
+[92m  📊  Report gerado:[0m  /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/reports/report.html
+
+[92m  📊  Report: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861/reports/report.html[0m
+
+[92m============================================================[0m
+[92m  ✅ Full Pipeline Complete![0m
+[92m  Output: /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786906940861[0m
+[92m============================================================[0m

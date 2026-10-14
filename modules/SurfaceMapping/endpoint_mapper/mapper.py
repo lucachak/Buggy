@@ -30,7 +30,11 @@ class EndpointMapper:
         self.base_urls = base_urls
         self.known_paths = set(discovered_paths)
         self.waf_detected = waf_detected
-        self.endpoints: Set[str] = set()
+        # Recon paths are already observed endpoints and must not be discarded.
+        self.endpoints: Set[str] = {
+            str(path) for path in discovered_paths
+            if isinstance(path, str) and urlparse(path).scheme in {"http", "https"}
+        }
         self.interesting_findings: List[Dict] = []
         
         # Headers que indicam rate limiting
@@ -85,21 +89,16 @@ class EndpointMapper:
     
     def _fetch_url(self, url: str, timeout: int = 5) -> Optional[str]:
         """Busca conteúdo de URL com rate limiting awareness."""
-        from urllib.request import Request, urlopen
+        from urllib.request import Request
+        from modules.utils.http_client import scoped_urlopen
         from urllib.error import URLError, HTTPError
-        import ssl
-        
-        ssl_ctx = ssl.create_default_context()
-        ssl_ctx.check_hostname = False
-        ssl_ctx.verify_mode = ssl.CERT_NONE
-        
         try:
             req = Request(url, headers={
                 "User-Agent": "Buggy/1.0 SurfaceMapper",
                 "Accept": "text/plain,text/html,application/xml"
             })
             
-            response = urlopen(req, timeout=timeout, context=ssl_ctx)
+            response = scoped_urlopen(req, timeout=timeout)
             
             # Detecta rate limiting
             for header in self.rate_limit_headers:

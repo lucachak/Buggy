@@ -1,0 +1,35 @@
+{
+  "target": "http://127.0.0.1:3000",
+  "timestamp": 1786903228.538277,
+  "attack_surface": {
+    "total_endpoints": 13,
+    "total_forms": 0,
+    "total_apis": 0,
+    "js_secrets_found": 0,
+    "open_ports_count": 0
+  },
+  "technologies": {
+    "cms": [],
+    "waf": false,
+    "waf_type": null,
+    "frameworks": [
+      "Angular"
+    ],
+    "servers": [],
+    "software": []
+  },
+  "high_value_targets": {
+    "admin_panels": [
+      "http://127.0.0.1:3000/administration"
+    ],
+    "api_specs": [],
+    "graphql": [],
+    "exposed_dbs": []
+  },
+  "risk_indicators": {
+    "waf_present": false,
+    "exposed_admin": true,
+    "exposed_databases": false,
+    "js_secrets_leaked": false
+  }
+}

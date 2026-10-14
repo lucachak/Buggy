@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import sys
@@ -42,15 +43,18 @@ def _build_subdomain_cmds(domain: str, sub_dir: str) -> list:
     all_out   = os.path.join(sub_dir, "all-subs.txt")
     amass_out = os.path.join(amass_dir, "amass.txt")
 
+    ct_q, sf_q, amass_q, pas_q, all_q = map(
+        shlex.quote, (ct_out, sf_out, amass_out, pas_out, all_out)
+    )
     crt_cmd = (
         f"curl -s 'https://crt.sh/?q=*.{domain}&output=json'"
         f" | jq -r '.[].name_value'"
         f" | sed 's/\\*\\.//g'"
-        f" | sort -u > {ct_out}"
+        f" | sort -u > {ct_q}"
     )
     merge_cmd = (
-        f"cat {ct_out} {sf_out} {amass_out} {pas_out} 2>/dev/null"
-        f" | sort -u > {all_out}"
+        f"cat {ct_q} {sf_q} {amass_q} {pas_q} 2>/dev/null"
+        f" | sort -u > {all_q}"
     )
     return [
         (True,  crt_cmd),
@@ -108,7 +112,7 @@ class Discovery:
         # caused every request to fail silently.
         self.__target: str = target
         self.__user_agent: str = user_agent
-        self.__proxy: dict | None = proxy
+        self.__proxy: dict = dict(proxy or {})
 
         self.__output_root = output_dir or "."
         self.__recon_dir      = os.path.join(self.__output_root, "recon")
@@ -170,6 +174,7 @@ class Discovery:
             shell=is_shell,
             text=True,
             capture_output=True,
+            timeout=300,
         )
 
         if stdout_file and result.stdout:
@@ -330,9 +335,12 @@ class Discovery:
         self,
         wordlist: str = "default.txt",
         threads: int = 50,
+        rate: float = 10.0,
         allowed_status: set | None = None,
         recursive: bool = False,
+        max_depth: int = 2,
         timeout: float = 10.0,
+        insecure: bool = False,
     ) -> None:
         YELLOW = "\033[93m"
         GREEN  = "\033[92m"
@@ -350,7 +358,7 @@ class Discovery:
         dirpy_bin = self._find_dirpy_binary()
         if dirpy_bin is None:
             print(f"{RED}  [!] Dirpy v2 binary not found.{RESET}")
-            print(f"{YELLOW}  [i] Build:  cd modules/Reconnaissance/Dirpy && make build{RESET}")
+            print(f"{YELLOW}  [i] Build:  cd modules/Reconnaissance/DirGO && make build{RESET}")
             print(f"{YELLOW}  [i] Or set DIRPY_BIN env var.{RESET}")
             return
 
@@ -369,12 +377,21 @@ class Discovery:
 
         with open(wordlist_path) as f:
             word_count = sum(1 for line in f if line.strip())
-        print(f"{YELLOW}  ▶ {RESET}Wordlist: {wordlist}  ({word_count} words)  |  Threads: {threads}")
+        estimated = word_count / rate if rate > 0 else 0
+        eta_text = f"{estimated / 60:.1f} min" if estimated >= 60 else f"{estimated:.0f}s"
+        print(
+            f"{YELLOW}  ▶ {RESET}Wordlist: {wordlist}  ({word_count} words)"
+            f"  |  Threads: {threads}  |  Rate: {rate * 60:.0f} req/min"
+            f"  |  ETA base: {eta_text}"
+        )
 
         scheme  = urlparse(self.__target).scheme or "https"
         targets = [self.__target.rstrip("/")]
+        target_host = urlparse(self.__target).hostname
         for sub in self.__subdomains:
             sub_url = f"{scheme}://{sub}".rstrip("/")
+            if urlparse(sub_url).hostname == target_host:
+                continue
             if sub_url != self.__target.rstrip("/"):
                 targets.append(sub_url)
         targets = list(dict.fromkeys(targets))
@@ -392,24 +409,26 @@ class Discovery:
                 "-u", target_url,
                 "-w", wordlist_path,
                 "-t", str(threads),
+                "--rate", str(rate),
                 "--timeout", str(timeout),
                 "--output-dir", self.__dirbust_dir,
                 "--json", json_filename,
-                "--silent",
             ]
+            if recursive:
+                cmd.extend(["-r", "--depth", str(max_depth)])
+            if insecure:
+                cmd.append("--insecure")
 
             try:
-                result = subprocess.run(
+                rate_duration = word_count / rate if rate > 0 else 0
+                # Inherit stdout/stderr so progress reaches both the terminal
+                # and WebUI log while the Go process is still running.
+                process_timeout = None if recursive else rate_duration + timeout * len(targets) + 60
+                subprocess.run(
                     cmd,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout * len(targets) + 60,
+                    timeout=process_timeout,
+                    check=False,
                 )
-                if result.stdout.strip():
-                    print(result.stdout.strip())
-                if result.stderr.strip():
-                    for line in result.stderr.strip().split("\n")[:5]:
-                        print(f"{RED}  {line}{RESET}")
             except subprocess.TimeoutExpired:
                 print(f"{RED}  [!] Dirpy timed out on {target_url}{RESET}")
                 continue
@@ -538,7 +557,8 @@ class Discovery:
         # SurfaceMapper._load_recon_data() reads recon/discovery_summary.json.
         # We write a stable flat file so the next pipeline stage always finds it,
         # regardless of the timestamped report filename.
-        session_path = os.path.join(self.__recon_dir, "discovery_summary.json")
+        session_dir = self.__recon_dir if output_dir is None else reports_dir
+        session_path = os.path.join(session_dir, "discovery_summary.json")
         session_data = {
             "meta": {
                 "tool":        "Buggy",
@@ -572,9 +592,12 @@ class Discovery:
         dir_bust: bool = True,
         wordlist: str = "default.txt",
         threads: int = 50,
+        rate: float = 10.0,
         recursive: bool = False,
+        max_depth: int = 2,
         allowed_status: set | None = None,
         timeout: float = 10.0,
+        insecure: bool = False,
     ) -> dict:
         BOLD  = "\033[1m"
         GREEN = "\033[92m"
@@ -592,9 +615,12 @@ class Discovery:
             self.run_dir_busting(
                 wordlist=wordlist,
                 threads=threads,
+                rate=rate,
                 recursive=recursive,
+                max_depth=max_depth,
                 allowed_status=allowed_status,
                 timeout=timeout,
+                insecure=insecure,
             )
 
         elapsed = time.time() - total_start
@@ -613,7 +639,7 @@ class Discovery:
 
     def get_target(self) -> str:          return self.__target
     def get_user_agent(self) -> str:      return self.__user_agent
-    def get_proxy(self) -> dict | None:   return self.__proxy
+    def get_proxy(self) -> dict:          return self.__proxy
     def get_subdomains(self) -> list:     return self.__subdomains
     def get_endpoints(self) -> list:      return self.__endpoints
     def get_pages(self) -> list:          return self.__pages
@@ -624,7 +650,7 @@ class Discovery:
 
     def set_target(self, target: str) -> None:           self.__target = target
     def set_user_agent(self, ua: str) -> None:           self.__user_agent = ua
-    def set_proxy(self, proxy: dict | None) -> None:     self.__proxy = proxy
+    def set_proxy(self, proxy: dict | None) -> None:     self.__proxy = dict(proxy or {})
     def set_subdomains(self, v: list) -> None:           self.__subdomains = v
     def set_endpoints(self, v: list) -> None:            self.__endpoints = v
     def set_pages(self, v: list) -> None:                self.__pages = v

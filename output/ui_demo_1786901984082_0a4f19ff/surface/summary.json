@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "target": "http://buggy-demo.invalid",
+  "summary": {
+    "technologies": {
+      "software": [
+        {
+          "product": "apache",
+          "version": "2.4.49",
+          "source": "server-header"
+        },
+        {
+          "product": "tomcat",
+          "version": "7.0.79",
+          "source": "server-header"
+        }
+      ],
+      "frameworks": [
+        "Java"
+      ]
+    },
+    "attack_surface": {
+      "total_endpoints": 6,
+      "total_forms": 1,
+      "total_apis": 2
+    },
+    "risk_indicators": {
+      "waf_present": false,
+      "exposed_admin": true
+    }
+  }
+}

@@ -29,11 +29,9 @@ def _inject_get_param(url: str, param: str, value: str) -> str:
 
 def _test_ssrf_get(client: HttpClient, url: str, param: str, oob_host: str) -> dict | None:
     # Escolhe um payload OOB e um interno (ex: localhost)
-    payloads = [
-        f"http://{oob_host}/ssrf",
-        "http://127.0.0.1",
-        "http://localhost:22",
-    ]
+    payloads = ["http://127.0.0.1", "http://localhost:22"]
+    if oob_host:
+        payloads.insert(0, f"http://{oob_host}/ssrf")
     
     for payload in payloads:
         injected_url = _inject_get_param(url, param, payload)
@@ -85,16 +83,19 @@ def _test_ssrf_form(client: HttpClient, form: dict) -> dict | None:
 # ── Path Traversal ────────────────────────────────────────────────────────────
 
 def _test_path_traversal(client: HttpClient, url: str, param: str) -> dict | None:
+    baseline = client.get(url).body.lower()
     for payload in P.PATH_PAYLOADS[:15]:
         injected = _inject_get_param(url, param, payload)
         resp = client.get(injected)
-        if resp and any(m.lower() in resp.body.lower() for m in P.TRAVERSAL_MARKERS):
+        marker = next((m for m in P.TRAVERSAL_MARKERS
+                       if m.lower() in resp.body.lower() and m.lower() not in baseline), None)
+        if marker:
             return {
                 "type":       "path_traversal",
                 "url":        injected,
                 "parameter":  param,
                 "payload":    payload,
-                "evidence":   "Response contains traversal marker",
+                "evidence":   f"New traversal marker in response: {marker}",
                 "confidence": "high",
             }
     return None
@@ -103,19 +104,22 @@ def _test_path_traversal(client: HttpClient, url: str, param: str) -> dict | Non
 # ── LFI ───────────────────────────────────────────────────────────────────────
 
 def _test_lfi(client: HttpClient, url: str, param: str) -> dict | None:
+    baseline = client.get(url).body.lower()
     for payload in P.LFI_PAYLOADS[:12]:
         injected = _inject_get_param(url, param, payload)
         resp = client.get(injected)
         if not resp: continue
 
         # Detecta marcadores diretos
-        if any(m.lower() in resp.body.lower() for m in P.LFI_MARKERS):
+        marker = next((m for m in P.LFI_MARKERS
+                       if m.lower() in resp.body.lower() and m.lower() not in baseline), None)
+        if marker:
             return {
                 "type":       "lfi",
                 "url":        injected,
                 "parameter":  param,
                 "payload":    payload,
-                "evidence":   "Response contains LFI marker",
+                "evidence":   f"New LFI marker in response: {marker}",
                 "confidence": "high",
             }
 
@@ -167,7 +171,7 @@ class SSRFScanner:
         if surface_file.exists():
             with open(surface_file) as f:
                 surface = json.load(f)
-            surface.setdefault("ssrf_findings", []).extend(self.findings)
+            surface["ssrf_findings"] = self.findings
             with open(surface_file, "w") as f:
                 json.dump(surface, f, indent=2)
 
@@ -180,7 +184,7 @@ class SSRFScanner:
         for ep in all_endpoints[:40]:
             url = str(ep)
             parsed = urlparse(url)
-            qs = parse_qs(parsed.query)
+            qs = parse_qs(parsed.query, keep_blank_values=True)
 
             for param in qs:
                 pl = param.lower()
@@ -209,7 +213,7 @@ class SSRFScanner:
 
         forms = surface.get("injection_targets", {}).get("forms", [])
         form_tasks = [(f,) for f in forms[:20]]
-        buggy_logger.info(f"  [+] {len(tasks)} param tasks + 0 form tasks\n")
+        buggy_logger.info(f"  [+] {len(tasks)} param tasks + {len(form_tasks)} form tasks\n")
 
         def _run_task(task: tuple) -> list[dict]:
             try:
@@ -239,7 +243,7 @@ class SSRFScanner:
                 self.findings.extend(fut.result())
                 done += 1
                 if done % 10 == 0:
-                    buggy_logger.info(f"  ... {done}/{len(tasks)} tasks, {len(self.findings)} findings")
+                    buggy_logger.info(f"  ... {done}/{len(all_tasks)} tasks, {len(self.findings)} findings")
 
         self._save()
 

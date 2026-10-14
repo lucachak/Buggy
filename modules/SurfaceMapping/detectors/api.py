@@ -5,17 +5,13 @@ Substitui o binário Go api_discoverer.
 
 import json
 import re
-import ssl
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from modules.utils.http_client import scoped_urlopen
 from urllib.error import HTTPError
 from urllib.parse import urljoin
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; Buggy/1.0)"}
-
-SSL_CTX = ssl.create_default_context()
-SSL_CTX.check_hostname = False
-SSL_CTX.verify_mode = ssl.CERT_NONE
 
 # Paths a tentar em cada base URL
 SWAGGER_PATHS = [
@@ -41,7 +37,7 @@ def _get(url: str, timeout: int = 6) -> tuple[int, str, dict]:
     """Retorna (status, body, headers)."""
     try:
         req = Request(url, headers=HEADERS)
-        resp = urlopen(req, timeout=timeout, context=SSL_CTX)
+        resp = scoped_urlopen(req, timeout=timeout)
         headers = {k.lower(): v for k, v in resp.headers.items()}
         body = resp.read(512 * 1024).decode("utf-8", errors="ignore")
         return resp.status, body, headers
@@ -91,11 +87,23 @@ def _probe_rest(base_url: str) -> list[dict]:
     return found
 
 
-def discover(base_urls: list[str], threads: int = 10, timeout: float = 6.0) -> dict:
+def discover(base_urls: list[str], threads: int = 10, timeout: float = 6.0,
+             candidates: list[dict] | None = None) -> dict:
     """Descobre APIs em todas as base_urls."""
     openapi_specs = []
     graphqls      = []
     rest_apis     = []
+
+    for candidate in candidates or []:
+        url = str(candidate.get("url", ""))
+        if not url:
+            continue
+        rest_apis.append({
+            "url": url,
+            "type": "API route (JavaScript)",
+            "method": candidate.get("method", "UNKNOWN"),
+            "source": candidate.get("source", "javascript"),
+        })
 
     def _probe_all(base_url: str):
         return {
@@ -112,10 +120,14 @@ def discover(base_urls: list[str], threads: int = 10, timeout: float = 6.0) -> d
             graphqls.extend(res["graphql"])
             rest_apis.extend(res["rest"])
 
-    total = len(openapi_specs) + len(graphqls) + len(rest_apis)
+    unique = {}
+    for item in openapi_specs + graphqls + rest_apis:
+        unique[(item.get("url"), item.get("method", ""), item.get("type"))] = item
+    results = list(unique.values())
+    total = len(results)
 
     return {
-        "results":       openapi_specs + graphqls + rest_apis,
+        "results":       results,
         "openapi_specs": openapi_specs,
         "graphqls":      graphqls,
         "rest_apis":     rest_apis,

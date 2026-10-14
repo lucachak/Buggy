@@ -1,0 +1,91 @@
+[2026-08-16 16:34:26] [INFO] Detailed logging initialized at /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/logs/buggy.log
+[2026-08-16 16:50:00] [INFO] 
+============================================================
+[2026-08-16 16:50:00] [INFO]   InfraScanner — http://localhost:3000
+[2026-08-16 16:50:00] [INFO] ============================================================
+
+[2026-08-16 16:50:00] [INFO]   [+] 1 hosts identificados para infra scan
+[2026-08-16 16:50:00] [INFO]   [+] 2 tarefas totais
+
+[2026-08-16 16:50:03] [INFO] 
+============================================================
+[2026-08-16 16:50:03] [INFO]   ✅ Infra scan complete — 0 findings
+[2026-08-16 16:50:03] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/attacks/infra/findings.json
+[2026-08-16 16:50:03] [INFO] ============================================================
+[2026-08-16 16:50:03] [INFO] 
+============================================================
+[2026-08-16 16:50:03] [INFO]   AuthScanner — http://localhost:3000
+[2026-08-16 16:50:03] [INFO] ============================================================
+
+[2026-08-16 16:50:03] [INFO]   [+] 0 tarefas totais
+
+[2026-08-16 16:50:03] [INFO] 
+  [+] Running SSO brute scanner...
+[2026-08-16 16:50:03] [INFO] 
+────────────────────────────────────────────────────────────
+[2026-08-16 16:50:03] [INFO]   SSO Brute Scanner — http://localhost:3000
+[2026-08-16 16:50:03] [INFO] ────────────────────────────────────────────────────────────
+
+[2026-08-16 16:50:03] [INFO]   [SSO] Brute-forcing SSO endpoints...
+[2026-08-16 16:50:11] [INFO]   [SSO] No SSO endpoints found.
+[2026-08-16 16:50:11] [INFO]   [SSO] No endpoints to test for open redirect.
+[2026-08-16 16:50:11] [INFO]   [SSO] Checking for token leakage in URLs...
+[2026-08-16 16:50:11] [INFO]   [SSO] No token leakage detected.
+[2026-08-16 16:50:11] [INFO] 
+  [SSO] Complete — 0 total finding(s)
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   ✅ Auth scan complete — 0 findings
+[2026-08-16 16:50:11] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/attacks/auth/findings.json
+[2026-08-16 16:50:11] [INFO] ============================================================
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   BusinessLogicScanner — http://localhost:3000
+[2026-08-16 16:50:11] [INFO] ============================================================
+
+[2026-08-16 16:50:11] [INFO]   [+] 0 tarefas totais
+
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   ✅ Business Logic scan complete — 0 findings
+[2026-08-16 16:50:11] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/attacks/business/findings.json
+[2026-08-16 16:50:11] [INFO] ============================================================
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   InjectionScanner — http://localhost:3000
+[2026-08-16 16:50:11] [INFO] ============================================================
+
+[2026-08-16 16:50:11] [INFO]   [+] 0 parâmetros GET para testar
+[2026-08-16 16:50:11] [INFO]   [+] 0 formulários para testar
+[2026-08-16 16:50:11] [INFO]   [+] 0 tarefas totais
+
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   ✅ Injection scan complete — 0 findings
+[2026-08-16 16:50:11] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/attacks/injection/findings.json
+[2026-08-16 16:50:11] [INFO] ============================================================
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   XSSScanner — http://localhost:3000
+[2026-08-16 16:50:11] [INFO] ============================================================
+
+[2026-08-16 16:50:11] [INFO]   [+] 0 forms | 0 search endpoints
+[2026-08-16 16:50:11] [INFO]   [+] 0 tarefas totais
+
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   ✅ XSS scan complete — 0 findings
+[2026-08-16 16:50:11] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/attacks/xss/findings.json
+[2026-08-16 16:50:11] [INFO] ============================================================
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   SSRFScanner — http://localhost:3000
+[2026-08-16 16:50:11] [INFO] ============================================================
+
+[2026-08-16 16:50:11] [INFO]   [+] 0 param tasks + 0 form tasks
+
+[2026-08-16 16:50:11] [INFO] 
+============================================================
+[2026-08-16 16:50:11] [INFO]   ✅ SSRF scan complete — 0 findings
+[2026-08-16 16:50:11] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786908866158/attacks/ssrf/findings.json
+[2026-08-16 16:50:11] [INFO] ============================================================

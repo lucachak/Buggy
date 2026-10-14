@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "plan_id": "b2233efaaacb1cfed3f7738b",
+  "results": [
+    {
+      "status": "completed",
+      "item_id": "apache.path-traversal-applicability:CVE-2021-41773",
+      "validator_id": "apache.path-traversal-applicability",
+      "result": {
+        "cve_id": "CVE-2021-41773",
+        "applicability": "possible",
+        "confirmed": false,
+        "summary": "A versão Apache exposta coincide; confirmação exigiria teste adicional autorizado.",
+        "safety": "Demonstração local: nenhum payload ou request foi enviado."
+      }
+    },
+    {
+      "status": "completed",
+      "item_id": "tomcat.put-applicability:CVE-2017-12615",
+      "validator_id": "tomcat.put-applicability",
+      "result": {
+        "cve_id": "CVE-2017-12615",
+        "applicability": "possible",
+        "confirmed": false,
+        "summary": "A versão Tomcat e suporte a PUT foram simulados; nenhum upload foi realizado.",
+        "safety": "Demonstração local: nenhum payload ou request foi enviado."
+      }
+    }
+  ]
+}

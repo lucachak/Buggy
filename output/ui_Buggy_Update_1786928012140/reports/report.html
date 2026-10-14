@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buggy Report — localhost</title>
+  <style>
+    body   { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              max-width: 1100px; margin: 0 auto; padding: 2rem;
+              background: #0d1117; color: #c9d1d9; }
+    h1     { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: .5rem; }
+    h2     { color: #79c0ff; margin-top: 2rem; }
+    h3     { color: #d2a8ff; }
+    section { background: #161b22; border: 1px solid #30363d;
+               border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+    table  { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #21262d; }
+    th     { background: #21262d; color: #8b949e; font-weight: 600; }
+    tr:hover { background: #1f2937; }
+    code   { background: #1c2128; padding: 1px 6px; border-radius: 4px;
+               font-size: 12px; color: #a5d6ff; }
+    ul     { padding-left: 1.2rem; line-height: 1.8; }
+    .meta  { color: #8b949e; font-size: 13px; margin-top: -.5rem; margin-bottom: 1.5rem; }
+    footer { color: #8b949e; font-size: 12px; margin-top: 3rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>🐛 Buggy Report</h1>
+  <p class="meta">Target: <code>http://localhost:3000</code> &nbsp;|&nbsp;
+     Scan: <code>20260816_220857</code> &nbsp;|&nbsp;
+     Generated: <code>2026-08-16 22:16:15</code></p>
+
+  
+    <section>
+      <h2>Executive Summary</h2>
+      <table><thead><tr><th>Indicador</th><th>Status</th></tr></thead><tbody><tr><td>WAF presente</td><td>❌ Não</td></tr><tr><td>Rota admin observada</td><td>⚠️ Sim</td></tr><tr><td>DB exposto</td><td>✅ Não</td></tr><tr><td>JS secrets leaked</td><td>✅ Não</td></tr></tbody></table><table><thead><tr><th>Severity</th><th>Count</th></tr></thead><tbody></tbody></table>
+    </section>
+    
+  
+    <section>
+      <h2>Reconnaissance</h2>
+      <table><thead><tr><th>Tipo</th><th>Quantidade</th></tr></thead><tbody><tr><td>Subdomínios</td><td>1</td></tr><tr><td>Live IPs</td><td>1</td></tr><tr><td>Paths found</td><td>7</td></tr></tbody></table><h3>Subdomains</h3><ul><li><code>localhost</code></li></ul><h3>Live IPs</h3><ul><li><code>localhost</code></li></ul>
+    </section>
+    
+  
+    <section>
+      <h2>Attack Surface</h2>
+      <table><thead><tr><th>Tipo</th><th>Quantidade</th></tr></thead><tbody><tr><td>Endpoints</td><td>51</td></tr><tr><td>Formulários</td><td>0</td></tr><tr><td>APIs</td><td>44</td></tr><tr><td>JS secrets</td><td>0</td></tr><tr><td>Open ports</td><td>0</td></tr></tbody></table><table><thead><tr><th>Tech</th><th>Tipo</th></tr></thead><tbody><tr><td>Angular</td><td>Framework</td></tr></tbody></table><h3>Admin panels expostos</h3><ul><li><code>http://localhost:3000/rest/admin</code></li><li><code>http://localhost:3000/rest/admin/application-configuration</code></li></ul><h3>Observações de superfície</h3><table><thead><tr><th>Severidade</th><th>Tipo</th><th>Alvo</th><th>Descrição</th></tr></thead><tbody><tr><td>high</td><td>robots_disallow</td><td>http://localhost:3000/ftp</td><td>Path explicitly hidden in robots.txt</td></tr><tr><td>info</td><td>security_contact</td><td>http://localhost:3000/.well-known/security.txt</td><td>Security contact found: mailto:donotreply@owasp-juice.shop</td></tr></tbody></table>
+    </section>
+    
+  
+    <section>
+      <h2>Cobertura e limitações</h2>
+      <table><thead><tr><th>Área</th><th>Quantidade</th><th>Cobertura</th></tr></thead><tbody><tr><td>JavaScript</td><td>16</td><td>analisado</td></tr><tr><td>Formulários</td><td>0</td><td>sem entradas para testar</td></tr><tr><td>APIs</td><td>44</td><td>mapeadas</td></tr><tr><td>Alvos dinâmicos</td><td>54</td><td>disponíveis</td></tr></tbody></table>
+    </section>
+    
+  
+    <section>
+      <h2>CVE Intelligence</h2>
+      <p>Nenhuma CVE correlacionada com versões confirmadas no inventário.</p>
+    </section>
+    
+  
+    <section>
+      <h2>CVE Validation</h2>
+      <p>Nenhuma validação de CVE executada.</p>
+    </section>
+    
+  
+    <section>
+      <h2>Findings (CVSS sorted)</h2>
+      <table><thead><tr><th>Severity</th><th>Score</th><th>Type</th><th>Target</th><th>Description</th></tr></thead><tbody><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/api/Feedbacks</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/api/Challenges/?key=nftMintChallenge</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/api/Challenges</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/repeat-notification</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/continue-code</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/continue-code-findIt</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/continue-code-fixIt</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/web3</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/continue-code/apply/</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>cors_misconfig</td><td>http://localhost:3000/rest/continue-code-findIt/apply/</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>missing_rate_limit</td><td>http://localhost:3000/rest/admin/application-configuration</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>missing_rate_limit</td><td>http://localhost:3000/rest/user/authentication-details/</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>missing_rate_limit</td><td>http://localhost:3000/rest/saveLoginIp</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>missing_rate_limit</td><td>http://localhost:3000/rest/admin</td><td>Unclassified finding</td></tr><tr><td><span style="background:#7f8c8d;color:#fff;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600">INFORMATIONAL</span></td><td>0.0</td><td>missing_rate_limit</td><td>http://localhost:3000/rest/user/login</td><td>Unclassified finding</td></tr></tbody></table>
+    </section>
+    
+
+  <footer>Generated by Buggy — bug bounty / ethical hacking only</footer>
+</body>
+</html>

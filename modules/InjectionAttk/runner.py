@@ -7,6 +7,7 @@ em formulários, endpoints e APIs extraídos do attack_surface.json.
 from __future__ import annotations
 
 import json
+import base64
 import os
 import ssl
 import time
@@ -42,11 +43,16 @@ def _contains_any(text: str, markers: list[str]) -> str | None:
 # ── SQLi ──────────────────────────────────────────────────────────────────────
 
 def _test_sqli_error(client: HttpClient, url: str, param: str, via: str = "GET") -> dict | None:
+    baseline = client.get(url)
+    baseline_hits = {
+        marker.lower() for marker in P.SQLI_ERROR_PATTERNS
+        if marker.lower() in baseline.body.lower()
+    }
     for payload in P.SQLI_ERROR[:10]:   # limite de payloads por param
         injected_url = _inject_get_param(url, param, payload)
         resp = client.get(injected_url)
         hit = _contains_any(resp.body, P.SQLI_ERROR_PATTERNS)
-        if hit:
+        if hit and hit.lower() not in baseline_hits:
             return {
                 "type":       "sqli",
                 "url":        injected_url,
@@ -68,13 +74,17 @@ def _test_sqli_time(client: HttpClient, url: str, param: str) -> dict | None:
         # Using a specialized client config for this if we wanted, but the global handles timeouts
         resp = client.get(injected_url)
         if resp.elapsed >= TIME_THRESHOLD and resp.elapsed >= baseline.elapsed + 2.5:
+            confirmation = client.get(injected_url)
+            if confirmation.elapsed < TIME_THRESHOLD or confirmation.elapsed < baseline.elapsed + 2.5:
+                continue
             return {
                 "type":       "sqli_blind",
                 "url":        injected_url,
                 "parameter":  param,
                 "payload":    payload,
-                "evidence":   f"Response delayed {resp.elapsed:.1f}s (baseline {baseline.elapsed:.1f}s)",
-                "confidence": "medium",
+                "evidence":   (f"Two delayed responses: {resp.elapsed:.1f}s and "
+                               f"{confirmation.elapsed:.1f}s (baseline {baseline.elapsed:.1f}s)"),
+                "confidence": "high",
             }
     return None
 
@@ -83,13 +93,17 @@ def _test_sqli_time(client: HttpClient, url: str, param: str) -> dict | None:
 
 def _test_cmdi(client: HttpClient, url: str, param: str) -> dict | None:
     baseline = client.get(url)
-    
-    for payload in P.CMD_PAYLOADS[:12]: # Increased limit to include sleep payloads
+    encoded = base64.b64encode(P.CANARY.encode()).decode()
+    output_payload = f"; printf {encoded} | base64 -d"
+    blind_payloads = [payload for payload in P.CMD_PAYLOADS if "sleep" in payload or "ping" in payload]
+
+    for payload in [output_payload, *blind_payloads[:4]]:
         injected_url = _inject_get_param(url, param, payload)
         resp = client.get(injected_url)
-        
-        # Reflected
-        if P.CANARY in resp.body:
+
+        # The plaintext marker is not present in output_payload, so reflection
+        # alone cannot satisfy this check.
+        if P.CANARY not in baseline.body and P.CANARY not in payload and P.CANARY in resp.body:
             return {
                 "type":       "command_injection",
                 "url":        injected_url,
@@ -116,17 +130,27 @@ def _test_cmdi(client: HttpClient, url: str, param: str) -> dict | None:
 # ── SSTI ──────────────────────────────────────────────────────────────────────
 
 def _test_ssti(client: HttpClient, url: str, param: str) -> dict | None:
-    for payload in P.SSTI_PAYLOADS[:6]:
+    baseline = client.get(url)
+    strong_checks = [
+        ("{{7*7}}", "49"),
+        ("${7*7}", "49"),
+        ("<%= 7*7 %>", "49"),
+        ("#{7*7}", "49"),
+        ("{{7*'7'}}", "7777777"),
+    ]
+    for payload, expected in strong_checks:
         injected_url = _inject_get_param(url, param, payload)
         resp = client.get(injected_url)
-        hit = _contains_any(resp.body, P.SSTI_MARKERS)
-        if hit:
+        baseline_count = baseline.body.count(expected)
+        response_count = resp.body.count(expected)
+        reflected_only = payload.lower() in resp.body.lower()
+        if response_count > baseline_count and not reflected_only:
             return {
                 "type":       "ssti",
                 "url":        injected_url,
                 "parameter":  param,
                 "payload":    payload,
-                "evidence":   hit,
+                "evidence":   f"template expression evaluated to {expected}",
                 "confidence": "high",
             }
     return None
@@ -146,6 +170,55 @@ def _test_xxe(client: HttpClient, url: str) -> dict | None:
                 "payload":    xml_payload[:200],
                 "evidence":   hit,
                 "confidence": "high",
+            }
+    return None
+
+
+def _contains_auth_token(body: str) -> bool:
+    try:
+        payload = json.loads(body)
+    except (TypeError, json.JSONDecodeError):
+        return False
+
+    def walk(value) -> bool:
+        if isinstance(value, dict):
+            for key, item in value.items():
+                normalized = str(key).lower().replace("-", "_")
+                if normalized in {"token", "access_token", "id_token", "jwt"}:
+                    if isinstance(item, str) and len(item) >= 12:
+                        return True
+                if walk(item):
+                    return True
+        elif isinstance(value, list):
+            return any(walk(item) for item in value)
+        return False
+
+    return walk(payload)
+
+
+def _test_json_login_sqli(client: HttpClient, url: str) -> dict | None:
+    """Confirm auth bypass only when injection uniquely returns an auth token."""
+    baseline = client.post_json(url, {
+        "email": f"buggy-invalid-{time.time_ns()}@invalid.local",
+        "password": "buggy-invalid-password",
+    })
+    if _contains_auth_token(baseline.body):
+        return None
+    for payload in ("' OR 1=1--", "' OR true--"):
+        response = client.post_json(url, {
+            "email": payload,
+            "password": "buggy-invalid-password",
+        })
+        if 200 <= response.status < 300 and _contains_auth_token(response.body):
+            return {
+                "type": "sqli",
+                "subtype": "authentication_bypass",
+                "url": url,
+                "parameter": "email",
+                "payload": payload,
+                "evidence": "authentication token returned only for injected identity",
+                "confidence": "confirmed",
+                "via": "POST JSON",
             }
     return None
 
@@ -230,7 +303,7 @@ class InjectionScanner:
         if surface_file.exists():
             with open(surface_file) as f:
                 surface = json.load(f)
-            surface.setdefault("injection_findings", []).extend(self.findings)
+            surface["injection_findings"] = self.findings
             with open(surface_file, "w") as f:
                 json.dump(surface, f, indent=2)
 
@@ -242,7 +315,7 @@ class InjectionScanner:
         for ep in surface.get("injection_targets", {}).get("search_endpoints", []):
             url = str(ep)
             parsed = urllib.parse.urlparse(url)
-            qs     = urllib.parse.parse_qs(parsed.query)
+            qs     = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
             for param in qs:
                 targets.append((url, param))
 
@@ -283,9 +356,21 @@ class InjectionScanner:
         for form in forms[:30]:
             tasks.append(("form", form))
 
-        # APIs — XXE nos endpoints que aceitam XML
-        for api in surface.get("api_endpoints", [])[:10]:
+        # APIs — preserve method hints extracted from JavaScript bundles.
+        api_entries = surface.get("api_endpoints", [])[:100]
+        for api in api_entries:
             url = api.get("url", "") if isinstance(api, dict) else str(api)
+            method = str(api.get("method", "UNKNOWN")).upper() if isinstance(api, dict) else "UNKNOWN"
+            lowered = url.lower()
+            if url and method == "POST" and any(key in lowered for key in ("login", "signin", "auth")):
+                tasks.append(("api_login_sqli", url))
+
+        writable_apis = [
+            api for api in api_entries
+            if isinstance(api, dict) and str(api.get("method", "")).upper() in {"POST", "PUT", "PATCH"}
+        ]
+        for api in writable_apis[:10]:
+            url = str(api.get("url", ""))
             if url:
                 tasks.append(("xxe", url))
 
@@ -310,6 +395,9 @@ class InjectionScanner:
                     return _test_form(client, task[1])
                 elif kind == "xxe":
                     r = _test_xxe(client, task[1])
+                    return [r] if r else []
+                elif kind == "api_login_sqli":
+                    r = _test_json_login_sqli(client, task[1])
                     return [r] if r else []
             except Exception as e:
                 buggy_logger.debug(f"Error in Injection task {kind} for {task[1]}: {e}")

@@ -73,11 +73,18 @@ def _check_security_headers(url: str, headers: dict) -> list[dict]:
 def _test_sensitive_files(client: HttpClient, base_url: str) -> list[dict]:
     findings = []
     base = base_url.rstrip("/")
+    soft_404 = client.get(base + "/.buggy-not-found-canary-7d913f4c")
     
     for path in P.SENSITIVE_FILES:
         target_url = base + path
         resp = client.get(target_url)
-        if resp.status == 200 and len(resp.body) > 0 and "404" not in resp.body and "Not Found" not in resp.body:
+        resembles_soft_404 = (
+            soft_404.status == 200
+            and abs(len(resp.body) - len(soft_404.body)) < 32
+            and resp.body[:256] == soft_404.body[:256]
+        )
+        if (resp.status == 200 and len(resp.body) > 0 and not resembles_soft_404
+                and "404" not in resp.body and "not found" not in resp.body.lower()):
             findings.append({
                 "type": "exposed_sensitive_file",
                 "url": target_url,
@@ -116,7 +123,7 @@ class InfraScanner:
         if surface_file.exists():
             with open(surface_file) as f:
                 surface = json.load(f)
-            surface.setdefault("infra_findings", []).extend(self.findings)
+            surface["infra_findings"] = self.findings
             with open(surface_file, "w") as f:
                 json.dump(surface, f, indent=2)
 
@@ -150,8 +157,8 @@ class InfraScanner:
                 
         # Se não tiver, adiciona o target
         if not bases:
-            bases.add(f"http://{self.target}")
-            bases.add(f"https://{self.target}")
+            parsed_target = urllib.parse.urlparse(self.target)
+            bases.add(f"{parsed_target.scheme}://{parsed_target.netloc}")
             
         buggy_logger.info(f"  [+] {len(bases)} hosts identificados para infra scan")
         

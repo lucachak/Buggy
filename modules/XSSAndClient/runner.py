@@ -96,16 +96,15 @@ def _test_stored_xss(client: HttpClient, form: dict) -> dict | None:
     resp2 = client.get(url)
     body2 = resp2.body
 
-    for probe_url_str in [body, body2]:
-        if P.XSS_CANARY in probe_url_str:
-            return {
-                "type":       "xss_stored",
-                "url":        url,
-                "parameter":  list(data.keys())[0],
-                "payload":    P.XSS_STORED_PROBE[0],
-                "evidence":   f"Payload persisted on re-read of {url}",
-                "confidence": "high",
-            }
+    if P.XSS_CANARY in body2:
+        return {
+            "type":       "xss_stored",
+            "url":        url,
+            "parameter":  list(data.keys())[0],
+            "payload":    P.XSS_STORED_PROBE[0],
+            "evidence":   f"Payload persisted on a separate re-read of {url}",
+            "confidence": "high",
+        }
     return None
 
 
@@ -164,14 +163,17 @@ def _test_open_redirect(client: HttpClient, url: str, param: str) -> dict | None
     for payload in P.REDIRECT_PAYLOADS[:5]:
         injected = _inject_get_param(url, param, payload)
         try:
-            resp = client.get(injected)
-            if "evil.com" in resp.url or payload.lstrip("/") in resp.url:
+            resp = client.get(injected, allow_redirects=False)
+            location = resp.headers.get("location", "")
+            destination = urllib.parse.urljoin(injected, location)
+            host = urllib.parse.urlparse(destination).hostname or ""
+            if location and (host == "evil.com" or host.endswith(".evil.com")):
                 return {
                     "type":       "open_redirect",
                     "url":        injected,
                     "parameter":  param,
                     "payload":    payload,
-                    "evidence":   f"Redirected to {resp.url}",
+                    "evidence":   f"Location header redirects to {destination}",
                     "confidence": "high",
                 }
         except Exception:
@@ -182,7 +184,7 @@ def _test_open_redirect(client: HttpClient, url: str, param: str) -> dict | None
 def _probe_redirect_params(client: HttpClient, url: str) -> list[dict]:
     findings = []
     parsed = urllib.parse.urlparse(url)
-    qs     = urllib.parse.parse_qs(parsed.query)
+    qs     = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
     for param in qs:
         if param.lower() in P.REDIRECT_PARAMS:
             r = _test_open_redirect(client, url, param)
@@ -219,7 +221,7 @@ class XSSScanner:
         if surface_file.exists():
             with open(surface_file) as f:
                 surface = json.load(f)
-            surface.setdefault("xss_findings", []).extend(self.findings)
+            surface["xss_findings"] = self.findings
             with open(surface_file, "w") as f:
                 json.dump(surface, f, indent=2)
 
@@ -240,7 +242,7 @@ class XSSScanner:
         for ep in search_eps[:40]:
             url    = str(ep)
             parsed = urllib.parse.urlparse(url)
-            qs     = urllib.parse.parse_qs(parsed.query)
+            qs     = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
             for param in list(qs.keys())[:5]:
                 tasks.append(("reflected", url, param))
             for param in list(qs.keys())[:5]:

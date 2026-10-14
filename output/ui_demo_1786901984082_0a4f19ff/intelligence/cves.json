@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "target": "http://buggy-demo.invalid",
+  "summary": {
+    "total": 2,
+    "critical": 1,
+    "high": 1,
+    "kev": 1
+  },
+  "cves": [
+    {
+      "cve_id": "CVE-2021-41773",
+      "priority": "CRITICAL",
+      "priority_score": 92,
+      "cvss_score": 9.8,
+      "epss": 0.94,
+      "kev": true,
+      "component": {
+        "product": "apache",
+        "version": "2.4.49"
+      },
+      "applicability": "possible"
+    },
+    {
+      "cve_id": "CVE-2017-12615",
+      "priority": "HIGH",
+      "priority_score": 76,
+      "cvss_score": 8.1,
+      "epss": 0.71,
+      "kev": false,
+      "component": {
+        "product": "tomcat",
+        "version": "7.0.79"
+      },
+      "applicability": "possible"
+    }
+  ]
+}

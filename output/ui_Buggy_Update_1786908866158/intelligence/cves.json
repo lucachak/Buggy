@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "generated_at": 1786909800.9492388,
+  "target": "http://localhost:3000",
+  "inventory": [
+    {
+      "vendor": "angular",
+      "product": "angular",
+      "version": "",
+      "cpe": "",
+      "source": "surface",
+      "evidence": "Angular"
+    }
+  ],
+  "cves": [],
+  "summary": {
+    "components": 1,
+    "versioned_components": 0,
+    "cves": 0,
+    "kev": 0,
+    "critical": 0
+  }
+}

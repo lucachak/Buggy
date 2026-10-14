@@ -8,9 +8,9 @@ import logging
 from html.parser import HTMLParser
 from urllib.parse import urljoin, urlparse
 from typing import Dict, List, Optional, Set
-from urllib.request import Request, urlopen
+from urllib.request import Request
+from modules.utils.http_client import scoped_urlopen
 from urllib.error import URLError, HTTPError
-import ssl
 
 logger = logging.getLogger(__name__)
 
@@ -262,11 +262,7 @@ class FormMapper:
         try:
             # Fetch página
             req = Request(url, headers=self.headers)
-            ssl_ctx = ssl.create_default_context()
-            ssl_ctx.check_hostname = False
-            ssl_ctx.verify_mode = ssl.CERT_NONE
-            
-            response = urlopen(req, timeout=10, context=ssl_ctx)
+            response = scoped_urlopen(req, timeout=10)
             
             # Só processa HTML
             content_type = response.headers.get('Content-Type', '')

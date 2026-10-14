@@ -1,0 +1,172 @@
+{
+  "target": "http://localhost:3000",
+  "timestamp": 1786909791.435881,
+  "technologies": {
+    "results": [
+      {
+        "url": "http://localhost:3000",
+        "status": 200,
+        "waf": [],
+        "cms": [],
+        "framework": [
+          "Angular"
+        ],
+        "software": []
+      }
+    ],
+    "summary": {
+      "waf_detected": false,
+      "waf_type": null,
+      "all_waf": [],
+      "all_cms": [],
+      "all_frameworks": [
+        "Angular"
+      ],
+      "all_servers": [],
+      "all_software": [],
+      "total_urls": 1
+    }
+  },
+  "endpoints": {
+    "endpoints": [
+      "http://localhost:3000/Video",
+      "http://localhost:3000/robots.txt",
+      "http://localhost:3000/ftp",
+      "http://localhost:3000/media/",
+      "http://localhost:3000/promotion",
+      "http://localhost:3000/assets/",
+      "http://localhost:3000/video"
+    ],
+    "total_discovered": 7,
+    "categorized": {
+      "admin_panels": [],
+      "api_endpoints": [],
+      "backup_files": [],
+      "config_files": [],
+      "login_pages": [],
+      "uploads": [
+        "http://localhost:3000/media/"
+      ],
+      "debug": []
+    },
+    "interesting": [
+      {
+        "type": "robots_disallow",
+        "url": "http://localhost:3000/ftp",
+        "severity": "high",
+        "description": "Path explicitly hidden in robots.txt"
+      },
+      {
+        "type": "security_contact",
+        "contact": "mailto:donotreply@owasp-juice.shop",
+        "url": "http://localhost:3000/.well-known/security.txt",
+        "severity": "info",
+        "description": "Security contact found: mailto:donotreply@owasp-juice.shop"
+      }
+    ],
+    "discovery_sources": [
+      "robots.txt"
+    ]
+  },
+  "js_secrets": {
+    "results": [
+      {
+        "url": "http://localhost:3000/js/app.js",
+        "secrets": [],
+        "endpoints": [],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/static/js/main.js",
+        "secrets": [],
+        "endpoints": [],
+        "secret_count": 0
+      },
+      {
+        "url": "http://localhost:3000/assets/js/bundle.js",
+        "secrets": [],
+        "endpoints": [],
+        "secret_count": 0
+      }
+    ],
+    "summary": {
+      "total_files": 3,
+      "total_secrets": 0,
+      "high_severity": 0
+    }
+  },
+  "forms": {
+    "total_forms": 0,
+    "forms": [],
+    "categorized": {
+      "login_forms": [],
+      "search_forms": [],
+      "contact_forms": [],
+      "upload_forms": [],
+      "registration_forms": [],
+      "payment_forms": [],
+      "other": []
+    },
+    "high_value_targets": [],
+    "injection_points": [],
+    "summary": {
+      "total_forms": 0,
+      "total_injection_points": 0,
+      "forms_by_risk": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0
+      },
+      "csrf_protection": 0,
+      "upload_forms": 0
+    }
+  },
+  "apis": {
+    "results": [],
+    "openapi_specs": [],
+    "graphqls": [],
+    "rest_apis": [],
+    "total_apis": 0
+  },
+  "open_ports": {
+    "localhost": {
+      "open_ports": [],
+      "services": {},
+      "high_risk": []
+    }
+  },
+  "summary": {
+    "target": "http://localhost:3000",
+    "timestamp": 1786909800.924161,
+    "attack_surface": {
+      "total_endpoints": 7,
+      "total_forms": 0,
+      "total_apis": 0,
+      "js_secrets_found": 0,
+      "open_ports_count": 0
+    },
+    "technologies": {
+      "cms": [],
+      "waf": false,
+      "waf_type": null,
+      "frameworks": [
+        "Angular"
+      ],
+      "servers": [],
+      "software": []
+    },
+    "high_value_targets": {
+      "admin_panels": [],
+      "api_specs": [],
+      "graphql": [],
+      "exposed_dbs": []
+    },
+    "risk_indicators": {
+      "waf_present": false,
+      "exposed_admin": false,
+      "exposed_databases": false,
+      "js_secrets_leaked": false
+    }
+  }
+}

@@ -1,0 +1,118 @@
+[2026-08-16 21:53:32] [INFO] Detailed logging initialized at /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/logs/buggy.log
+[2026-08-16 22:09:16] [INFO] 
+============================================================
+[2026-08-16 22:09:16] [INFO]   InfraScanner — http://localhost:3000
+[2026-08-16 22:09:16] [INFO] ============================================================
+
+[2026-08-16 22:09:16] [INFO]   [+] 1 hosts identificados para infra scan
+[2026-08-16 22:09:16] [INFO]   [+] 12 tarefas totais
+
+[2026-08-16 22:09:20] [INFO]   ... 10/12 tasks, 9 findings
+[2026-08-16 22:09:21] [INFO] 
+============================================================
+[2026-08-16 22:09:21] [INFO]   ✅ Infra scan complete — 10 findings
+[2026-08-16 22:09:21] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/infra/findings.json
+[2026-08-16 22:09:21] [INFO] ============================================================
+[2026-08-16 22:09:21] [INFO] 
+============================================================
+[2026-08-16 22:09:21] [INFO]   AuthScanner — http://localhost:3000
+[2026-08-16 22:09:21] [INFO] ============================================================
+
+[2026-08-16 22:09:21] [INFO]   [+] 10 tarefas totais
+
+[2026-08-16 22:09:25] [INFO]   ... 10/10 tasks, 5 findings
+[2026-08-16 22:09:25] [INFO] 
+  [+] Running SSO brute scanner...
+[2026-08-16 22:09:25] [INFO] 
+────────────────────────────────────────────────────────────
+[2026-08-16 22:09:25] [INFO]   SSO Brute Scanner — http://localhost:3000
+[2026-08-16 22:09:25] [INFO] ────────────────────────────────────────────────────────────
+
+[2026-08-16 22:09:25] [INFO]   [SSO] Brute-forcing SSO endpoints...
+[2026-08-16 22:09:34] [INFO]   [SSO] No SSO endpoints found.
+[2026-08-16 22:09:34] [INFO]   [SSO] No endpoints to test for open redirect.
+[2026-08-16 22:09:34] [INFO]   [SSO] Checking for token leakage in URLs...
+[2026-08-16 22:09:34] [INFO]   [SSO] No token leakage detected.
+[2026-08-16 22:09:34] [INFO] 
+  [SSO] Complete — 0 total finding(s)
+[2026-08-16 22:09:34] [INFO] 
+============================================================
+[2026-08-16 22:09:34] [INFO]   ✅ Auth scan complete — 5 findings
+[2026-08-16 22:09:34] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/auth/findings.json
+[2026-08-16 22:09:34] [INFO] ============================================================
+[2026-08-16 22:09:34] [INFO] 
+============================================================
+[2026-08-16 22:09:34] [INFO]   BusinessLogicScanner — http://localhost:3000
+[2026-08-16 22:09:34] [INFO] ============================================================
+
+[2026-08-16 22:09:34] [INFO]   [+] 3 tarefas totais
+
+[2026-08-16 22:09:34] [INFO] 
+============================================================
+[2026-08-16 22:09:34] [INFO]   ✅ Business Logic scan complete — 0 findings
+[2026-08-16 22:09:34] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/business/findings.json
+[2026-08-16 22:09:34] [INFO] ============================================================
+[2026-08-16 22:09:34] [INFO] 
+============================================================
+[2026-08-16 22:09:34] [INFO]   InjectionScanner — http://localhost:3000
+[2026-08-16 22:09:34] [INFO] ============================================================
+
+[2026-08-16 22:09:34] [INFO]   [+] 38 parâmetros GET para testar
+[2026-08-16 22:09:34] [INFO]   [+] 0 formulários para testar
+[2026-08-16 22:09:34] [INFO]   [+] 158 tarefas totais
+
+[2026-08-16 22:10:52] [INFO]   ... 20/158 tasks, 0 findings
+[2026-08-16 22:12:06] [INFO]   ... 40/158 tasks, 0 findings
+[2026-08-16 22:12:35] [INFO]   ... 60/158 tasks, 0 findings
+[2026-08-16 22:13:04] [INFO]   ... 80/158 tasks, 0 findings
+[2026-08-16 22:14:00] [INFO]   ... 100/158 tasks, 0 findings
+[2026-08-16 22:15:24] [INFO]   ... 120/158 tasks, 0 findings
+[2026-08-16 22:15:57] [INFO]   ... 140/158 tasks, 0 findings
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/login
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/login
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/login
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code-findIt/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code-findIt/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code-findIt/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code-fixIt/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code-fixIt/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/continue-code-fixIt/apply/
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/login
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/login
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/login
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/reset-password
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/reset-password
+[2026-08-16 22:16:00] [DEBUG] state-changing request blocked; use --profile standard: http://localhost:3000/rest/user/reset-password
+[2026-08-16 22:16:10] [INFO] 
+============================================================
+[2026-08-16 22:16:10] [INFO]   ✅ Injection scan complete — 0 findings
+[2026-08-16 22:16:10] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/injection/findings.json
+[2026-08-16 22:16:10] [INFO] ============================================================
+[2026-08-16 22:16:10] [INFO] 
+============================================================
+[2026-08-16 22:16:10] [INFO]   XSSScanner — http://localhost:3000
+[2026-08-16 22:16:10] [INFO] ============================================================
+
+[2026-08-16 22:16:10] [INFO]   [+] 0 forms | 5 search endpoints
+[2026-08-16 22:16:10] [INFO]   [+] 8 tarefas totais
+
+[2026-08-16 22:16:15] [INFO] 
+============================================================
+[2026-08-16 22:16:15] [INFO]   ✅ XSS scan complete — 0 findings
+[2026-08-16 22:16:15] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/xss/findings.json
+[2026-08-16 22:16:15] [INFO] ============================================================
+[2026-08-16 22:16:15] [INFO] 
+============================================================
+[2026-08-16 22:16:15] [INFO]   SSRFScanner — http://localhost:3000
+[2026-08-16 22:16:15] [INFO] ============================================================
+
+[2026-08-16 22:16:15] [INFO]   [+] 0 param tasks + 0 form tasks
+
+[2026-08-16 22:16:15] [INFO] 
+============================================================
+[2026-08-16 22:16:15] [INFO]   ✅ SSRF scan complete — 0 findings
+[2026-08-16 22:16:15] [INFO]   📁 /home/lucas/Documentos/Code/Python/eJPT/BugBounty/output/ui_Buggy_Update_1786928012140/attacks/ssrf/findings.json
+[2026-08-16 22:16:15] [INFO] ============================================================

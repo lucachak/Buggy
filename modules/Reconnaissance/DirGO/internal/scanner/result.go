@@ -15,6 +15,7 @@ type Result struct {
 // Config holds scanner parameters.
 type Config struct {
 	Concurrency int
+	Rate        float64
 	Timeout     float64
 	Retry       int
 	ShowTech    bool
@@ -23,4 +24,5 @@ type Config struct {
 	FilterCodes map[int]bool
 	Recursive   bool
 	MaxDepth    int
+	Insecure    bool
 }

@@ -1,0 +1,122 @@
+[
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/api/Feedbacks",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/api/Challenges/?key=nftMintChallenge",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/api/Challenges",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/repeat-notification",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/continue-code",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/continue-code-findIt",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/continue-code-fixIt",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/web3",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/continue-code/apply/",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "cors_misconfig",
+    "url": "http://localhost:3000/rest/continue-code-findIt/apply/",
+    "parameter": "headers",
+    "payload": "https://evil-cors.com",
+    "evidence": "ACAO: *",
+    "confidence": "medium",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  }
+]

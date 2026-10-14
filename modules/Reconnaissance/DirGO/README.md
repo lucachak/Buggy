@@ -49,13 +49,14 @@ internal/
 
 ## Features
 
-- HTTP e HTTPS (TLS via `crypto/tls`, sem verificação de cert por padrão)
+- HTTP e HTTPS (TLS via `crypto/tls`, com verificação de certificado por padrão)
 - Concorrência real com goroutines e channels (`-t`, padrão: 50 workers)
 - Scan recursivo em diretórios descobertos (`-r`, profundidade configurável com `-depth`)
 - Suporte a múltiplas portas por alvo (`-p 80,443,8080`)
 - Expansão de extensões por caminho (`-x php,txt,bak`)
 - Fingerprint de tecnologia via headers HTTP (`-tech`)
 - Filtro de status codes para suprimir (`-c`, padrão: 404)
+- Detecção de soft 404 por templates estáveis, recalibrada em cada diretório
 - Exportação para JSON e CSV (`-json`, `-csv`)
 - Wordlist embutida — funciona sem `-w`
 - Exportação da wordlist built-in (`--export-wordlist`)
@@ -124,6 +125,7 @@ Gera binários para Linux (amd64/arm64), macOS (amd64/arm64) e Windows (amd64).
 | `-x` | Extensões (vírgula): `php,txt,bak` | — |
 | `-c` | Status codes a **filtrar** (suprimir) | `404` |
 | `-t` | Número de workers (goroutines) | `50` |
+| `-rate` | Limite global de requisições por segundo (`0` = ilimitado) | `0` |
 | `-timeout` | Timeout por requisição (segundos) | `10.0` |
 | `-retry` | Tentativas em caso de timeout | `1` |
 | `-r` | Scan recursivo em diretórios | `false` |
@@ -135,6 +137,11 @@ Gera binários para Linux (amd64/arm64), macOS (amd64/arm64) e Windows (amd64).
 | `-v` | Verbose (exibe erros e timeouts) | `false` |
 | `-silent` | Silent mode (só resumo final) | `false` |
 | `--export-wordlist` | Exportar wordlist embutida para arquivo | — |
+
+Antes de cada passada, o scanner consulta dois caminhos aleatórios inexistentes.
+Se as respostas formarem um template estável, respostas equivalentes são
+suprimidas mesmo quando o servidor retorna `200` ou `401`. Na recursão, essa
+calibração é repetida dentro de cada diretório encontrado.
 
 ---
 

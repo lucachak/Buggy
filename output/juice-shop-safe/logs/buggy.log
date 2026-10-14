@@ -1,0 +1,149 @@
+[2026-08-16 14:52:41] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:53:06] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:53:14] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:55:14] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:55:30] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:55:54] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:55:54] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:55:54] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:55:54] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:56:34] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:56:34] [INFO] 
+============================================================
+[2026-08-16 14:56:34] [INFO]   InfraScanner — http://127.0.0.1:3000
+[2026-08-16 14:56:34] [INFO] ============================================================
+
+[2026-08-16 14:56:34] [INFO]   [+] 1 hosts identificados para infra scan
+[2026-08-16 14:56:34] [INFO]   [+] 2 tarefas totais
+
+[2026-08-16 14:56:37] [INFO] 
+============================================================
+[2026-08-16 14:56:37] [INFO]   ✅ Infra scan complete — 0 findings
+[2026-08-16 14:56:37] [INFO]   📁 output/juice-shop-safe/attacks/infra/findings.json
+[2026-08-16 14:56:37] [INFO] ============================================================
+[2026-08-16 14:57:11] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:57:11] [INFO] 
+============================================================
+[2026-08-16 14:57:11] [INFO]   AuthScanner — http://127.0.0.1:3000
+[2026-08-16 14:57:11] [INFO] ============================================================
+
+[2026-08-16 14:57:11] [INFO]   [+] 2 tarefas totais
+
+[2026-08-16 14:57:11] [INFO] 
+  [+] Running SSO brute scanner...
+[2026-08-16 14:57:11] [INFO] 
+────────────────────────────────────────────────────────────
+[2026-08-16 14:57:11] [INFO]   SSO Brute Scanner — http://127.0.0.1:3000
+[2026-08-16 14:57:11] [INFO] ────────────────────────────────────────────────────────────
+
+[2026-08-16 14:57:11] [INFO]   [SSO] Brute-forcing SSO endpoints...
+[2026-08-16 14:57:11] [INFO]     ✓ http://127.0.0.1:3000/oauth/authorize → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:12] [INFO]     ✓ http://127.0.0.1:3000/oauth2/authorize → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:12] [INFO]     ✓ http://127.0.0.1:3000/oauth/token → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:12] [INFO]     ✓ http://127.0.0.1:3000/oauth2/token → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:13] [INFO]     ✓ http://127.0.0.1:3000/oauth/callback → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:13] [INFO]     ✓ http://127.0.0.1:3000/oauth2/callback → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:13] [INFO]     ✓ http://127.0.0.1:3000/oauth/login → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:14] [INFO]     ✓ http://127.0.0.1:3000/.well-known/openid-configuration → SSO endpoint responded with HTTP 200 — OIDC discovery document exposed
+[2026-08-16 14:57:14] [INFO]     ✓ http://127.0.0.1:3000/.well-known/oauth-authorization-server → SSO endpoint responded with HTTP 200 — OIDC discovery document exposed
+[2026-08-16 14:57:14] [INFO]     ✓ http://127.0.0.1:3000/saml/login → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:15] [INFO]     ✓ http://127.0.0.1:3000/saml/sso → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:15] [INFO]     ✓ http://127.0.0.1:3000/saml/acs → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:15] [INFO]     ✓ http://127.0.0.1:3000/saml/metadata → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:16] [INFO]     ✓ http://127.0.0.1:3000/saml2/login → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:16] [INFO]     ✓ http://127.0.0.1:3000/saml2/sso → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:16] [INFO]     ✓ http://127.0.0.1:3000/saml2/acs → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:17] [INFO]     ✓ http://127.0.0.1:3000/adfs/ls → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:17] [INFO]     ✓ http://127.0.0.1:3000/auth/realms/master/protocol/openid-connect/auth → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:17] [INFO]     ✓ http://127.0.0.1:3000/auth/realms/master/protocol/openid-connect/token → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:18] [INFO]     ✓ http://127.0.0.1:3000/auth/realms/master/.well-known/openid-configuration → SSO endpoint responded with HTTP 200 — OIDC discovery document exposed
+[2026-08-16 14:57:18] [INFO]     ✓ http://127.0.0.1:3000/sso/login → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:18] [INFO]     ✓ http://127.0.0.1:3000/sso/callback → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:19] [INFO]     ✓ http://127.0.0.1:3000/sso/logout → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:19] [INFO]     ✓ http://127.0.0.1:3000/login/sso → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:19] [INFO]     ✓ http://127.0.0.1:3000/auth/sso → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:20] [INFO]     ✓ http://127.0.0.1:3000/cas/login → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:20] [INFO]     ✓ http://127.0.0.1:3000/cas/serviceValidate → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:20] [INFO]     ✓ http://127.0.0.1:3000/common/oauth2/v2.0/authorize → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:21] [INFO]     ✓ http://127.0.0.1:3000/common/oauth2/v2.0/token → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:21] [INFO]     ✓ http://127.0.0.1:3000/.auth/login/aad → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:21] [INFO]     ✓ http://127.0.0.1:3000/o/oauth2/v2/auth → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:22] [INFO]     ✓ http://127.0.0.1:3000/connect/authorize → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:23] [INFO]     ✓ http://127.0.0.1:3000/connect/token → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:24] [INFO]     ✓ http://127.0.0.1:3000/Account/ExternalLogin → SSO endpoint responded with HTTP 200
+[2026-08-16 14:57:24] [INFO]   [SSO] 34 SSO endpoint(s) discovered.
+[2026-08-16 14:57:24] [INFO]   [SSO] Testing open redirects on SSO endpoints...
+[2026-08-16 14:57:24] [INFO]   [SSO] 6936 redirect test(s) queued.
+[2026-08-16 14:57:41] [INFO]   [SSO] ... 50/6936 redirect tests, 0 finding(s)
+[2026-08-16 14:58:37] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:58:37] [INFO] 
+============================================================
+[2026-08-16 14:58:37] [INFO]   AuthScanner — http://127.0.0.1:3000
+[2026-08-16 14:58:37] [INFO] ============================================================
+
+[2026-08-16 14:58:37] [INFO]   [+] 2 tarefas totais
+
+[2026-08-16 14:58:37] [INFO] 
+  [+] Running SSO brute scanner...
+[2026-08-16 14:58:37] [INFO] 
+────────────────────────────────────────────────────────────
+[2026-08-16 14:58:37] [INFO]   SSO Brute Scanner — http://127.0.0.1:3000
+[2026-08-16 14:58:37] [INFO] ────────────────────────────────────────────────────────────
+
+[2026-08-16 14:58:37] [INFO]   [SSO] Brute-forcing SSO endpoints...
+[2026-08-16 14:58:51] [INFO]   [SSO] No SSO endpoints found.
+[2026-08-16 14:58:51] [INFO]   [SSO] No endpoints to test for open redirect.
+[2026-08-16 14:58:51] [INFO]   [SSO] Checking for token leakage in URLs...
+[2026-08-16 14:58:51] [INFO]   [SSO] No token leakage detected.
+[2026-08-16 14:58:51] [INFO] 
+  [SSO] Complete — 0 total finding(s)
+[2026-08-16 14:58:51] [INFO] 
+============================================================
+[2026-08-16 14:58:51] [INFO]   ✅ Auth scan complete — 2 findings
+[2026-08-16 14:58:51] [INFO]   📁 output/juice-shop-safe/attacks/auth/findings.json
+[2026-08-16 14:58:51] [INFO] ============================================================
+[2026-08-16 14:59:17] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:59:17] [INFO] 
+============================================================
+[2026-08-16 14:59:17] [INFO]   BusinessLogicScanner — http://127.0.0.1:3000
+[2026-08-16 14:59:17] [INFO] ============================================================
+
+[2026-08-16 14:59:17] [INFO]   [+] 0 tarefas totais
+
+[2026-08-16 14:59:17] [INFO] 
+============================================================
+[2026-08-16 14:59:17] [INFO]   ✅ Business Logic scan complete — 0 findings
+[2026-08-16 14:59:17] [INFO]   📁 output/juice-shop-safe/attacks/business/findings.json
+[2026-08-16 14:59:17] [INFO] ============================================================
+[2026-08-16 14:59:17] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:59:17] [INFO] 
+============================================================
+[2026-08-16 14:59:17] [INFO]   XSSScanner — http://127.0.0.1:3000
+[2026-08-16 14:59:17] [INFO] ============================================================
+
+[2026-08-16 14:59:17] [INFO]   [+] 0 forms | 1 search endpoints
+[2026-08-16 14:59:17] [INFO]   [+] 2 tarefas totais
+
+[2026-08-16 14:59:17] [INFO] 
+============================================================
+[2026-08-16 14:59:17] [INFO]   ✅ XSS scan complete — 0 findings
+[2026-08-16 14:59:17] [INFO]   📁 output/juice-shop-safe/attacks/xss/findings.json
+[2026-08-16 14:59:17] [INFO] ============================================================
+[2026-08-16 14:59:17] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 14:59:17] [INFO] 
+============================================================
+[2026-08-16 14:59:17] [INFO]   SSRFScanner — http://127.0.0.1:3000
+[2026-08-16 14:59:17] [INFO] ============================================================
+
+[2026-08-16 14:59:17] [INFO]   [+] 0 param tasks + 0 form tasks
+
+[2026-08-16 14:59:17] [INFO] 
+============================================================
+[2026-08-16 14:59:17] [INFO]   ✅ SSRF scan complete — 0 findings
+[2026-08-16 14:59:17] [INFO]   📁 output/juice-shop-safe/attacks/ssrf/findings.json
+[2026-08-16 14:59:17] [INFO] ============================================================
+[2026-08-16 15:00:11] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 15:00:28] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 15:00:28] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 15:00:29] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log
+[2026-08-16 15:00:29] [INFO] Detailed logging initialized at output/juice-shop-safe/logs/buggy.log

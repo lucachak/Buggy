@@ -268,13 +268,41 @@ class TestRunDirBustingDefaults(unittest.TestCase):
         self.assertIsNone(default,
             "allowed_status default must be None (sentinel), not a mutable set literal")
 
-    def test_exec_allowed_status_default_is_none_sentinel(self):
-        import inspect
-        d = Discovery()
-        sig = inspect.signature(d.exec)
-        default = sig.parameters["allowed_status"].default
-        self.assertIsNone(default,
-            "exec allowed_status default must be None (sentinel)")
+
+def test_dir_busting_forwards_recursion_and_streams_output(tmp_path, monkeypatch):
+    wordlist = tmp_path / "tiny.txt"
+    wordlist.write_text("api\nadmin\n")
+    observed = {}
+
+    def fake_run(command, **kwargs):
+        observed["command"] = command
+        observed["kwargs"] = kwargs
+        return _make_completed()
+
+    discovery = Discovery(target="http://localhost:3000", output_dir=str(tmp_path / "scan"))
+    monkeypatch.setattr(discovery, "_find_dirpy_binary", lambda: "/tmp/DirGo")
+    monkeypatch.setattr("modules.Reconnaissance.Discovery.subprocess.run", fake_run)
+    discovery.run_dir_busting(
+        wordlist=str(wordlist), threads=12, rate=50,
+        recursive=True, max_depth=3, timeout=4,
+    )
+
+    command = observed["command"]
+    assert command[command.index("-t") + 1] == "12"
+    assert command[command.index("--rate") + 1] == "50"
+    assert command[command.index("--depth") + 1] == "3"
+    assert "-r" in command
+    assert "--silent" not in command
+    assert "capture_output" not in observed["kwargs"]
+    assert observed["kwargs"]["timeout"] is None
+
+
+def test_exec_allowed_status_default_is_none_sentinel():
+    import inspect
+    d = Discovery()
+    sig = inspect.signature(d.exec)
+    default = sig.parameters["allowed_status"].default
+    assert default is None, "exec allowed_status default must be None (sentinel)"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -478,6 +506,7 @@ class TestSaveReport(unittest.TestCase):
         txt, jsn = d.SaveReport(output_dir=self.tmp)
         self.assertTrue(os.path.exists(txt),  "TXT not created")
         self.assertTrue(os.path.exists(jsn), "JSON not created")
+        self.assertTrue(os.path.exists(os.path.join(self.tmp, "discovery_summary.json")))
 
     def test_json_structure(self):
         d = Discovery(target=LOCAL_TARGET)

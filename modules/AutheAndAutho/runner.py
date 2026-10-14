@@ -163,7 +163,7 @@ class AuthScanner:
         if surface_file.exists():
             with open(surface_file) as f:
                 surface = json.load(f)
-            surface.setdefault("auth_findings", []).extend(self.findings)
+            surface["auth_findings"] = self.findings
             with open(surface_file, "w") as f:
                 json.dump(surface, f, indent=2)
 
@@ -185,7 +185,7 @@ class AuthScanner:
         for ep in search_endpoints[:30]:
             url = str(ep)
             parsed = urllib.parse.urlparse(url)
-            qs = urllib.parse.parse_qs(parsed.query)
+            qs = urllib.parse.parse_qs(parsed.query, keep_blank_values=True)
             for param, vals in qs.items():
                 if param.lower() in P.IDOR_PARAMS and vals:
                     tasks.append(("idor", url, param, vals[0]))
@@ -247,4 +247,3 @@ class AuthScanner:
         buggy_logger.info(f"{'='*60}")
 
         return self.findings
-

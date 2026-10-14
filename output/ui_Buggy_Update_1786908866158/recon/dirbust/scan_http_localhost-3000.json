@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "ports": null,
+    "target": "http://localhost:3000",
+    "total_found": 16
+  },
+  "results": [
+    {
+      "url": "http://localhost:3000/api",
+      "status": 500,
+      "size": 2408,
+      "elapsed_ms": 2004.571,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/apis",
+      "status": 500,
+      "size": 2410,
+      "elapsed_ms": 2006.879,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/assets",
+      "status": 301,
+      "size": 156,
+      "redirect": "/assets/",
+      "elapsed_ms": 2008.652,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/ftp",
+      "status": 200,
+      "size": 11307,
+      "elapsed_ms": 2044.205,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/media",
+      "status": 301,
+      "size": 155,
+      "redirect": "/media/",
+      "elapsed_ms": 2044.206,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/profile",
+      "status": 500,
+      "size": 1043,
+      "elapsed_ms": 2015.954,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/promotion",
+      "status": 200,
+      "size": 5863,
+      "elapsed_ms": 2041.907,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/redirect",
+      "status": 500,
+      "size": 2531,
+      "elapsed_ms": 2004.184,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/rest",
+      "status": 500,
+      "size": 2410,
+      "elapsed_ms": 2007.307,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/restaurants",
+      "status": 500,
+      "size": 2424,
+      "elapsed_ms": 2000.557,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/restore",
+      "status": 500,
+      "size": 2416,
+      "elapsed_ms": 2005.936,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/restored",
+      "status": 500,
+      "size": 2418,
+      "elapsed_ms": 2002.269,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/restricted",
+      "status": 500,
+      "size": 2422,
+      "elapsed_ms": 2001.191,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/robots.txt",
+      "status": 200,
+      "size": 28,
+      "elapsed_ms": 1991.69,
+      "is_dir": false,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/video",
+      "status": 200,
+      "size": 2097152,
+      "elapsed_ms": 2014.663,
+      "is_dir": true,
+      "depth": 0
+    },
+    {
+      "url": "http://localhost:3000/Video",
+      "status": 200,
+      "size": 2097152,
+      "elapsed_ms": 2008.107,
+      "is_dir": true,
+      "depth": 0
+    }
+  ]
+}

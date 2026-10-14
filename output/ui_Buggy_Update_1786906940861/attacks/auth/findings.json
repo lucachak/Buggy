@@ -1,0 +1,122 @@
+[
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/admin_area",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/SysAdmin",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/admincp",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/assetmanagement",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/dbadmin",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/aspadmin",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/panel",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/Super-Admin",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/phpmyadmin2",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  },
+  {
+    "type": "missing_rate_limit",
+    "url": "http://localhost:3000/listadmin",
+    "parameter": "headers",
+    "payload": "N/A",
+    "evidence": "Login page missing rate limit headers: ['x-ratelimit-limit', 'x-ratelimit-remaining', 'retry-after']",
+    "confidence": "low",
+    "cvss_score": 0.0,
+    "cvss_severity": "INFORMATIONAL",
+    "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+    "cvss_desc": "Unclassified finding"
+  }
+]

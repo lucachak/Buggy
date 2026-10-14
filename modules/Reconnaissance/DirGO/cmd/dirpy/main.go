@@ -21,6 +21,7 @@ func main() {
 	extensionsFlag := flag.String("x", "", "Extensions (comma-separated): php,txt,bak")
 	filterCodesFlag := flag.String("c", "404", "Status codes to filter (comma-separated)")
 	concurrencyFlag := flag.Int("t", 50, "Number of workers")
+	rateFlag := flag.Float64("rate", 0, "Maximum requests per second (0 = unlimited)")
 	timeoutFlag := flag.Float64("timeout", 10.0, "Timeout in seconds")
 	retryFlag := flag.Int("retry", 1, "Retry count on timeout")
 	techFlag := flag.Bool("tech", false, "Fingerprint technology")
@@ -31,9 +32,18 @@ func main() {
 	recursiveFlag := flag.Bool("r", false, "Recursive scan into directories")
 	maxDepthFlag := flag.Int("depth", 0, "Max recursion depth (0 = unlimited)")
 	outputDirFlag := flag.String("output-dir", "output", "Output directory for reports")
+	insecureFlag := flag.Bool("insecure", false, "Disable TLS certificate verification")
 	exportWordlistFlag := flag.String("export-wordlist", "", "Export built-in wordlist")
 
 	flag.Parse()
+	if *rateFlag < 0 {
+		fmt.Fprintln(os.Stderr, "error: --rate cannot be negative")
+		os.Exit(1)
+	}
+	if *concurrencyFlag < 1 || *timeoutFlag <= 0 || *retryFlag < 1 || *maxDepthFlag < 0 {
+		fmt.Fprintln(os.Stderr, "error: workers, timeout and retries must be positive; depth cannot be negative")
+		os.Exit(1)
+	}
 
 	if *exportWordlistFlag != "" {
 		if err := wordlist.WriteBuiltin(*exportWordlistFlag); err != nil {
@@ -99,6 +109,7 @@ func main() {
 
 	cfg := scanner.Config{
 		Concurrency: *concurrencyFlag,
+		Rate:        *rateFlag,
 		Timeout:     *timeoutFlag,
 		Retry:       *retryFlag,
 		ShowTech:    *techFlag,
@@ -107,6 +118,7 @@ func main() {
 		FilterCodes: filterCodes,
 		Recursive:   *recursiveFlag,
 		MaxDepth:    *maxDepthFlag,
+		Insecure:    *insecureFlag,
 	}
 
 	// Criar diretório de output

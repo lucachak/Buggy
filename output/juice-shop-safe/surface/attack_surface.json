@@ -1,0 +1,31 @@
+{
+  "injection_targets": {
+    "forms": [],
+    "login_pages": [
+      "http://127.0.0.1:3000/administration",
+      "http://127.0.0.1:3000/login"
+    ],
+    "search_endpoints": [
+      "http://127.0.0.1:3000/rest/products/search"
+    ]
+  },
+  "api_endpoints": [],
+  "exposed_services": [],
+  "tech_context": {
+    "cms": [],
+    "waf": false,
+    "frameworks": [
+      "Angular"
+    ]
+  },
+  "js_secrets": [
+    {
+      "url": "http://127.0.0.1:3000/main.js",
+      "secrets": [],
+      "endpoints": [
+        "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token="
+      ],
+      "secret_count": 0
+    }
+  ]
+}

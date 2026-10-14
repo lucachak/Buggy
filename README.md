@@ -1,7 +1,6 @@
-
 # Buggy - Offensive Security Automation Suite
 
-**Buggy** é uma plataforma modular de bug bounty e pentest automatizado, projetada para reduzir em até 4 dias o tempo de information gathering e testes manuais. Construída para funcionar offline-first, sem dependência de APIs pagas, utilizando ferramentas consolidadas como `subfinder`, `dnsx`, `amass` e o scanner de alta performance **Dirpy v2 Go**.
+**Buggy** é um scanner modular para reconhecimento, mapeamento de superfície e validações de segurança web em ambientes autorizados. Ele organiza os resultados por execução, aplica controles de escopo e produz achados JSON e relatório HTML. Não substitui revisão manual: vários módulos usam heurísticas e os achados precisam ser confirmados.
 
 > **Autor:** [Lucas Lucachak](https://github.com/lucachak)  
 > **Licença:** MIT  
@@ -12,9 +11,10 @@
 
 ## Filosofia
 
-- **Zero APIs pagas.** Sem Shodan, sem VirusTotal. Apenas ferramentas locais e código próprio.
+- **Safe by default.** TLS validado, redirects presos ao escopo, rate limit e bloqueio de requisições que alteram estado.
+- **Sem APIs obrigatórias.** A integração opcional com Shodan só é usada quando CLI e chave estão configuradas.
 - **Modular.** Cada módulo é independente. Teste, mantenha e expanda sem quebrar o resto.
-- **Alta performance.** Dirpy v2 em Go atinge 13.000+ req/s.
+- **Carga controlável.** Concorrência, timeout e taxa são configuráveis; respeite sempre as regras do programa.
 - **Testado.** Testes unitários com `pytest` desde o início.
 - **Feito por um hacker, para hackers.**
 
@@ -79,14 +79,14 @@ $ python Buggy.py -t http://localhost:8000 -m recon --skip-deps
 ```bash
 git clone https://github.com/lucachak/Buggy.git
 cd Buggy
-chmod +x install.sh
-./install.sh
+chmod +x Install.sh
+./Install.sh
 ```
 
 ### Com virtual environment
 
 ```bash
-./install.sh --venv
+./Install.sh --venv
 source .venv/bin/activate
 ```
 
@@ -103,7 +103,7 @@ source .venv/bin/activate
 ./buggy -t http://localhost:8000 -m recon --recursive --threads 100
 
 # Ajuda
-./buggy --help
+python Buggy.py --help
 ```
 
 ---
@@ -113,14 +113,17 @@ source .venv/bin/activate
 | # | Módulo | Status | Função |
 | :---: | :--- | :---: | :--- |
 | 1 | `Reconnaissance` | ✅ Ativo | Subdomínios, DNS, CDN bypass, dir busting |
-| 2 | `SurfaceMapping` | 🧱 Em breve | Mapeamento de superfície de ataque |
-| 3 | `Infra` | 🧱 Em breve | Testes de infraestrutura e configuração |
-| 4 | `AutheAndAutho` | 🧱 Em breve | Testes de autenticação e autorização |
-| 5 | `BusinessLogic` | 🧱 Em breve | Falhas de lógica de negócio |
-| 6 | `InjectionAttk` | 🧱 Em breve | SQLi, CMDi, SSTI e outras injeções |
-| 7 | `ServerSide(SSRF)` | 🧱 Em breve | Server-Side Request Forgery |
-| 8 | `XSSAndClient` | 🧱 Em breve | XSS, CSRF, client-side attacks |
-| 9 | `Report` | 🧱 Em breve | Geração automática de relatórios |
+| 2 | `SurfaceMapping` | ✅ Ativo | Mapeamento de superfície de ataque |
+| 3 | `Infra` | ✅ Ativo | Headers, CORS e exposição de arquivos |
+| 4 | `AutheAndAutho` | ✅ Ativo | Heurísticas de autenticação, IDOR e SSO |
+| 5 | `BusinessLogic` | ✅ Ativo | HPP e mass assignment heurístico |
+| 6 | `InjectionAttk` | ✅ Ativo | SQLi, CMDi, SSTI e XXE |
+| 7 | `ServerSide_SSRF` | ✅ Ativo | SSRF, path traversal e LFI |
+| 8 | `XSSAndClient` | ✅ Ativo | XSS, CSRF e open redirect |
+| 9 | `Report` | ✅ Ativo | Relatório HTML consolidado |
+| 10 | `CVEIntelligence` | ✅ Ativo | Correlação NVD/KEV/EPSS e priorização |
+| 11 | `Validation` | ✅ Ativo | Plano, aprovação, sandbox e validators seguros |
+| 12 | `WebUI` | ✅ Ativo | API e dashboard locais com acompanhamento em tempo real |
 
 ---
 
@@ -130,7 +133,7 @@ source .venv/bin/activate
 - **Subdomain enumeration:** crt.sh, subfinder, amass, assetfinder
 - **DNS resolution:** dnsx com registro A, AAAA, CNAME, MX, TXT
 - **Origin IP discovery:** Bypass de CDN/Cloudflare, SecurityTrails
-- **Dir busting:** Dirpy v2 Go scanner com 13.000+ req/s
+- **Dir busting:** Dirpy v2 em Go com concorrência, timeout e saída JSON
 - **Recursive scan:** Segue diretórios automaticamente até profundidade configurável
 - **Report:** Exportação automática em TXT e JSON
 
@@ -153,14 +156,14 @@ source .venv/bin/activate
 ```
 Buggy/
 ├── Buggy.py                    # Entry point
-├── install.sh                  # Instalador one-command
+├── Install.sh                  # Instalador one-command
 ├── Makefile                    # Atalhos
 ├── requirements.txt
 ├── modules/
 │   ├── OS_info.py              # Detecção de SO + instalador de pacotes
 │   ├── Reconnaissance/
 │   │   ├── Discovery.py        # Pipeline completa de recon
-│   │   ├── Dirpy/              # Dirpy v2 Go source
+│   │   ├── DirGO/              # Código-fonte e binário do Dirpy v2
 │   │   │   ├── cmd/dirpy/
 │   │   │   ├── internal/
 │   │   │   │   ├── scanner/    # HTTP client + worker pool
@@ -196,11 +199,11 @@ cd Buggy
 pip install -r requirements.txt
 
 # Build do Dirpy Go
-cd modules/Reconnaissance/Dirpy
+cd modules/Reconnaissance/DirGO
 make build
 cd ../../..
 
-# Ferramentas externas necessárias (instale manualmente se não usar install.sh):
+# Ferramentas externas necessárias (instale manualmente se não usar Install.sh):
 # - subfinder, dnsx, amass, assetfinder
 # - curl, jq, sed, sort, dig, grep
 ```
@@ -213,11 +216,30 @@ cd ../../..
 # Recon completo
 python Buggy.py -t example.com -m recon
 
+# Fluxo completo no perfil seguro (padrão)
+python Buggy.py -t https://app.example.com -m all -o output/app-scan
+
+# Testes ativos com POST/JSON/XML — somente quando autorizados
+python Buggy.py -t https://app.example.com -m injection \
+  -o output/app-scan --profile standard --rate 5
+
+# Autorizar explicitamente outro host encontrado no mapeamento
+python Buggy.py -t https://app.example.com -m xss \
+  -o output/app-scan --allow-host api.example.com
+
 # Recon com dir busting recursivo
 python Buggy.py -t example.com -m recon --recursive --threads 100
 
 # Pular verificação de dependências (útil em dev)
 python Buggy.py -t http://localhost:8000 -m recon --skip-deps
+
+# Correlacionar CVEs, criar plano e executar checks seguros automaticamente
+python Buggy.py -t https://app.example.com -m cve -o output/app-scan
+python Buggy.py -t https://app.example.com -m plan -o output/app-scan
+python Buggy.py -m execute -o output/app-scan
+
+# Dashboard/API somente local
+python Buggy.py -m ui --ui-port 8787
 
 # Sem banner
 python Buggy.py -t example.com -m recon --no-banner
@@ -226,12 +248,47 @@ python Buggy.py -t example.com -m recon --no-banner
 pytest tests/ -v
 ```
 
+Na primeira abertura da UI, use **Iniciar demonstração** para criar um scan
+guiado com inventário, CVEs, plano e resultados de exemplo. O onboarding usa
+dados locais, não inicia o scanner, não acessa alvos e permanece somente leitura.
+Scans reais exibem status e logs automaticamente durante a execução por um
+atualizador local, sem CDN ou dependência de internet; ao terminar, a página
+recarrega uma vez para apresentar os artefatos finais. A timeline mostra
+as fases concluídas, ativa e pendentes. **Cancelar execução** encerra com `SIGTERM`
+somente processos iniciados pela instância atual da UI e persiste `cancelled`.
+Em **Ajustar desempenho**, cada projeto permite configurar workers, requisições
+por minuto, timeout, verificação de dependências, recursão e profundidade. A UI
+estima a duração da lista base; cada diretório confirmado pode acrescentar outra
+passada quando a recursão estiver ativa.
+
+Para aplicações SPA, o SurfaceMapping lê os assets reais declarados por
+`script`, `modulepreload` e referências internas dos bundles. Rotas `/api` e
+`/rest` são resolvidas apenas dentro do host autorizado, preservando quando
+possível o método HTTP observado. O relatório separa cobertura, observações e
+vulnerabilidades confirmadas; zero entradas dinâmicas é marcado como resultado
+inconclusivo, não como aplicação segura.
+
+### Perfis e hardening
+
+- `--profile safe` é o padrão: permite reconhecimento e testes GET, mas bloqueia POST, JSON e XML.
+- `--profile standard` habilita validações que podem alterar estado. Use contas e dados de teste.
+- O escopo de rede é o host de `--target`. Hosts extras exigem `--allow-host` explícito.
+- TLS é verificado por padrão. `--insecure` existe apenas para laboratórios com certificado inválido.
+- Headers de bypass não são enviados por padrão; `--waf-bypass` é opt-in.
+- `--rate`, `--threads` e `--timeout` limitam a carga. Regras do programa têm precedência.
+- `--recursive --max-depth N` revisita diretórios confirmados. O Dirpy calibra
+  templates de soft 404 na raiz e em cada profundidade antes de expandir a lista.
+- Validators `safe` usam apenas provas não destrutivas e são executados automaticamente; eles indicam aplicabilidade, não exploração confirmada.
+- Validators de risco maior permanecem bloqueados até aprovação explícita vinculada ao plano.
+
+Execute `python Buggy.py -h` para ver módulos, defaults, exemplos e o fluxo recomendado.
+
 ---
 
 ## ⚡ Dirpy v2 Go (standalone)
 
 ```bash
-cd modules/Reconnaissance/Dirpy
+cd modules/Reconnaissance/DirGO
 
 # Build
 make build
@@ -266,19 +323,21 @@ localhost_recon_20260625_143922.json  # Machine-parseable
 - [x] Testes unitários com pytest
 - [x] Dirpy v2 Go (alta performance)
 - [x] Dir busting recursivo
-- [x] Instalador one-command (install.sh)
+- [x] Instalador one-command (Install.sh)
 - [x] Cross-platform (Linux, macOS)
 - [x] Detecção de alvo local (pula enumeração externa)
-- [ ] SurfaceMapping
-- [ ] Infra
-- [ ] AutheAndAutho
-- [ ] BusinessLogic
-- [ ] InjectionAttk
-- [ ] ServerSide (SSRF)
-- [ ] XSSAndClient
-- [ ] Report
+- [x] SurfaceMapping
+- [x] Infra
+- [x] AutheAndAutho
+- [x] BusinessLogic
+- [x] InjectionAttk
+- [x] ServerSide (SSRF)
+- [x] XSSAndClient
+- [x] Report
 - [ ] Suporte a múltiplos targets
-- [ ] Web UI
+- [x] Web UI local
+- [x] Inteligência de CVEs e priorização
+- [x] Registry, aprovação, sandbox e validators HTTP seguros
 - [ ] Docker image
 
 ---

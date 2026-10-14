@@ -1,0 +1,14 @@
+<section id="scan-live" class="card live-status"
+  {% if scan.status == "running" %}data-poll-url="/ui/scans/{{ scan.id }}/status" data-poll-interval="2000"{% endif %}>
+  <div class="status-line">
+    <div><span class="step-label">EXECUÇÃO</span><h2>Status do scan</h2></div>
+    <span class="status {{ scan.status }}">{% if scan.status == "running" %}<i></i>{% endif %}{{ scan.status }}</span>
+  </div>
+  <progress class="progress-track" value="{{ progress.percent }}" max="100">{{ progress.percent }}%</progress>
+  <ol class="scan-steps">
+    {% for step in progress.steps %}<li class="{{ step.state }}"><b>{% if step.state == "completed" %}✓{% elif step.state == "failed" %}!{% elif step.state == "cancelled" %}×{% else %}{{ step.number }}{% endif %}</b><span>{{ step.label }}</span></li>{% endfor %}
+  </ol>
+  {% if scan.status == "running" %}<p class="section-help">Atualização automática a cada 2 segundos.</p>{% endif %}
+  {% if scan.status == "running" %}<form method="post" action="/ui/scans/{{ scan.id }}/cancel" class="cancel-form"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="danger">Cancelar execução</button></form>{% endif %}
+  <pre>{{ log_tail if log_tail else waiting_message }}</pre>
+</section>

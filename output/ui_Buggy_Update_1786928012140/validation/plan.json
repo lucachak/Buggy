@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "plan_id": "e58b0438c0c282ae9b219754",
+  "created_at": 1786928956.4602215,
+  "target": "http://localhost:3000",
+  "registry_digest": "8fb8f1abbb0a793cc04ff9e9f94855601e49497f1196eb4d013e9d28287e3594",
+  "items": [],
+  "summary": {
+    "total": 0,
+    "auto_approved_safe": 0,
+    "requires_approval": 0
+  }
+}

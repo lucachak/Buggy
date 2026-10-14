@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "plan_id": "b2233efaaacb1cfed3f7738b",
+  "created_at": 1786901984.0867684,
+  "target": "http://buggy-demo.invalid",
+  "registry_digest": "8fb8f1abbb0a793cc04ff9e9f94855601e49497f1196eb4d013e9d28287e3594",
+  "items": [
+    {
+      "item_id": "apache.path-traversal-applicability:CVE-2021-41773",
+      "validator_id": "apache.path-traversal-applicability",
+      "cve_id": "CVE-2021-41773",
+      "risk": "safe",
+      "executor": "python",
+      "target": "http://buggy-demo.invalid",
+      "status": "proposed",
+      "approved": true,
+      "priority": "CRITICAL"
+    },
+    {
+      "item_id": "tomcat.put-applicability:CVE-2017-12615",
+      "validator_id": "tomcat.put-applicability",
+      "cve_id": "CVE-2017-12615",
+      "risk": "safe",
+      "executor": "python",
+      "target": "http://buggy-demo.invalid",
+      "status": "proposed",
+      "approved": true,
+      "priority": "HIGH"
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "auto_approved_safe": 2,
+    "requires_approval": 0
+  }
+}

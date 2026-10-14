@@ -5,17 +5,11 @@ import logging
 import time
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-from urllib.request import Request, urlopen
+from urllib.request import Request
 from urllib.error import URLError, HTTPError
-import ssl
+from modules.utils.http_client import scoped_urlopen
 
 logger = logging.getLogger(__name__)
-
-# Config SSL permissivo (para alvos com certificados inválidos)
-SSL_CONTEXT = ssl.create_default_context()
-SSL_CONTEXT.check_hostname = False
-SSL_CONTEXT.verify_mode = ssl.CERT_NONE
-
 
 def make_request(url: str, timeout: int = 5, max_redirects: int = 3) -> Optional[Dict]:
     """
@@ -30,7 +24,7 @@ def make_request(url: str, timeout: int = 5, max_redirects: int = 3) -> Optional
             "Accept": "*/*"
         })
         
-        response = urlopen(req, timeout=timeout, context=SSL_CONTEXT)
+        response = scoped_urlopen(req, timeout=timeout)
         
         # Lê headers
         headers = dict(response.headers)

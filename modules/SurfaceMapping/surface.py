@@ -4,7 +4,7 @@ import os
 import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 from .endpoint_mapper.mapper import EndpointMapper
 from .form_mapper.forms import FormMapper
@@ -86,6 +86,7 @@ class SurfaceMapper:
         # 3. JS Analyzer (Go)
         print(f"\n[3/6] 📜 JS Analysis (secrets, API keys)...")
         self.results["js_secrets"] = self._run_js_analyzer(threads, timeout)
+        self._merge_js_routes()
         self._print_js_summary()
 
         # 4. Form Mapper (Python)
@@ -136,16 +137,19 @@ class SurfaceMapper:
         else:
             # Modo standalone - constrói URLs básicas
             print(f"⚠️  No Recon data found, running in standalone mode")
-            self.base_urls = [
-                f"http://{self.target}",
-                f"https://{self.target}",
-                f"http://www.{self.target}",
-                f"https://www.{self.target}",
-            ]
+            parsed = urlparse(self.target)
+            if parsed.scheme and parsed.hostname:
+                self.base_urls = [self.target.rstrip("/")]
+            else:
+                self.base_urls = [f"https://{self.target}", f"http://{self.target}"]
 
     def _extract_base_urls(self, recon_data: Dict) -> List[str]:
         """Extrai URLs base dos dados do Recon."""
         urls = set()
+        original = str(recon_data.get("meta", {}).get("target") or self.target).rstrip("/")
+        parsed_original = urlparse(original)
+        if parsed_original.scheme in {"http", "https"} and parsed_original.hostname:
+            urls.add(original)
 
         # De subdomínios
         for sub in recon_data.get("subdomains", []):
@@ -154,6 +158,8 @@ class SurfaceMapper:
             else:
                 domain = str(sub)
             if domain:
+                if parsed_original.port and domain == parsed_original.hostname:
+                    continue
                 urls.add(f"https://{domain}")
                 urls.add(f"http://{domain}")
 
@@ -167,6 +173,8 @@ class SurfaceMapper:
                 port = ""
 
             if ip:
+                if parsed_original.port and ip == parsed_original.hostname:
+                    continue
                 base = f"{ip}:{port}" if port else ip
                 urls.add(f"http://{base}")
                 urls.add(f"https://{base}")
@@ -196,6 +204,7 @@ class SurfaceMapper:
         """Analisa arquivos JavaScript em busca de segredos e endpoints (Python)."""
         endpoints = self.results.get("endpoints", {}).get("endpoints", [])
         js_urls = [ep for ep in endpoints if str(ep).endswith(".js")]
+        js_urls.extend(path for path in self.paths if str(path).split("?", 1)[0].endswith(".js"))
 
         if not js_urls:
             for base in self.base_urls[:5]:
@@ -210,7 +219,13 @@ class SurfaceMapper:
         if not js_urls:
             return {"results": [], "summary": {"total_files": 0, "total_secrets": 0}}
 
-        return analyze_js(js_urls, threads=threads, timeout=timeout)
+        html_pages = self.base_urls[:5] + [
+            endpoint for endpoint in endpoints[:20]
+            if not str(endpoint).split("?", 1)[0].endswith(".js")
+        ]
+        return analyze_js(
+            js_urls, threads=threads, timeout=timeout, page_urls=html_pages,
+        )
 
     def _run_form_mapper(self, timeout: float) -> Dict:
         """Executa Form Mapper em Python."""
@@ -223,7 +238,62 @@ class SurfaceMapper:
 
     def _run_api_discoverer(self, threads: int, timeout: float) -> Dict:
         """Descobre APIs REST, GraphQL e specs OpenAPI/Swagger (Python)."""
-        return discover_apis(self.base_urls[:10], threads=threads, timeout=timeout)
+        return discover_apis(
+            self.base_urls[:10], threads=threads, timeout=timeout,
+            candidates=self._js_route_details(),
+        )
+
+    def _js_route_details(self) -> List[Dict]:
+        """Resolve JS route literals against the bundle origin."""
+        routes = []
+        seen = set()
+        allowed_hosts = {
+            (urlparse(url).hostname or "").lower()
+            for url in [self.target, *self.base_urls]
+        }
+        for result in self.results.get("js_secrets", {}).get("results", []):
+            source = str(result.get("url", self.target))
+            parsed = urlparse(source)
+            origin = f"{parsed.scheme}://{parsed.netloc}/" if parsed.scheme and parsed.netloc else self.target
+            details = result.get("endpoint_details") or [
+                {"path": path, "method": "UNKNOWN", "source": source}
+                for path in result.get("endpoints", [])
+            ]
+            for detail in details:
+                raw = str(detail.get("path", "")).strip()
+                if not raw:
+                    continue
+                absolute = raw if raw.startswith(("http://", "https://")) else urljoin(origin, raw.lstrip("/"))
+                if (urlparse(absolute).hostname or "").lower() not in allowed_hosts:
+                    continue
+                item = {
+                    "url": absolute,
+                    "path": raw,
+                    "method": str(detail.get("method", "UNKNOWN")).upper(),
+                    "source": source,
+                }
+                marker = (item["url"], item["method"])
+                if marker not in seen:
+                    seen.add(marker)
+                    routes.append(item)
+        return routes[:200]
+
+    def _merge_js_routes(self) -> None:
+        """Make SPA routes available to forms, API discovery and attack modules."""
+        endpoints_data = self.results.setdefault("endpoints", {})
+        endpoints = endpoints_data.setdefault("endpoints", [])
+        categories = endpoints_data.setdefault("categorized", {})
+        api_routes = categories.setdefault("api_endpoints", [])
+        login_routes = categories.setdefault("login_pages", [])
+        for route in self._js_route_details():
+            url = route["url"]
+            if url not in endpoints:
+                endpoints.append(url)
+            lowered = url.lower()
+            if any(token in lowered for token in ("/api", "/rest", "/graphql")) and url not in api_routes:
+                api_routes.append(url)
+            if any(token in lowered for token in ("login", "signin", "auth", "oauth", "sso")) and url not in login_routes:
+                login_routes.append(url)
 
     def _run_port_scanner(self, threads: int, timeout: float) -> Dict:
         """Escaneia portas abertas nos IPs resolvidos (Python socket)."""
@@ -278,12 +348,6 @@ class SurfaceMapper:
                         {"type": "exposed_db", "host": host, "port": port}
                     )
 
-        # Anota endpoints admin expostos
-        for ep in self._filter_admin_endpoints():
-            attack_data.setdefault("scored_findings", []).append(
-                {"type": "exposed_admin", "url": ep}
-            )
-
         # Scoring e ordenação
         findings = attack_data.get("scored_findings", [])
         if findings:
@@ -313,7 +377,7 @@ class SurfaceMapper:
         return {
             "injection_targets": {
                 "forms": self.results.get("forms", {}).get("forms", []),
-                "login_pages": self._filter_admin_endpoints(),
+                "login_pages": self._filter_login_endpoints(),
                 "search_endpoints": self._filter_search_endpoints(),
             },
             "api_endpoints": self.results.get("apis", {}).get("results", []),
@@ -334,16 +398,25 @@ class SurfaceMapper:
 
     def _filter_admin_endpoints(self) -> List[str]:
         """Filtra endpoints administrativos."""
-        admin_kw = ["admin", "login", "dashboard", "wp-admin", "panel", "manage"]
+        admin_kw = ["admin", "dashboard", "wp-admin", "panel", "manage"]
         endpoints = self.results.get("endpoints", {}).get("endpoints", [])
         return [ep for ep in endpoints if any(kw in str(ep).lower() for kw in admin_kw)]
 
+    def _filter_login_endpoints(self) -> List[str]:
+        """Retorna rotas de autenticação e administração como alvos, não findings."""
+        keywords = ["login", "signin", "auth", "oauth", "sso"]
+        endpoints = self.results.get("endpoints", {}).get("endpoints", [])
+        values = list(self._filter_admin_endpoints())
+        values.extend(ep for ep in endpoints if any(kw in str(ep).lower() for kw in keywords))
+        return list(dict.fromkeys(values))
+
     def _filter_search_endpoints(self) -> List[str]:
-        """Filtra endpoints de busca."""
+        """Return query-bearing routes plus routes with search semantics."""
         search_kw = ["search", "query", "find", "lookup", "filter"]
         endpoints = self.results.get("endpoints", {}).get("endpoints", [])
         return [
-            ep for ep in endpoints if any(kw in str(ep).lower() for kw in search_kw)
+            ep for ep in endpoints
+            if urlparse(str(ep)).query or any(kw in str(ep).lower() for kw in search_kw)
         ]
 
     def _detect_exposed_databases(self) -> List[str]:
@@ -408,6 +481,9 @@ class SurfaceMapper:
                 "servers": self.results.get("technologies", {})
                 .get("summary", {})
                 .get("all_servers", []),
+                "software": self.results.get("technologies", {})
+                .get("summary", {})
+                .get("all_software", []),
             },
             "high_value_targets": {
                 "admin_panels": self._filter_admin_endpoints(),
@@ -489,7 +565,7 @@ class SurfaceMapper:
         print(f"\n  Risk Indicators:")
         print(f"    • WAF: {'⚠️  Present' if risk.get('waf_present') else '✅ None'}")
         print(
-            f"    • Admin exposed: {'⚠️  Yes' if risk.get('exposed_admin') else '✅ No'}"
+            f"    • Admin route observed: {'⚠️  Yes' if risk.get('exposed_admin') else '✅ No'}"
         )
         print(
             f"    • DB exposed: {'🔴 Yes!' if risk.get('exposed_databases') else '✅ No'}"
@@ -517,4 +593,3 @@ def run_surface(target: str, args, output_dir: str) -> None:
         timeout=args.timeout if hasattr(args, "timeout") else 10.0,
         wordlist=args.wordlist if hasattr(args, "wordlist") else "default.txt",
     )
-

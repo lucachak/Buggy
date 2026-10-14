@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}{{ demo.title if demo.is_demo else "Scan " ~ scan.id[:8] }}{% endblock %}
+{% block content %}
+<section class="hero scan-hero">
+  {% if demo.is_demo %}<span class="badge demo-badge">DEMONSTRAÇÃO OFFLINE</span>{% endif %}
+  <h1>{{ demo.title if demo.is_demo else "Scan " ~ scan.id[:8] }}</h1>
+  <p>{% if demo.is_demo %}{{ demo.description }}{% else %}{{ scan.module }} · {{ scan.profile }} · PID {{ scan.pid }}{% endif %}</p>
+  {% if settings %}
+  <div class="scan-config" aria-label="Configuração do scan">
+    <span>{{ settings.threads }} workers</span>
+    <span>{{ settings.requests_per_minute }} req/min</span>
+    <span>timeout {{ settings.timeout }}s</span>
+    <span>{{ "recursivo · profundidade " ~ settings.max_depth if settings.recursive else "sem recursão" }}</span>
+  </div>
+  {% endif %}
+</section>
+
+{% include "scan_status.html" %}
+
+{% if not demo.is_demo %}
+<section class="card guided" id="coverage">
+  <div class="status-line">
+    <div><span class="step-label">COBERTURA</span><h2>O que foi realmente analisado</h2></div>
+    {% if report_available %}<a class="button-link" href="/ui/scans/{{ scan.id }}/report">Abrir relatório HTML</a>{% endif %}
+  </div>
+  {% set attack = surface.get("attack_surface", {}) %}
+  {% set js_summary = surface_full.get("js_secrets", {}).get("summary", {}) %}
+  <div class="metric-grid">
+    <div><strong>{{ attack.get("total_endpoints", 0) }}</strong><span>endpoints</span></div>
+    <div><strong>{{ attack.get("total_apis", 0) }}</strong><span>APIs</span></div>
+    <div><strong>{{ js_summary.get("total_files", 0) }}</strong><span>bundles JS</span></div>
+    <div><strong>{{ attack.get("total_forms", 0) }}</strong><span>formulários</span></div>
+  </div>
+  {% if not attack.get("total_apis", 0) and not attack.get("total_forms", 0) %}
+  <p class="coverage-warning">Resultado inconclusivo: os módulos dinâmicos ficaram sem APIs ou formulários para testar.</p>
+  {% endif %}
+</section>
+
+<section class="card guided" id="pipeline-findings">
+  <span class="step-label">EVIDÊNCIAS</span><h2>Achados do pipeline</h2>
+  <p class="section-help">Somente evidências confirmadas devem ser tratadas como vulnerabilidade; itens informativos exigem revisão.</p>
+  <table><thead><tr><th>Severidade</th><th>Tipo</th><th>Alvo</th><th>Evidência</th></tr></thead><tbody>
+  {% for finding in findings %}
+  <tr><td><span class="severity {{ finding.get('cvss_severity', 'informational')|lower }}">{{ finding.get('cvss_severity', 'informational') }}</span></td><td>{{ finding.get("subtype", finding.get("type", "—")) }}</td><td><code>{{ finding.get("url", finding.get("host", "—")) }}</code></td><td>{{ finding.get("evidence", finding.get("cvss_desc", "—")) }}</td></tr>
+  {% else %}<tr><td colspan="4">Nenhuma vulnerabilidade confirmada nesta execução.</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+{% endif %}
+
+{% if demo.is_demo %}
+<nav class="tour" aria-label="Etapas da demonstração">
+  <a href="#inventory"><b>1</b><span>Inventário<small>O que está exposto</small></span></a>
+  <a href="#cves"><b>2</b><span>CVEs<small>O que priorizar</small></span></a>
+  <a href="#plan"><b>3</b><span>Plano<small>Como testar</small></span></a>
+  <a href="#results"><b>4</b><span>Resultado<small>O que foi provado</small></span></a>
+</nav>
+{% endif %}
+
+<section class="card guided" id="inventory">
+  {% if demo.is_demo %}<span class="step-label">ETAPA 1 · DESCOBERTA</span>{% endif %}
+  <h2>Inventário observado</h2>
+  <p class="section-help">Versões expostas formam a base para correlacionar vulnerabilidades sem testar payloads.</p>
+  <table><thead><tr><th>Produto</th><th>Versão</th><th>Origem</th></tr></thead><tbody>
+  {% set technologies = surface.get("technologies", {}) %}
+  {% for software in technologies.get("software", []) %}<tr><td>{{ software.get("product", "—") }}</td><td>{{ software.get("version", "—") }}</td><td>{{ software.get("source", "—") }}</td></tr>{% endfor %}
+  {% for framework in technologies.get("frameworks", []) %}<tr><td>{{ framework }}</td><td>não exposta</td><td>fingerprint HTTP</td></tr>{% endfor %}
+  {% if not technologies.get("software", []) and not technologies.get("frameworks", []) %}<tr><td colspan="3">Inventário ainda não disponível.</td></tr>{% endif %}
+  </tbody></table>
+</section>
+
+<section class="card guided" id="cves">
+  {% if demo.is_demo %}<span class="step-label">ETAPA 2 · PRIORIZAÇÃO</span>{% endif %}
+  <h2>CVEs priorizadas</h2>
+  <p class="section-help">CVSS mede severidade; EPSS estima chance de exploração; KEV indica exploração conhecida.</p>
+  <table><thead><tr><th>CVE</th><th>Componente</th><th>Prioridade</th><th>EPSS</th><th>KEV</th></tr></thead><tbody>
+  {% for cve in cves %}{% set component = cve.get("component", {}) %}<tr><td><code>{{ cve.get("cve_id", "—") }}</code></td><td>{{ component.get("product", "") }} {{ component.get("version", "") }}</td><td><span class="severity {{ cve.get('priority', 'low')|lower }}">{{ cve.get("priority", "—") }}</span></td><td>{{ cve.get("epss", "—") }}</td><td>{{ "sim" if cve.get("kev") else "não" }}</td></tr>
+  {% else %}<tr><td colspan="5">Nenhuma CVE correlacionada.</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+
+<section class="card guided" id="plan">
+  {% if demo.is_demo %}<span class="step-label">ETAPA 3 · DECISÃO</span>{% endif %}
+  <h2>Plano de validação</h2>
+  <p class="section-help">Checks <code>safe</code> são não destrutivos. Riscos maiores ficam bloqueados até aprovação explícita.</p>
+  {% if plan.get("items", []) and not demo.is_demo %}
+  <form method="post" action="/ui/scans/{{ scan.id }}/approve">
+    <input type="hidden" name="csrf" value="{{ csrf }}"><label>Aprovador<input name="approved_by" required></label>
+    {% for item in plan.get("items", []) %}<label class="check"><input type="checkbox" name="item_id" value="{{ item.item_id }}"> {{ item.cve_id }} · {{ item.validator_id }} · {{ item.risk }}</label>{% endfor %}
+    <button>Aprovar selecionados</button>
+  </form>
+  {% elif plan.get("items", []) %}
+  <table><thead><tr><th>CVE</th><th>Validator</th><th>Risco</th><th>Decisão</th></tr></thead><tbody>
+  {% for item in plan.get("items", []) %}<tr><td>{{ item.cve_id }}</td><td>{{ item.validator_id }}</td><td><span class="badge">{{ item.risk }}</span></td><td>{{ "automática" if item.approved else "exige aprovação" }}</td></tr>{% endfor %}
+  </tbody></table>
+  {% else %}<p class="muted">Plano ainda não disponível.</p>{% endif %}
+</section>
+
+<section class="card guided" id="results">
+  {% if demo.is_demo %}<span class="step-label">ETAPA 4 · EVIDÊNCIA</span>{% endif %}
+  <h2>Execução dos validators</h2>
+  <p class="section-help"><code>possible</code> significa que os pré-requisitos coincidem, mas não autoriza afirmar exploração confirmada.</p>
+  {% if plan.get("items", []) and not demo.is_demo %}<form method="post" action="/ui/scans/{{ scan.id }}/execute"><input type="hidden" name="csrf" value="{{ csrf }}"><button>Executar plano</button></form>{% endif %}
+  <table><thead><tr><th>CVE</th><th>Validator</th><th>Status</th><th>Aplicabilidade</th><th>Resumo</th></tr></thead><tbody>
+  {% for item in execution.get("results", []) %}{% set result = item.get("result", {}) %}<tr><td>{{ result.get("cve_id", item.get("cve_id", "—")) }}</td><td>{{ item.get("validator_id", "—") }}</td><td>{{ item.get("status", "—") }}</td><td><span class="severity medium">{{ result.get("applicability", item.get("reason", "—")) }}</span></td><td>{{ result.get("summary", "—") }}</td></tr>
+  {% else %}<tr><td colspan="5">Nenhum validator executado.</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+
+{% if demo.is_demo %}<section class="next-step"><div><span class="step-label">FIM DO TOUR</span><h2>Pronto para um alvo autorizado?</h2><p>Volte ao workspace, crie um projeto e comece pelo perfil <code>safe</code>.</p></div><a class="button-link" href="/">Criar meu projeto →</a></section>{% endif %}
+
+{% endblock %}

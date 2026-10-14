@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "tool": "Buggy",
+    "target": "http://localhost:3000",
+    "domain": "localhost",
+    "timestamp": "20260816_220857"
+  },
+  "results": {
+    "target": "http://localhost:3000",
+    "domain": "localhost",
+    "subdomains": [
+      "localhost"
+    ],
+    "live_ips": [
+      "localhost"
+    ],
+    "discovered_paths": [
+      "http://localhost:3000/assets/",
+      "http://localhost:3000/ftp",
+      "http://localhost:3000/media/",
+      "http://localhost:3000/promotion",
+      "http://localhost:3000/robots.txt",
+      "http://localhost:3000/video",
+      "http://localhost:3000/Video"
+    ]
+  }
+}

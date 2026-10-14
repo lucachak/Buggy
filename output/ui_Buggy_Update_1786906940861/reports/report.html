@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buggy Report — localhost</title>
+  <style>
+    body   { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+              max-width: 1100px; margin: 0 auto; padding: 2rem;
+              background: #0d1117; color: #c9d1d9; }
+    h1     { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: .5rem; }
+    h2     { color: #79c0ff; margin-top: 2rem; }
+    h3     { color: #d2a8ff; }
+    section { background: #161b22; border: 1px solid #30363d;
+               border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; }
+    table  { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #21262d; }
+    th     { background: #21262d; color: #8b949e; font-weight: 600; }
+    tr:hover { background: #1f2937; }
+    code   { background: #1c2128; padding: 1px 6px; border-radius: 4px;
+               font-size: 12px; color: #a5d6ff; }
+    ul     { padding-left: 1.2rem; line-height: 1.8; }
+    .meta  { color: #8b949e; font-size: 13px; margin-top: -.5rem; margin-bottom: 1.5rem; }
+    footer { color: #8b949e; font-size: 12px; margin-top: 3rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>🐛 Buggy Report</h1>
+  <p class="meta">Target: <code>http://localhost:3000</code> &nbsp;|&nbsp;
+     Scan: <code>20260816_161745</code> &nbsp;|&nbsp;
+     Generated: <code>2026-08-16 16:24:36</code></p>
+
+  
+    <section>
+      <h2>Executive Summary</h2>
+      <table><thead><tr><th>Indicador</th><th>Status</th></tr></thead><tbody><tr><td>WAF presente</td><td>❌ Não</td></tr><tr><td>Rota admin observada</td><td>⚠️ Sim</td></tr><tr><td>DB exposto</td><td>✅ Não</td></tr><tr><td>JS secrets leaked</td><td>✅ Não</td></tr></tbody></table>
+    </section>
+    
+  
+    <section>
+      <h2>Reconnaissance</h2>
+      <table><thead><tr><th>Tipo</th><th>Quantidade</th></tr></thead><tbody><tr><td>Subdomínios</td><td>1</td></tr><tr><td>Live IPs</td><td>1</td></tr><tr><td>Paths found</td><td>4603</td></tr></tbody></table><h3>Subdomains</h3><ul><li><code>localhost</code></li></ul><h3>Live IPs</h3><ul><li><code>localhost</code></li></ul>
+    </section>
+    
+  
+    <section>
+      <h2>Attack Surface</h2>
+      <table><thead><tr><th>Tipo</th><th>Quantidade</th></tr></thead><tbody><tr><td>Endpoints</td><td>4603</td></tr><tr><td>Formulários</td><td>0</td></tr><tr><td>APIs</td><td>0</td></tr><tr><td>JS secrets</td><td>0</td></tr><tr><td>Open ports</td><td>0</td></tr></tbody></table><table><thead><tr><th>Tech</th><th>Tipo</th></tr></thead><tbody><tr><td>Angular</td><td>Framework</td></tr></tbody></table><h3>Admin panels expostos</h3><ul><li><code>http://localhost:3000/admin_area</code></li><li><code>http://localhost:3000/SysAdmin</code></li><li><code>http://localhost:3000/admincp</code></li><li><code>http://localhost:3000/assetmanagement</code></li><li><code>http://localhost:3000/dbadmin</code></li><li><code>http://localhost:3000/aspadmin</code></li><li><code>http://localhost:3000/panel</code></li><li><code>http://localhost:3000/Super-Admin</code></li><li><code>http://localhost:3000/phpmyadmin2</code></li><li><code>http://localhost:3000/listadmin</code></li><li><code>http://localhost:3000/sohoadmin</code></li><li><code>http://localhost:3000/Administration</code></li><li><code>http://localhost:3000/indy_admin</code></li><li><code>http://localhost:3000/shopadmin</code></li><li><code>http://localhost:3000/dashboard</code></li><li><code>http://localhost:3000/useradmin</code></li><li><code>http://localhost:3000/sys-admin</code></li><li><code>http://localhost:3000/ServerAdministrator</code></li><li><code>http://localhost:3000/system-administration</code></li><li><code>http://localhost:3000/sysadmins</code></li><li><code>http://localhost:3000/adminlogin</code></li><li><code>http://localhost:3000/admin.php</code></li><li><code>http://localhost:3000/phpmyadmin</code></li><li><code>http://localhost:3000/WebAdmin</code></li><li><code>http://localhost:3000/phpldapadmin</code></li><li><code>http://localhost:3000/admin-admin</code></li><li><code>http://localhost:3000/database_administration</code></li><li><code>http://localhost:3000/~sysadmin</code></li><li><code>http://localhost:3000/administrador</code></li><li><code>http://localhost:3000/admin_interface</code></li><li><code>http://localhost:3000/administrivia</code></li><li><code>http://localhost:3000/system_admin</code></li><li><code>http://localhost:3000/cmsadmin</code></li><li><code>http://localhost:3000/filemanager</code></li><li><code>http://localhost:3000/AdminService</code></li><li><code>http://localhost:3000/wp-dbmanager</code></li><li><code>http://localhost:3000/newadmin</code></li><li><code>http://localhost:3000/admin_index</code></li><li><code>http://localhost:3000/admin_banner</code></li><li><code>http://localhost:3000/admin.cgi</code></li><li><code>http://localhost:3000/admintools</code></li><li><code>http://localhost:3000/admin_</code></li><li><code>http://localhost:3000/sqladmin</code></li><li><code>http://localhost:3000/administration</code></li><li><code>http://localhost:3000/vsadmin</code></li><li><code>http://localhost:3000/macadmin</code></li><li><code>http://localhost:3000/_vti_bin/_vti_adm/admin.dll</code></li><li><code>http://localhost:3000/adminlogon</code></li><li><code>http://localhost:3000/topicadmin</code></li><li><code>http://localhost:3000/ccp14admin</code></li><li><code>http://localhost:3000/vmailadmin</code></li><li><code>http://localhost:3000/administratoraccounts</code></li><li><code>http://localhost:3000/phpMyAdmin2</code></li><li><code>http://localhost:3000/~admin</code></li><li><code>http://localhost:3000/controlpanel</code></li><li><code>http://localhost:3000/radmind</code></li><li><code>http://localhost:3000/adminsql</code></li><li><code>http://localhost:3000/admin4_colon</code></li><li><code>http://localhost:3000/fileadmin</code></li><li><code>http://localhost:3000/dh_phpmyadmin</code></li><li><code>http://localhost:3000/manager</code></li><li><code>http://localhost:3000/admin3</code></li><li><code>http://localhost:3000/sqlmanager</code></li><li><code>http://localhost:3000/wizmysqladmin</code></li><li><code>http://localhost:3000/cpanel</code></li><li><code>http://localhost:3000/imanager</code></li><li><code>http://localhost:3000/directadmin</code></li><li><code>http://localhost:3000/Lotus_Domino_Admin</code></li><li><code>http://localhost:3000/management</code></li><li><code>http://localhost:3000/sysmanager</code></li><li><code>http://localhost:3000/admin_logon</code></li><li><code>http://localhost:3000/axis2-admin</code></li><li><code>http://localhost:3000/AdminTools</code></li><li><code>http://localhost:3000/admin_c</code></li><li><code>http://localhost:3000/ADMIN</code></li><li><code>http://localhost:3000/Indy_admin</code></li><li><code>http://localhost:3000/cpanel_file</code></li><li><code>http://localhost:3000/admin-console</code></li><li><code>http://localhost:3000/admin</code></li><li><code>http://localhost:3000/staradmin</code></li><li><code>http://localhost:3000/wp-admin</code></li><li><code>http://localhost:3000/e107_admin</code></li><li><code>http://localhost:3000/pgadmin</code></li><li><code>http://localhost:3000/bbadmin</code></li><li><code>http://localhost:3000/administratie</code></li><li><code>http://localhost:3000/admin.pl</code></li><li><code>http://localhost:3000/siteadmin</code></li><li><code>http://localhost:3000/adminpro</code></li><li><code>http://localhost:3000/adminhelp</code></li><li><code>http://localhost:3000/administrat</code></li><li><code>http://localhost:3000/resin-admin</code></li><li><code>http://localhost:3000/admin4_account</code></li><li><code>http://localhost:3000/admins</code></li><li><code>http://localhost:3000/bigadmin</code></li><li><code>http://localhost:3000/newsadmin</code></li><li><code>http://localhost:3000/mysqlmanager</code></li><li><code>http://localhost:3000/sysadmin2</code></li><li><code>http://localhost:3000/adminpanel</code></li><li><code>http://localhost:3000/admin1</code></li><li><code>http://localhost:3000/Admin</code></li></ul><p style='color:#666'>… and 59 more</p>
+    </section>
+    
+  
+    <section>
+      <h2>CVE Intelligence</h2>
+      <p>Nenhuma CVE correlacionada com versões confirmadas no inventário.</p>
+    </section>
+    
+  
+    <section>
+      <h2>CVE Validation</h2>
+      <p>Nenhuma validação de CVE executada.</p>
+    </section>
+    
+  
+    <section>
+      <h2>Findings (CVSS sorted)</h2>
+      <p>Nenhum finding com score CVSS ainda. Execute os módulos de ataque para popular esta seção.</p>
+    </section>
+    
+
+  <footer>Generated by Buggy — bug bounty / ethical hacking only</footer>
+</body>
+</html>

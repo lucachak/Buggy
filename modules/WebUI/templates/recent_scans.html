@@ -1,0 +1,6 @@
+<div id="recent-scans" data-poll-url="/ui/scans/recent" data-poll-interval="3000">
+  <table><thead><tr><th>Projeto</th><th>Módulo</th><th>Perfil</th><th>Status</th></tr></thead><tbody>
+  {% for scan in scans %}<tr><td><a href="/ui/scans/{{ scan.id }}">{{ project_names.get(scan.project_id, scan.project_id[:8]) }}</a></td><td>{{ scan.module }}</td><td>{{ scan.profile }}</td><td><span class="status {{ scan.status }}">{{ scan.status }}</span></td></tr>
+  {% else %}<tr><td colspan="4">Nenhum scan.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
